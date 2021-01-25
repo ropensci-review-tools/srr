@@ -21,6 +21,12 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     if (!get_verbose_flag (blocks))
         return (NULL)
 
+    Rcpp <- vapply (blocks, function (block)
+                    basename (block$file) == "RcppExports.R",
+                    logical (1))
+    Rcpp_blocks <- blocks [which (Rcpp)]
+    blocks <- blocks [which (!Rcpp)]
+
     msgs <- msgsNA <- msgsTODO <- list () # nolint
 
     for (block in blocks) {
@@ -33,11 +39,22 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     }
 
     if (length (msgs) > 0L | length (msgsNA) > 0L | length (msgsTODO))
-        message ("rOpenSci Statistical Software Standards:")
+    {
+        message ("--------  rOpenSci Statistical Software Standards --------")
+        cli::rule (center = cli::col_green ("rOpenSci Statistical Software Standards"),
+                   line_col = "green")
+    }
 
-    print_one_msg_list (msgs)
-    print_one_msg_list (msgsNA)
-    print_one_msg_list (msgsTODO)
+    if (length (msgs) > 0L |
+        length (msgsNA) > 0L |
+        length (msgsTODO) > 0L) {
+
+        message ("\n------- /R files:")
+
+        print_one_msg_list (msgs)
+        print_one_msg_list (msgsNA)
+        print_one_msg_list (msgsTODO)
+    }
 
     tags <- get_test_tags (base_path)
 
@@ -45,11 +62,26 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
         length (tags$msgsNA) > 0L |
         length (tags$msgsTODO) > 0L) {
 
-        message ("\ntests files:")
+        message ("\n-------- /tests files:")
 
         print_one_msg_list (tags$msgs)
         print_one_msg_list (tags$msgsNA)
         print_one_msg_list (tags$msgsTODO)
+    }
+
+    msgs <- get_src_tags (Rcpp_blocks, base_path, tag = "rssr")
+    msgsNA <- get_src_tags (Rcpp_blocks, base_path, tag = "rssrNA")
+    msgsTODO <- get_src_tags (Rcpp_blocks, base_path, tag = "rssrTODO")
+
+    if (length (msgs) > 0L |
+        length (msgsNA) > 0L |
+        length (msgsTODO) > 0L) {
+
+        message ("\n------- /src files:")
+
+        print_one_msg_list (msgs)
+        print_one_msg_list (msgsNA)
+        print_one_msg_list (msgsTODO)
     }
 
     return (NULL)
@@ -188,6 +220,62 @@ get_block_backref <- function (block, base_path = NULL) {
         block_backref <- basename (block_backref)
 
     return (block_backref)
+}
+
+get_src_tags <- function (blocks, base_path, tag = "rssr") {
+
+    n <- vapply (blocks, function (i)
+                 length (roxygen2::block_get_tags (i, tag)),
+                 integer (1))
+    blocks <- blocks [which (n > 0)]
+
+    msgs <- list ()
+
+    src_files <- list.files (file.path (base_path, "src"),
+                             pattern = "\\.cpp$|\\.hpp$|.h$",
+                             full.names = TRUE)
+    src_files <- src_files [-grep ("RcppExports.cpp", src_files)]
+
+    for (block in blocks) { # usually only 1 block for "RcppExports.R"
+
+        block_backref <- roxygen2::block_get_tag_value (block, "backref")
+        block_tags <- roxygen2::block_get_tags (block, tag)
+
+        for (tag in block_tags) {
+
+            tag_txt <- paste0 (tag$tag, "\\s+", tag$val)
+            which_file <- vapply (src_files, function (f)
+                                  any (grepl (tag_txt, readLines (f))),
+                                  logical (1))
+            this_src <- src_files [which (which_file)]
+            if (length (this_src) > 1) {
+                base_files <- tools::file_path_sans_ext (basename (this_src))
+                this_src <- grep ("\\.cpp", this_src, value = TRUE)
+            }
+
+            src_lines <- readLines (this_src)
+            line_num <- grep (tag_txt, src_lines)
+            roxy_lines <- grep ("\\/\\/\\'", src_lines)
+            index <- cumsum (c (FALSE, diff (roxy_lines) > 1))
+            roxy_lines <- split (roxy_lines, index)
+            this_group <- which (vapply (roxy_lines, function (i)
+                                         line_num %in% i,
+                                         logical (1)))
+            roxy_lines <- roxy_lines [[this_group]]
+
+            src_lines <- src_lines [(max (roxy_lines) + 1):length (src_lines)]
+            while (src_lines [1] == "" | grepl ("Rcpp::export", src_lines [1]))
+                src_lines <- src_lines [-1]
+            this_fn <- strsplit (src_lines [1], "\\s") [[1]] [2]
+
+            msgs <- c (msgs, paste0 ("Standards [", tag$val, "] in function '",
+                                     this_fn, "# on line#", line_num,
+                                     " of file [", this_src, "]"))
+
+        } # end for tag in block_tags
+    } # end for block in blocks
+
+    return (msgs)
 }
 
 get_test_tags <- function (base_path) {
