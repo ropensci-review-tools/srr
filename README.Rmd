@@ -126,3 +126,11 @@ addressed each of these standards. The steps to achieve this are:
    standard removed and replaced by an explanation of why you consider that
    standard not applicable to your software.
     
+Note that individual standards may be moved to, and addressed in, any location
+including the directories `R/`, `src/`, or `tests/`. The [`roxygen2`
+roclet](https://roxygen2.r-lib.org) associated with this package is able to
+parse the various `@rssr` tags in all of these locations. Note, however, that
+tags in `src/` directories are only able to be parsed form C++ files compiled
+with [`Rcpp`](https://cran.r-project.org/package=Rcpp). Equivalent parsing of
+C++ packages compiled with [`cpp11`](https://cpp11.r-lib.org) should hopefully
+[soon be possible](https://github.com/r-lib/cpp11/issues/147).
