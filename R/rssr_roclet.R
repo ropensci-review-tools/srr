@@ -93,6 +93,8 @@ process_rssr_tags <- function (block) {
     standards <- unlist (strsplit (standards, ","))
 
     block_backref <- roxygen2::block_get_tag_value (block, "backref")
+    if (is.null (block_backref))
+        block_backref <- block$file
     block_line <- block$line
 
     msg <- paste0 ("Standards [", standards,
