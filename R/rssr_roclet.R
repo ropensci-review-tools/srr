@@ -25,16 +25,11 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
 
     for (block in blocks) {
 
-        if (length (roxygen2::block_get_tags (block, "rssr")) > 0L) {
-            msgs <- c (msgs, process_rssr_tags (block))
-        }
-        if (length (roxygen2::block_get_tags (block, "rssrNA")) > 0L) {
-            msgsNA <- c (msgsNA, process_rssrNA_tags (block)) # nolint
-        }
-        if (length (roxygen2::block_get_tags (block, "rssrTODO")) > 0L) {
-            msgsTODO <- process_rssrTODO_tags (block)
-        }
+        msgs <- parse_one_msg_list (msgs, block, "rssr")
 
+        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
+
+        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO")
     }
 
     if (length (msgs) > 0L | length (msgsNA) > 0L | length (msgsTODO))
@@ -74,6 +69,16 @@ get_verbose_flag <- function (blocks) {
         stop ("The @rssrVerboseDoc tag should only have 'TRUE' or 'FALSE' after it")
 
     return (as.logical (flag))
+}
+
+parse_one_msg_list <- function (msgs, block, tag) {
+
+    if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
+        fn_name <- paste0 ("process_", tag, "_tags")
+        msgs <- c (msgs, do.call (fn_name, list (block)))
+    }
+
+    return (msgs)
 }
 
 process_rssr_tags <- function (block) {
