@@ -92,9 +92,7 @@ process_rssr_tags <- function (block) {
     }
     standards <- unlist (strsplit (standards, ","))
 
-    block_backref <- roxygen2::block_get_tag_value (block, "backref")
-    if (is.null (block_backref))
-        block_backref <- block$file
+    block_backref <- get_block_backref (block)
     block_line <- block$line
 
     msg <- paste0 ("Standards [", standards,
@@ -116,7 +114,7 @@ process_rssrNA_tags <- function (block) { # nolint
     standards <- unlist (lapply (standards, function (i) i$val))
     standards <- gsub ("\\s.*$", "", standards)
 
-    block_backref <- roxygen2::block_get_tag_value (block, "backref")
+    block_backref <- get_block_backref (block)
     block_line <- block$line
 
     msg <- paste0 ("NA Standards [", paste0 (standards, collapse = ", "),
@@ -137,7 +135,7 @@ process_rssrTODO_tags <- function (block) { # nolint
     standards <- unlist (lapply (standards, function (i) i$val))
     standards <- gsub ("\\s.*$", "", standards)
 
-    block_backref <- roxygen2::block_get_tag_value (block, "backref")
+    block_backref <- get_block_backref (block)
     block_line <- block$line
 
     msg <- paste0 ("TODO Standards [", paste0 (standards, collapse = ", "),
@@ -145,6 +143,20 @@ process_rssrTODO_tags <- function (block) { # nolint
                    " of file [", basename (block_backref), "]")
 
     return (msg)
+}
+
+get_block_backref <- function (block, base_path = NULL) {
+
+    block_backref <- roxygen2::block_get_tag_value (block, "backref")
+
+    if (is.null (block_backref))
+        block_backref <- block$file
+    if (!is.null (base_path))
+        block_backref <- gsub (base_path, "", block_backref)
+    else
+        block_backref <- basename (block_backref)
+
+    return (block_backref)
 }
 
 #' @importFrom roxygen2 roclet_output
