@@ -25,7 +25,7 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (msgs, block, "rssr")
+        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = TRUE)
 
         msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
 
@@ -75,11 +75,12 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-parse_one_msg_list <- function (msgs, block, tag) {
+parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE) {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        fn_name <- paste0 ("process_", tag, "_tags")
-        msgs <- c (msgs, do.call (fn_name, list (block)))
+        call_fn <- paste0 ("process_", tag, "_tags")
+        msgs <- c (msgs, do.call (call_fn, list (block = block,
+                                                 fn_name = fn_name)))
     }
 
     return (msgs)
@@ -93,7 +94,11 @@ print_one_msg_list <- function (msgs) {
     }
 }
 
-process_rssr_tags <- function (block) {
+#' process_rssr_tags
+#'
+#' @param fn_name Include name of calling function in message?
+#' @noRd
+process_rssr_tags <- function (block, fn_name = TRUE) {
 
     func_name <- block$object$alias
     standards <- roxygen2::block_get_tag_value (block, "rssr")
@@ -112,15 +117,20 @@ process_rssr_tags <- function (block) {
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("Standards [", standards,
-                   "] in function '", func_name,
-                   "()' on line#", block_line,
+    msg <- paste0 ("Standards [", standards, "]")
+    if (fn_name)
+        msg <- paste0 (msg, " in function '", func_name, "()'")
+    msg <- paste0 (msg, " on line#", block_line,
                    " of file [", basename (block_backref), "]")
 
     return (msg)
 }
 
-process_rssrNA_tags <- function (block) { # nolint
+#' process_rssr_NA_tags
+#'
+#' @param fn_name Just a dummy here to allow do.call
+#' @noRd
+process_rssrNA_tags <- function (block, fn_name = TRUE) { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     if (!block_title == "NA_standards")
@@ -141,7 +151,11 @@ process_rssrNA_tags <- function (block) { # nolint
     return (msg)
 }
 
-process_rssrTODO_tags <- function (block) { # nolint
+#' process_rssr_TODO_tags
+#'
+#' @param fn_name Just a dummy here to allow do.call
+#' @noRd
+process_rssrTODO_tags <- function (block, fn_name = TRUE) { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     if (!block_title == "rssr_standards")
@@ -192,7 +206,7 @@ get_test_tags <- function (base_path) {
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (msgs, block, "rssr")
+        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = FALSE)
 
         msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
 
