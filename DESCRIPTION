@@ -1,0 +1,22 @@
+Package: rssr
+Title: 'rOpenSci' Statistical Software Review
+Version: 0.0.0.028
+Authors@R: 
+    person(given = "Mark",
+           family = "Padgham",
+           role = c("aut", "cre"),
+           email = "mark@ropensci.org",
+           comment = c(ORCID = "0000-0003-2172-5265"))
+Description: Companion package to 'rOpenSci' statistical
+    software review project.
+License: MIT + file LICENSE
+Imports:
+    cli,
+    clipr,
+    here,
+    httr,
+    roxygen2
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
