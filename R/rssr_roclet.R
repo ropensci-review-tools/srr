@@ -39,6 +39,19 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     print_one_msg_list (msgsNA)
     print_one_msg_list (msgsTODO)
 
+    tags <- get_test_tags (base_path)
+
+    if (length (tags$msgs) > 0L |
+        length (tags$msgsNA) > 0L |
+        length (tags$msgsTODO) > 0L) {
+
+        message ("\ntests files:")
+
+        print_one_msg_list (tags$msgs)
+        print_one_msg_list (tags$msgsNA)
+        print_one_msg_list (tags$msgsTODO)
+    }
+
     return (NULL)
 }
 
@@ -161,6 +174,34 @@ get_block_backref <- function (block, base_path = NULL) {
         block_backref <- basename (block_backref)
 
     return (block_backref)
+}
+
+get_test_tags <- function (base_path) {
+
+    test_dir <- file.path (base_path, "tests")
+
+    flist <- list.files (test_dir,
+                         pattern = "\\.R$",
+                         recursive = TRUE,
+                         full.names = TRUE)
+    blocks <- lapply (flist, function (i) roxygen2::parse_file (i, env = NULL))
+    names (blocks) <- flist
+    blocks <- do.call (c, blocks)
+
+    msgs <- msgsNA <- msgsTODO <- list () # nolint
+
+    for (block in blocks) {
+
+        msgs <- parse_one_msg_list (msgs, block, "rssr")
+
+        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
+
+        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO")
+    }
+
+    return (list (msgs = msgs,
+                  msgsNA = msgsNA,
+                  msgsTODO = msgsTODO))
 }
 
 #' @importFrom roxygen2 roclet_output
