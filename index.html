@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rssr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.037</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.038</span>
       </span>
     </div>
 
@@ -110,6 +110,7 @@
 <li><p>A standard may be addressed by moving the item in the <code>rssr_standards.R</code> file (or wherever you’ve chosen to list these within your own package) to one or more places in your code where these standards have been addressed. In doing so, the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag should be changed from <code>@rssrTODO</code> to <code>@rssr</code>, and the text which initially lists the actual standard should be changed to provide a brief description of how that standard has been met. Tags for one particular standard may be repeated in multiple places within your code, and we encourage locating an <code>@rssr</code> tag reference to a particular standard at all locations which directly address that standard.</p></li>
 <li><p>Alternatively, any standards which you consider not applicable to your software may remain listed in the main <code>rssr_standards.R</code> document, with their tag changed from <code>@rssrTODO</code> to <code>@rssrNA</code>, and the description of the standard removed and replaced by an explanation of why you consider that standard not applicable to your software.</p></li>
 </ol>
+<p>Note that individual standards may be moved to, and addressed in, any location including the directories <code>R/</code>, <code>src/</code>, or <code>tests/</code>. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code> roclet</a> associated with this package is able to parse the various <code>@rssr</code> tags in all of these locations. Note, however, that tags in <code>src/</code> directories are only able to be parsed form C++ files compiled with <a href="https://cran.r-project.org/package=Rcpp"><code>Rcpp</code></a>. Equivalent parsing of C++ packages compiled with <a href="https://cpp11.r-lib.org"><code>cpp11</code></a> should hopefully <a href="https://github.com/r-lib/cpp11/issues/147">soon be possible</a>.</p>
 </div>
 </div>
 
