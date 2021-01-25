@@ -35,18 +35,9 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     if (length (msgs) > 0L | length (msgsNA) > 0L | length (msgsTODO))
         message ("rOpenSci Statistical Software Standards:")
 
-    if (length (msgs) > 0L) {
-        message ("")
-        message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
-    }
-    if (length (msgsNA) > 0L) {
-        message ("")
-        message (paste0 ("  * ", msgsNA, collapse = "\n"), sep = "")
-    }
-    if (length (msgsTODO) > 0L) {
-        message ("")
-        message (paste0 ("  * ", msgsTODO, collapse = "\n"), sep = "")
-    }
+    print_one_msg_list (msgs)
+    print_one_msg_list (msgsNA)
+    print_one_msg_list (msgsTODO)
 
     return (NULL)
 }
@@ -79,6 +70,14 @@ parse_one_msg_list <- function (msgs, block, tag) {
     }
 
     return (msgs)
+}
+
+print_one_msg_list <- function (msgs) {
+
+    if (length (msgs) > 0L) {
+        message ("")
+        message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
+    }
 }
 
 process_rssr_tags <- function (block) {
