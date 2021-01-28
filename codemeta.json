@@ -8,7 +8,7 @@
   "description": "Companion package to 'rOpenSci' statistical\n    software review project.",
   "name": "rssr: 'rOpenSci' Statistical Software Review",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.0.44",
+  "version": "0.0.0.45",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -113,7 +113,8 @@
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     }
   ],
-  "codeRepository": "https://github.com/ropenscilabs/statistical-software-review",
-  "readme": "https://github.com/ropenscilabs/statistical-software-review/blob/master/README.md",
-  "fileSize": "81.837KB"
+  "codeRepository": "https://github.com/ropenscilabs/rssr",
+  "readme": "https://github.com/ropenscilabs/rssr/blob/master/README.md",
+  "fileSize": "81.978KB",
+  "issueTracker": "https://github.com/ropenscilabs/rssr/issues"
 }

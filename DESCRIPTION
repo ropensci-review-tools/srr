@@ -1,6 +1,6 @@
 Package: rssr
 Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.044
+Version: 0.0.0.045
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -10,6 +10,8 @@ Authors@R:
 Description: Companion package to 'rOpenSci' statistical
     software review project.
 License: MIT + file LICENSE
+URL: https://github.com/ropenscilabs/rssr
+BugReports: https://github.com/ropenscilabs/rssr/issues
 Imports:
     cli,
     clipr,
