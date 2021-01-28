@@ -17,9 +17,9 @@ and reviewing package submitted to rOpenSci’s system for [Statistical
 Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of
-software against the standards detailed in the [main project book (from
-here on referred to as the “SSR
-Book”)](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
+software against the standards detailed in the [main project
+book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
+(from here on referred to as the “SSR Book”).
 
 This package can be installed with,
 
@@ -40,14 +40,13 @@ for submission to our peer review system, keep straight on reading. If
 you’ve been invited to review a package, you may skip the following
 section and proceed straight to the subsequent section.
 
-Both sections provide explicit descriptions of how the functions of the
-`rssr` package can help developers prepare them for submission (in the
-first), and use the package’s functions to aid the review process (in
-the second). In both cases, the general procedures are described in the
-[SSR
+The first section provides explicit descriptions of how the functions of
+the `rssr` package can help developers prepare packages for submission,
+while the second section describes how the functionality of the package
+can aid reviewers in assessing submitted packages. In both cases, the
+general procedures are described in the [SSR
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
-with this `README` intended to provide supporting technical details
-only.
+with this `README` intended to provide supporting technical details.
 
 ## For Package Developers
 
