@@ -77,7 +77,7 @@ make_test_files <- function (d, pkg_name) {
 }
 
 
-#' rssr_make_pkg
+#' rssr_pkg_skeleton
 #'
 #' Make a dummy package skeleton including 'rssr' \pkg{roxygen2} tags which can
 #' be used to try out the functionality of this package. Running the example
@@ -90,10 +90,10 @@ make_test_files <- function (d, pkg_name) {
 #' will be in `file.path(base_dir, pkg_name)`.
 #' @return The path to the directory holding the newly created package
 #' @examples
-#' d <- rssr_make_pkg ()
+#' d <- rssr_pkg_skeleton ()
 #' roxygen2::roxygenise (d)
 #' @export
-rssr_make_pkg <- function (base_dir = tempdir (), pkg_name = "demo") {
+rssr_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 
