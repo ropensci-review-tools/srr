@@ -2,6 +2,9 @@
 
 [![R build
 status](https://github.com/ropenscilabs/rssr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/rssr/actions)
+[![codecov](https://codecov.io/gh/ropenscilabs/rssr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/rssr)
+[![Project Status:
+Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
