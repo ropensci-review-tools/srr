@@ -1,6 +1,6 @@
 Package: rssr
 Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.052
+Version: 0.0.0.053
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -17,6 +17,7 @@ Imports:
     clipr,
     here,
     httr,
+    Rcpp,
     roxygen2
 Suggests: 
     testthat (>= 3.0.0)
