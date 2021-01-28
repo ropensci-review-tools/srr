@@ -9,6 +9,14 @@
 Companion package to 'rOpenSci' statistical
     software review project.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/ropenscilabs/rssr}
+  \item Report bugs at \url{https://github.com/ropenscilabs/rssr/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Mark Padgham \email{mark@ropensci.org} (\href{https://orcid.org/0000-0003-2172-5265}{ORCID})
 
