@@ -77,7 +77,23 @@ make_test_files <- function (d, pkg_name) {
 }
 
 
-make_pkg <- function (base_dir = tempdir (), pkg_name = "demo") {
+#' rssr_make_pkg
+#'
+#' Make a dummy package skeleton including 'rssr' \pkg{roxygen2} tags which can
+#' be used to try out the functionality of this package. Running the example
+#' lines below which activate the 'rssr' roclets, and show you what the output
+#' of those roclets looks like. Feel free to examine the effect of modifying any
+#' of the `@rssr` tags within the code as identified by running those lines.
+#'
+#' @param base_dir The base directory where the package should be constructed.
+#' @param pkg_name The name of the package. The final location of this package
+#' will be in `file.path(base_dir, pkg_name)`.
+#' @return The path to the directory holding the newly created package
+#' @examples
+#' d <- rssr_make_pkg ()
+#' roxygen2::roxygenise (d)
+#' @export
+rssr_make_pkg <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 
