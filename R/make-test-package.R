@@ -10,7 +10,7 @@ make_pkg_path <- function (base_dir = tempdir (), pkg_name = "demo") {
 
 get_roxygen_version <- function () {
 
-    ip <- as.data.frame (installed.packages ())
+    ip <- as.data.frame (utils::installed.packages ())
     if (!"roxygen2" %in% ip$Package)
         return (NULL)
 
