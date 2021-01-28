@@ -32,7 +32,9 @@ make_desc <- function (d, pkg_name) {
                "    testthat",
                "License: GPL-3",
                "Encoding: UTF-8",
-               "Roxygen: list(markdown = TRUE, roclets = c (\"rd\", \"namespace\", \"rssr::rssr_roclet\"))")
+               paste0 ("Roxygen: list(markdown = TRUE, ",
+                       "roclets = c (\"rd\", \"namespace\", ",
+                       "\"rssr::rssr_roclet\"))"))
 
     rv <- get_roxygen_version ()
     if (!is.null (rv))
@@ -41,7 +43,7 @@ make_desc <- function (d, pkg_name) {
     writeLines (desc, con = file.path (d, "DESCRIPTION"))
 }
 
-make_R_fn <- function (d) {
+make_r_fn <- function (d) {
 
     rfile <- c ("#' test_fn",
                 "#' A test funtion",
@@ -100,10 +102,11 @@ rssr_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
     if (length (list.files (d)) > 0L)
         stop ("The path [", d, "] is not empty; ",
               "can only make a package in an empty directory\n",
-              "  Directory can be cleared with 'unlink(<dir>, recursive = TRUE)'")
+              "  Directory can be cleared with ",
+              "'unlink(<dir>, recursive = TRUE)'")
 
     make_desc (d, pkg_name)
-    make_R_fn (d)
+    make_r_fn (d)
     make_test_files (d, pkg_name)
 
     return (d)
