@@ -62,13 +62,6 @@ write_r_fn <- function (d, pkg_name) {
         dir.create (dr)
     writeLines (rfile, con = file.path (dr, "test.R"))
 
-    rfile <- c (paste0 ("#' ", pkg_name),
-                "",
-                paste0 ("#' @name ", pkg_name),
-                "#' @docType package",
-                "#' @importFrom Rcpp evalCpp",
-                paste0 ("#' @useDynLib ", pkg_name, ", .registration = TRUE"),
-                "NULL")
     rfile <- c ("#' @keywords internal",
                 "\"_PACKAGE\"",
                 "",
