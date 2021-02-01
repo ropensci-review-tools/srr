@@ -185,12 +185,13 @@ process_rssrNA_tags <- function (block, fn_name = TRUE) { # nolint
 
     standards <- roxygen2::block_get_tags (block, "rssrNA")
     standards <- unlist (lapply (standards, function (i) i$val))
-    standards <- gsub ("\\s.*$", "", standards)
+    snum <- extract_standard_numbers (standards)
+    #standards <- gsub ("\\s.*$", "", standards)
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("NA Standards [", paste0 (standards, collapse = ", "),
+    msg <- paste0 ("NA Standards [", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
                    " of file [", basename (block_backref), "]")
 
@@ -210,12 +211,13 @@ process_rssrTODO_tags <- function (block, fn_name = TRUE) { # nolint
 
     standards <- roxygen2::block_get_tags (block, "rssrTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
-    standards <- gsub ("\\s.*$", "", standards)
+    #standards <- gsub ("\\s.*$", "", standards)
+    snum <- extract_standard_numbers (standards)
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("TODO Standards [", paste0 (standards, collapse = ", "),
+    msg <- paste0 ("TODO Standards [", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
                    " of file [", basename (block_backref), "]")
 
@@ -284,10 +286,11 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
 
             snum <- extract_standard_numbers (tag$val)
 
+            this_src <- file.path ("src", basename (this_src))
             msgs <- c (msgs, paste0 ("Standards [", paste0 (snum, collapse = ", "),
                                      "] in function '", this_fn,
-                                     "# on line#", line_num,
-                                     " of file [", this_src, "]"))
+                                     "# on line#", line_num, " of file [",
+                                     file.path ("src", basename (this_src)), "]"))
 
         } # end for tag in block_tags
     } # end for block in blocks
