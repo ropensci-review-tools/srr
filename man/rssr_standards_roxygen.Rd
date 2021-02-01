@@ -4,7 +4,7 @@
 \alias{rssr_standards_roxygen}
 \title{rssr_standards_roxygen}
 \usage{
-rssr_standards_roxygen(category = NULL, filename = "rssr_standards.R")
+rssr_standards_roxygen(category = NULL, filename = "rssr-standards.R")
 }
 \arguments{
 \item{category}{One of the names of files given in the directory contents of

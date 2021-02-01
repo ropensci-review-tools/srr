@@ -161,7 +161,7 @@ rssr_standards_checklist <- function (category = NULL, filename = NULL) {
 #' @return Nothing
 #' @export
 rssr_standards_roxygen <- function (category = NULL,
-                                    filename = "rssr_standards.R") {
+                                    filename = "rssr-standards.R") {
 
     if (!"DESCRIPTION" %in% list.files (here::here ()))
         stop ("This function must be called within an R package directory")
