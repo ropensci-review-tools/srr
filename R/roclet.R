@@ -21,66 +21,71 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     if (!get_verbose_flag (blocks))
         return (NULL)
 
-    Rcpp <- vapply (blocks, function (block)
+    rcpp <- vapply (blocks, function (block)
                     basename (block$file) == "RcppExports.R",
                     logical (1))
-    Rcpp_blocks <- blocks [which (Rcpp)]
-    blocks <- blocks [which (!Rcpp)]
+    rcpp_blocks <- blocks [which (rcpp)]
+    blocks <- blocks [which (!rcpp)]
 
-    msgs <- msgsNA <- msgsTODO <- list () # nolint
+    # test blocks:
+    test_blocks <- get_test_blocks (base_path)
+
+    msgs <- msgs_na <- msgs_todo <- list () # nolint
 
     for (block in blocks) {
 
         msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = TRUE)
 
-        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
+        msgs_na <- parse_one_msg_list (msgs_na, block, "rssrNA")
 
-        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO")
+        msgs_todo <- parse_one_msg_list (msgs_todo, block, "rssrTODO")
     }
 
-    if (length (msgs) > 0L | length (msgsNA) > 0L | length (msgsTODO))
+    if (length (msgs) > 0L | length (msgs_na) > 0L | length (msgs_todo))
     {
         message (cli::rule (center = cli::col_green ("rOpenSci Statistical Software Standards"),
                             line_col = "green"))
     }
 
     if (length (msgs) > 0L |
-        length (msgsNA) > 0L |
-        length (msgsTODO) > 0L) {
+        length (msgs_na) > 0L |
+        length (msgs_todo) > 0L) {
 
         cli::cli_h3 ("/R files")
 
         print_one_msg_list (msgs)
-        print_one_msg_list (msgsNA)
-        print_one_msg_list (msgsTODO)
+        print_one_msg_list (msgs_na)
+        print_one_msg_list (msgs_todo)
     }
 
-    tags <- get_test_tags (base_path)
+    msgs <- get_test_tags (test_blocks, tag = "rssr")
+    msgs_na <- get_test_tags (test_blocks, tag = "rssrNA")
+    msgs_todo <- get_test_tags (test_blocks, tag = "rssrTODO")
 
-    if (length (tags$msgs) > 0L |
-        length (tags$msgsNA) > 0L |
-        length (tags$msgsTODO) > 0L) {
+    if (length (msgs) > 0L |
+        length (msgs_na) > 0L |
+        length (msgs_todo) > 0L) {
 
         cli::cli_h3 ("/tests files")
 
-        print_one_msg_list (tags$msgs)
-        print_one_msg_list (tags$msgsNA)
-        print_one_msg_list (tags$msgsTODO)
+        print_one_msg_list (msgs)
+        print_one_msg_list (msgs_na)
+        print_one_msg_list (msgs_todo)
     }
 
-    msgs <- get_src_tags (Rcpp_blocks, base_path, tag = "rssr")
-    msgsNA <- get_src_tags (Rcpp_blocks, base_path, tag = "rssrNA")
-    msgsTODO <- get_src_tags (Rcpp_blocks, base_path, tag = "rssrTODO")
+    msgs <- get_src_tags (rcpp_blocks, base_path, tag = "rssr")
+    msgs_na <- get_src_tags (rcpp_blocks, base_path, tag = "rssrNA")
+    msgs_todo <- get_src_tags (rcpp_blocks, base_path, tag = "rssrTODO")
 
     if (length (msgs) > 0L |
-        length (msgsNA) > 0L |
-        length (msgsTODO) > 0L) {
+        length (msgs_na) > 0L |
+        length (msgs_todo) > 0L) {
 
         cli::cli_h3 ("/src files")
 
         print_one_msg_list (msgs)
-        print_one_msg_list (msgsNA)
-        print_one_msg_list (msgsTODO)
+        print_one_msg_list (msgs_na)
+        print_one_msg_list (msgs_todo)
     }
 
     return (NULL)
@@ -302,32 +307,32 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
     return (msgs)
 }
 
-get_test_tags <- function (base_path) {
+get_test_blocks <- function (base_path) {
 
-    test_dir <- file.path (base_path, "tests")
 
-    flist <- list.files (test_dir,
+    flist <- list.files (file.path (base_path, "tests"),
                          pattern = "\\.R$",
                          recursive = TRUE,
                          full.names = TRUE)
+
     blocks <- lapply (flist, function (i) roxygen2::parse_file (i, env = NULL))
     names (blocks) <- flist
     blocks <- do.call (c, blocks)
 
-    msgs <- msgsNA <- msgsTODO <- list () # nolint
+    return (blocks)
+}
+
+get_test_tags <- function (blocks, tag = "rssr") {
+
+    msgs <- list () # nolint
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = FALSE, dir = "tests")
+        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = FALSE, dir = "tests")
 
-        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA", dir = "tests")
-
-        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO", dir = "tests")
     }
 
-    return (list (msgs = msgs,
-                  msgsNA = msgsNA,
-                  msgsTODO = msgsTODO))
+    return (msgs)
 }
 
 #' @importFrom roxygen2 roclet_output
