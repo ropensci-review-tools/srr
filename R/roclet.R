@@ -106,12 +106,13 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE) {
+parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
         call_fn <- paste0 ("process_", tag, "_tags")
         msgs <- c (msgs, do.call (call_fn, list (block = block,
-                                                 fn_name = fn_name)))
+                                                 fn_name = fn_name,
+                                                 dir = dir)))
     }
 
     return (msgs)
@@ -128,7 +129,7 @@ print_one_msg_list <- function (msgs) {
 #'
 #' @param fn_name Include name of calling function in message?
 #' @noRd
-process_rssr_tags <- function (block, fn_name = TRUE) {
+process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     func_name <- block$object$alias
     standards <- roxygen2::block_get_tag_value (block, "rssr")
@@ -153,7 +154,8 @@ process_rssr_tags <- function (block, fn_name = TRUE) {
     if (fn_name)
         msg <- paste0 (msg, " in function '", func_name, "()'")
     msg <- paste0 (msg, " on line#", block_line,
-                   " of file [", basename (block_backref), "]")
+                   " of file [",
+                   file.path (dir, basename (block_backref)), "]")
 
     return (msg)
 }
@@ -176,7 +178,7 @@ extract_standard_numbers <- function (standards) {
 #'
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
-process_rssrNA_tags <- function (block, fn_name = TRUE) { # nolint
+process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     if (!block_title == "NA_standards")
@@ -193,7 +195,8 @@ process_rssrNA_tags <- function (block, fn_name = TRUE) { # nolint
 
     msg <- paste0 ("NA Standards [", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
-                   " of file [", basename (block_backref), "]")
+                   " of file [",
+                   file.path (dir, basename (block_backref)), "]")
 
     return (msg)
 }
@@ -202,7 +205,7 @@ process_rssrNA_tags <- function (block, fn_name = TRUE) { # nolint
 #'
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
-process_rssrTODO_tags <- function (block, fn_name = TRUE) { # nolint
+process_rssrTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     if (!block_title == "rssr_standards")
@@ -219,7 +222,8 @@ process_rssrTODO_tags <- function (block, fn_name = TRUE) { # nolint
 
     msg <- paste0 ("TODO Standards [", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
-                   " of file [", basename (block_backref), "]")
+                   " of file [",
+                   file.path (dir, basename (block_backref)), "]")
 
     return (msg)
 }
@@ -314,11 +318,11 @@ get_test_tags <- function (base_path) {
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = FALSE)
+        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = FALSE, dir = "tests")
 
-        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA")
+        msgsNA <- parse_one_msg_list (msgsNA, block, "rssrNA", dir = "tests")
 
-        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO")
+        msgsTODO <- parse_one_msg_list (msgsTODO, block, "rssrTODO", dir = "tests")
     }
 
     return (list (msgs = msgs,
