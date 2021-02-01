@@ -40,16 +40,15 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
 
     if (length (msgs) > 0L | length (msgsNA) > 0L | length (msgsTODO))
     {
-        message ("--------  rOpenSci Statistical Software Standards --------")
-        cli::rule (center = cli::col_green ("rOpenSci Statistical Software Standards"),
-                   line_col = "green")
+        message (cli::rule (center = cli::col_green ("rOpenSci Statistical Software Standards"),
+                            line_col = "green"))
     }
 
     if (length (msgs) > 0L |
         length (msgsNA) > 0L |
         length (msgsTODO) > 0L) {
 
-        message ("\n------- /R files:")
+        cli::cli_h3 ("/R files")
 
         print_one_msg_list (msgs)
         print_one_msg_list (msgsNA)
@@ -62,7 +61,7 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
         length (tags$msgsNA) > 0L |
         length (tags$msgsTODO) > 0L) {
 
-        message ("\n-------- /tests files:")
+        cli::cli_h3 ("/tests files")
 
         print_one_msg_list (tags$msgs)
         print_one_msg_list (tags$msgsNA)
@@ -77,7 +76,7 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
         length (msgsNA) > 0L |
         length (msgsTODO) > 0L) {
 
-        message ("\n------- /src files:")
+        cli::cli_h3 ("/src files")
 
         print_one_msg_list (msgs)
         print_one_msg_list (msgsNA)
@@ -121,7 +120,6 @@ parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE) {
 print_one_msg_list <- function (msgs) {
 
     if (length (msgs) > 0L) {
-        message ("")
         message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
     }
 }
