@@ -144,16 +144,32 @@ process_rssr_tags <- function (block, fn_name = TRUE) {
     }
     standards <- unlist (strsplit (standards, ","))
 
+    snum <- extract_standard_numbers (standards)
+
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("Standards [", standards, "]")
+    msg <- paste0 ("Standards [", paste0 (snum, collapse = ", "), "]")
     if (fn_name)
         msg <- paste0 (msg, " in function '", func_name, "()'")
     msg <- paste0 (msg, " on line#", block_line,
                    " of file [", basename (block_backref), "]")
 
     return (msg)
+}
+
+# extract the actual standards numbers from arbitrary text strings:
+extract_standard_numbers <- function (standards) {
+
+    gptn <- "[A-Z]+[0-9]+(\\.[0-9]+)?[a-z]?(\\s||\\n\\*)"
+    snum <- lapply (standards, function (i) {
+                     res <- gregexpr (gptn, i) [[1]]
+                     std_start <- as.integer (res)
+                     std_end <- std_start + attr (res, "match.length") - 1
+                     substring (i, std_start, std_end)  })
+    snum <- gsub ("\\s+", "", unlist (snum))
+
+    return (snum)
 }
 
 #' process_rssr_NA_tags
@@ -266,8 +282,11 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
                 src_lines <- src_lines [-1]
             this_fn <- strsplit (src_lines [1], "\\s") [[1]] [2]
 
-            msgs <- c (msgs, paste0 ("Standards [", tag$val, "] in function '",
-                                     this_fn, "# on line#", line_num,
+            snum <- extract_standard_numbers (tag$val)
+
+            msgs <- c (msgs, paste0 ("Standards [", paste0 (snum, collapse = ", "),
+                                     "] in function '", this_fn,
+                                     "# on line#", line_num,
                                      " of file [", this_src, "]"))
 
         } # end for tag in block_tags
