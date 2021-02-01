@@ -51,6 +51,7 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' test_fn",
                 "#' A test funtion",
+                "#' @rssrVerboseDoc TRUE",
                 "#' @rssr G1.1",
                 "#' @export",
                 "test_fn <- function() {",
