@@ -116,7 +116,7 @@ this are:
 
         ## [1] "#' rssr_standards"                                                                                                     
         ## [2] "#'"                                                                                                                    
-        ## [3] "#' @rssrVerboseDoc TRUE"                                                                                               
+        ## [3] "#' @rssrVerbose TRUE"                                                                                                  
         ## [4] "#'"                                                                                                                    
         ## [5] "#' @rssrTODO G1.0 Statistical Software should list at least one primary reference from published academic literature. "
         ## [6] "#' @rssrTODO G1.1 All statistical terminology should be clarified and unambiguously defined. "
@@ -127,7 +127,7 @@ this are:
     should remain somewhere in [`roxygen2`](https://roxygen2.r-lib.org)
     blocks somewhere in your source code.
 
-    The `@rssrVerboseDoc` line defines a variable which may be used to
+    The `@rssrVerbose` line defines a variable which may be used to
     suppress output from the `rssr` roclet when updating package
     documentation (by setting to `FALSE`). After that comes the list of
     standards, each of which is prefixed by a

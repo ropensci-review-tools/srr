@@ -108,7 +108,7 @@ addressed each of these standards. The steps to achieve this are:
     somewhere in [`roxygen2`](https://roxygen2.r-lib.org) blocks somewhere in
     your source code.
 
-    The `@rssrVerboseDoc` line defines a variable which may be used to suppress
+    The `@rssrVerbose` line defines a variable which may be used to suppress
     output from the `rssr` roclet when updating package documentation (by
     setting to `FALSE`). After that comes the list of standards, each of which
     is prefixed by a [`roxygen2`](https://roxygen2.r-lib.org) tag, `@rssrTODO`.

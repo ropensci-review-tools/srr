@@ -89,19 +89,19 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
 get_verbose_flag <- function (blocks) {
 
     n <- vapply (blocks, function (i)
-                 length (roxygen2::block_get_tags (i, "rssrVerboseDoc")),
+                 length (roxygen2::block_get_tags (i, "rssrVerbose")),
                  integer (1))
     if (sum (n) > 1)
-        stop ("There must be only one @rssrVerboseDoc flag in your documentation")
+        stop ("There must be only one @rssrVerbose flag in your documentation")
 
     if (sum (n) == 0)
         return (TRUE)
 
     block <- blocks [[which (n == 1)]]
-    flag <- roxygen2::block_get_tags (block, "rssrVerboseDoc") [[1]]$val
+    flag <- roxygen2::block_get_tags (block, "rssrVerbose") [[1]]$val
 
     if (is.na (as.logical (flag)))
-        stop ("The @rssrVerboseDoc tag should only have 'TRUE' or 'FALSE' after it")
+        stop ("The @rssrVerbose tag should only have 'TRUE' or 'FALSE' after it")
 
     return (as.logical (flag))
 }
