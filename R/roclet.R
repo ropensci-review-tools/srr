@@ -43,8 +43,8 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
 
     if (length (msgs) > 0L | length (msgs_na) > 0L | length (msgs_todo))
     {
-        message (cli::rule (center = cli::col_green ("rOpenSci Statistical Software Standards"),
-                            line_col = "green"))
+        txt <- "rOpenSci Statistical Software Standards"
+        message (cli::rule (center = cli::col_green (txt), line_col = "green"))
     }
 
     if (length (msgs) > 0L |
@@ -106,7 +106,8 @@ get_verbose_flag <- function (blocks) {
     flag <- roxygen2::block_get_tags (block, "rssrVerbose") [[1]]$val
 
     if (is.na (as.logical (flag)))
-        stop ("The @rssrVerbose tag should only have 'TRUE' or 'FALSE' after it")
+        stop ("The @rssrVerbose tag should only have ",
+              "'TRUE' or 'FALSE' after it")
 
     return (as.logical (flag))
 }
@@ -263,7 +264,6 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
 
     for (block in blocks) { # usually only 1 block for "RcppExports.R"
 
-        block_backref <- roxygen2::block_get_tag_value (block, "backref")
         block_tags <- roxygen2::block_get_tags (block, tag)
 
         for (tag in block_tags) {
@@ -274,7 +274,6 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
                                   logical (1))
             this_src <- src_files [which (which_file)]
             if (length (this_src) > 1) {
-                base_files <- tools::file_path_sans_ext (basename (this_src))
                 this_src <- grep ("\\.cpp", this_src, value = TRUE)
             }
 
@@ -296,10 +295,12 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
             snum <- extract_standard_numbers (tag$val)
 
             this_src <- file.path ("src", basename (this_src))
-            msgs <- c (msgs, paste0 ("Standards [", paste0 (snum, collapse = ", "),
+            msgs <- c (msgs, paste0 ("Standards [",
+                                     paste0 (snum, collapse = ", "),
                                      "] in function '", this_fn,
                                      "# on line#", line_num, " of file [",
-                                     file.path ("src", basename (this_src)), "]"))
+                                     file.path ("src", basename (this_src)),
+                                     "]"))
 
         } # end for tag in block_tags
     } # end for block in blocks
@@ -328,7 +329,11 @@ get_test_tags <- function (blocks, tag = "rssr") {
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = FALSE, dir = "tests")
+        msgs <- parse_one_msg_list (msgs,
+                                    block,
+                                    tag = tag,
+                                    fn_name = FALSE,
+                                    dir = "tests")
 
     }
 
