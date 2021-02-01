@@ -51,7 +51,6 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' test_fn",
                 "#' A test funtion",
-                "#' @rssrVerbose TRUE",
                 "#' @rssr G1.1",
                 "#' @export",
                 "test_fn <- function() {",
@@ -72,6 +71,20 @@ write_r_fn <- function (d, pkg_name) {
                 "## usethis namespace: end",
                 "NULL")
     writeLines (rfile, con = file.path (dr, paste0 (pkg_name, "-package.R")))
+
+    rfile <- c ("#' NA_standards",
+                "#'",
+                "#' @rssrNA And Here is S3.3 as NA plus some other stuff too.",
+                "#' @noRd",
+                "NULL",
+                "",
+                "#' rssr_standards",
+                "#'",
+                "#' @rssrVerbose TRUE",
+                "#' @rssrTODO And Here is S4.4 as TODO",
+                "#' @noRd",
+                "NULL")
+    writeLines (rfile, con = file.path (dr, "rssr-standards.R"))
 }
 
 write_src_fn <- function (d) {
