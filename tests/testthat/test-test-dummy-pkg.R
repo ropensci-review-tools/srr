@@ -11,17 +11,17 @@ test_that("dummy package", {
 
               x <- capture.output (roxygen2::roxygenise (d), type = "message")
 
-              expect_true (any (grepl ("R files", x)))
+              expect_true (any (grepl ("@rssr tags:", x)))
               expect_true (any (grepl ("Standards \\[G1\\.1\\]", x)))
 
-              expect_true (any (grepl ("tests files", x)))
-              expect_true (any (grepl ("Standards \\[G2\\.2\\]", x)))
-              # G2.2 is in "tests files":
-              expect_true (grep ("Standards \\[G2\\.2\\]", x) [1] >
-                           grep ("tests files", x) [1])
+              expect_true (any (grepl ("@rssrNA tags:", x)))
+              expect_true (any (grepl ("Standards \\[S3\\.3\\]", x)))
+              # S3.3 is an @rssrNA tag
+              expect_true (grep ("Standards \\[S3\\.3\\]", x) [1] >
+                           grep ("@rssrNA tags:", x) [1])
 
-              expect_true (any (grepl ("src files", x)))
-              expect_true (any (grepl ("Standards \\[G3\\.3\\]", x)))
-              expect_true (grep ("Standards \\[G3\\.3\\]", x) [1] >
-                           grep ("src files", x) [1])
+              expect_true (any (grepl ("@rssrTODO tags:", x)))
+              expect_true (any (grepl ("Standards \\[S4\\.4\\]", x)))
+              expect_true (grep ("Standards \\[S4\\.4\\]", x) [1] >
+                           grep ("@rssrTODO tags:", x) [1])
 })
