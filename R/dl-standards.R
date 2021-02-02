@@ -163,15 +163,19 @@ rssr_standards_checklist <- function (category = NULL, filename = NULL) {
 rssr_standards_roxygen <- function (category = NULL,
                                     filename = "rssr-standards.R") {
 
-    if (!"DESCRIPTION" %in% list.files (here::here ()))
+    loc <- here::here ()
+    if (dirname (filename) != ".") {
+        loc <- path.expand (dirname (filename))
+        if (substring (loc, nchar (loc), nchar (loc)) == "R")
+            loc <- gsub (paste0 (.Platform$file.sep, "R$"), "", loc)
+    }
+
+    if (!"DESCRIPTION" %in% list.files (loc))
         stop ("This function must be called within an R package directory")
-    fname <- basename (filename)
-    if (!fname == filename)
-        message ("Path information has been removed from filename")
 
-    fname <- file.path (here::here (), "R", fname)
+    filename <- file.path (loc, "R", basename (filename))
 
-    if (file.exists (fname)) {
+    if (interactive () & file.exists (filename)) {
         x <- readline ("Overwrite current file (y/n)? ")
         if (tolower (substring (x, 1, 1) != "y"))
             stop ("Okay, we'll stop there")
@@ -194,9 +198,9 @@ rssr_standards_roxygen <- function (category = NULL,
             "#' @noRd",
             "NULL")
 
-    writeLines (x, con = fname)
+    writeLines (x, con = filename)
     cli::cli_alert_info (paste0 ("Roxygen2-formatted stanards written to [",
-                                 basename (fname), "]"))
+                                 basename (filename), "]"))
 }
 
 get_standards_checklists <- function (category = NULL) {
