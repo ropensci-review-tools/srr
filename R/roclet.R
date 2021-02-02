@@ -26,66 +26,36 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
                     logical (1))
     rcpp_blocks <- blocks [which (rcpp)]
     blocks <- blocks [which (!rcpp)]
-
-    # test blocks:
     test_blocks <- get_test_blocks (base_path)
 
-    msgs <- msgs_na <- msgs_todo <- list () # nolint
+    # ------ @rssr tags:
+    msgs_rssr <- collect_one_tag (base_path, blocks, test_blocks, rcpp_blocks,
+                                  tag = "rssr")
+    msgs_rssr_na <- collect_one_tag (base_path, blocks, test_blocks,
+                                     rcpp_blocks, tag = "rssrNA")
+    msgs_rssr_todo <- collect_one_tag (base_path, blocks, test_blocks,
+                                       rcpp_blocks, tag = "rssrTODO")
 
-    for (block in blocks) {
-
-        msgs <- parse_one_msg_list (msgs, block, "rssr", fn_name = TRUE)
-
-        msgs_na <- parse_one_msg_list (msgs_na, block, "rssrNA")
-
-        msgs_todo <- parse_one_msg_list (msgs_todo, block, "rssrTODO")
-    }
-
-    if (length (msgs) > 0L | length (msgs_na) > 0L | length (msgs_todo))
+    if (length (msgs_rssr) > 0L | length (msgs_rssr_na) > 0L |
+        length (msgs_rssr_todo) > 0L)
     {
         txt <- "rOpenSci Statistical Software Standards"
         message (cli::rule (center = cli::col_green (txt), line_col = "green"))
     }
 
-    if (length (msgs) > 0L |
-        length (msgs_na) > 0L |
-        length (msgs_todo) > 0L) {
-
-        cli::cli_h3 ("/R files")
-
-        print_one_msg_list (msgs)
-        print_one_msg_list (msgs_na)
-        print_one_msg_list (msgs_todo)
+    if (length (msgs_rssr) > 0L) {
+        cli::cli_h3 ("@rssr tags:")
+        print_one_msg_list (msgs_rssr)
     }
 
-    msgs <- get_test_tags (test_blocks, tag = "rssr")
-    msgs_na <- get_test_tags (test_blocks, tag = "rssrNA")
-    msgs_todo <- get_test_tags (test_blocks, tag = "rssrTODO")
-
-    if (length (msgs) > 0L |
-        length (msgs_na) > 0L |
-        length (msgs_todo) > 0L) {
-
-        cli::cli_h3 ("/tests files")
-
-        print_one_msg_list (msgs)
-        print_one_msg_list (msgs_na)
-        print_one_msg_list (msgs_todo)
+    if (length (msgs_rssr_na) > 0L) {
+        cli::cli_h3 ("@rssrNA tags:")
+        print_one_msg_list (msgs_rssr_na)
     }
 
-    msgs <- get_src_tags (rcpp_blocks, base_path, tag = "rssr")
-    msgs_na <- get_src_tags (rcpp_blocks, base_path, tag = "rssrNA")
-    msgs_todo <- get_src_tags (rcpp_blocks, base_path, tag = "rssrTODO")
-
-    if (length (msgs) > 0L |
-        length (msgs_na) > 0L |
-        length (msgs_todo) > 0L) {
-
-        cli::cli_h3 ("/src files")
-
-        print_one_msg_list (msgs)
-        print_one_msg_list (msgs_na)
-        print_one_msg_list (msgs_todo)
+    if (length (msgs_rssr_todo) > 0L) {
+        cli::cli_h3 ("@rssrTODO tags:")
+        print_one_msg_list (msgs_rssr_todo)
     }
 
     return (NULL)
@@ -129,6 +99,20 @@ print_one_msg_list <- function (msgs) {
     if (length (msgs) > 0L) {
         message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
     }
+}
+
+# Collect all messages for one tag
+collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
+                             tag = "rssr") {
+
+    msgs <- list ()
+    for (block in blocks) {
+        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
+    }
+    msgs <- c (msgs, get_test_tags (test_blocks, tag = tag))
+    msgs <- c (msgs, get_src_tags (rcpp_blocks, base_path, tag = tag))
+
+    return (msgs)
 }
 
 #' process_rssr_tags
