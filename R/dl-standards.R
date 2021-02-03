@@ -193,13 +193,36 @@ rssr_standards_roxygen <- function (category = NULL,
     # remove bold/italic formatting characters
     s <- gsub ("\\*", "", s)
 
+    # nolint start -------- lines > 80 character --------
     x <- c ("#' rssr_standards",
+            "#'",
+            "#' All of the following standards initially have `@rssrTODO` tags.",
+            "#' These may be moved at any time to any other locations in your code.",
+            "#' Once addressed, please modify the tag from `@rssrTODO` to `@rssr`,",
+            "#' or `@rssrNA`, ensuring that references to every one of the following",
+            "#' standards remain somewhere within your code.",
+            "#'",
+            "#' (The above comments may be deleted at any time, but all `@rssrTODO`",
+            "#' items must remain in a block called 'rssr_standards'.)",
             "#'",
             "#' @rssrVerbose TRUE",
             "#'",
             paste0 ("#' @rssrTODO ", s),
             "#' @noRd",
             "NULL")
+
+    # Then add demo NA_standards
+    x <- c (x,
+            "",
+            "#' NA_standards",
+            "#'",
+            "#' Any non-applicable standards can have their tags changed from `@rssrTODO`",
+            "#' to `@rssrNA`, and placed together in this block, along with explanations",
+            "#' for why each of these standards have been deemed not applicable.",
+            "#' (These comments may also be deleted at any time.)",
+            "#' @noRd",
+            "NULL")
+    # nolint end
 
     writeLines (x, con = filename)
     cli::cli_alert_info (paste0 ("Roxygen2-formatted stanards written to [",
