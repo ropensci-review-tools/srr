@@ -38,36 +38,28 @@ All functions of the package are prefixed with `rssr_`. The remainder of
 this document is in two main sections. If you’re developing a package
 for submission to our peer review system, keep straight on reading. If
 you’ve been invited to review a package, you may skip the following
-section and proceed straight to the subsequent section.
-
-The first section provides explicit descriptions of how the functions of
-the `rssr` package can help developers prepare packages for submission,
-while the second section describes how the functionality of the package
-can aid reviewers in assessing submitted packages. In both cases, the
-general procedures are described in the [SSR
+section and proceed straight to the subsequent section. The general
+procedures for both developers and reviewers are described at length in
+the [SSR
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
 with this `README` intended to provide supporting technical details.
 
 ## For Package Developers
 
 People intending to develop packages for submission to our system for
-peer reviewing statistical software will need to following the following
-three general steps. The main mechanism is implemented via
-custom-developed [`roxygen2` “roclets”](https://roxygen2.r-lib.org).
-Once you’ve loaded these (as explained below), running
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
-or the equivalent
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
-will cause the roclet to scan your package’s documentation for the state
-of standards, and to summarise the result on your screen. In order to
-submit, you’ll need to document within your package code itself how and
-where you’ve addressed each of these standards. The steps to achieve
-this are:
+peer reviewing statistical software will need to follow the following
+three general steps. Note that, while the `rssr` package has a few
+functions which developers may call directly to aid their submission
+process, most functionality of this package is implemented via custom
+[`roxygen2` “roclets”](https://roxygen2.r-lib.org). The third of the
+following steps describes how to link your package with package in order
+to use these roclets.
 
 1.  Ensure the package successfully passes all
     [`autotest`](https://github.com/ropenscilabs/autotest) tests,
     including setting `test = FALSE` flags to switch off any particular
-    tests.
+    tests. For details, please see the [package documentation for
+    `autotest`](https://ropenscilabs.github.io/autotest/).
 
 2.  Decide which of our in-scope categories of statistical software best
     describe your package. The function
@@ -95,17 +87,18 @@ this are:
     Any software within one or more of these categories may be
     considered for review.
 
-3.  Enable your package to use the roclet by modifying the package’s
-    `DESCRIPTION` file so that the `Roxygen` line looks like this:
+3.  Enable your package to use the `rssr` roclets by modifying the
+    package’s `DESCRIPTION` file so that the `Roxygen` line looks like
+    this:
 
     ``` r
     Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rssr::rssr_roclet"))
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
-    this package to insert standards within your actual code. (You do
-    not need to add, import, or depend upon the `rssr` package anywhere
-    else within the `DESCRIPTION` file.)
+    this package to insert standards within your actual code. Note that
+    you do not need to add, import, or depend upon the `rssr` package
+    anywhere else within the `DESCRIPTION` file.
 
 4.  Load the `rssr` package and generate lists of standards within your
     package’s `/R` folder by running,
@@ -114,12 +107,12 @@ this are:
     `R/rssr_standards.R`, the first few lines of which will look like
     this:
 
-        ## [1] "#' rssr_standards"                                                                                                     
-        ## [2] "#'"                                                                                                                    
-        ## [3] "#' @rssrVerbose TRUE"                                                                                                  
-        ## [4] "#'"                                                                                                                    
-        ## [5] "#' @rssrTODO G1.0 Statistical Software should list at least one primary reference from published academic literature. "
-        ## [6] "#' @rssrTODO G1.1 All statistical terminology should be clarified and unambiguously defined. "
+        ## [1] "#' rssr_standards"                                                       
+        ## [2] "#'"                                                                      
+        ## [3] "#' @rssrVerbose TRUE"                                                    
+        ## [4] "#'"                                                                      
+        ## [5] "#' # All of the following standards initially have `@rssrTODO` tags."    
+        ## [6] "#' # These may be moved at any time to any other locations in your code."
 
     The file will contain a list of all standards from your nominated
     categories. This file may be renamed, and the individual items moved
@@ -154,6 +147,13 @@ this are:
     the description of the standard removed and replaced by an
     explanation of why you consider that standard not applicable to your
     software.
+
+7.  Each time you run
+    [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
+    or the equivalent
+    [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
+    the roclet will scan your package’s documentation for the state of
+    standards, and will generate a summary of the result on your screen.
 
 Note that individual standards may be moved to, and addressed in, any
 location including the directories `R/`, `src/`, or `tests/`. The
