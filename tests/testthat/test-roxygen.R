@@ -53,3 +53,51 @@ test_that("roxygen standards", {
               expect_length (standards_old, 1)
               expect_true (length (standards_new) > 100)
 })
+
+test_that ("roclet errors", {
+
+               nm <- paste0 (sample (letters, size = 7), collapse = "")
+               d <- rssr_pkg_skeleton (pkg_name = nm)
+
+               # ------1. Adding extract @rssrVerbose tag should error:
+               f <- file.path (d, "R", "test.R")
+               x <- c (readLines (f),
+                       "",
+                       "#' @rssrVerbose TRUE",
+                       "NULL")
+               writeLines (x, f)
+
+               out <- tryCatch (roxygen2::roxygenise (d),
+                                error = function (e) e)
+               expect_s3_class (out, "simpleError")
+               expect_true (grepl ("There must be only one @rssrVerbose flag",
+                                   out$message))
+
+               x <- x [1:(length (x) - 3)]
+               writeLines (x, f)
+
+               # ------2. Docs should be auto-verbose when @rssrVerbose flag is
+               # ------   removed
+               f <- file.path (d, "R", "rssr-standards.R")
+               x0 <- readLines (f)
+               x <- x0 [-grep ("@rssrVerbose", x0)]
+               writeLines (x, f)
+               x <- capture.output (
+                                    roxygen2::roxygenise (d),
+                                    type = "message"
+               )
+               expect_true (length (x) > 5) # output is verbose
+               writeLines (x0, f)
+
+               # ------3. @rssrVerbose value must be logical
+               i <- grep ("@rssrVerbose", x0)
+               x <- x0
+               x [i] <- gsub ("TRUE", "junk", x0 [i])
+               writeLines (x, f)
+               out <- tryCatch (roxygen2::roxygenise (d),
+                                error = function (e) e)
+               expect_s3_class (out, "simpleError")
+               txt <- "The @rssrVerbose tag should only have 'TRUE' or 'FALSE'"
+               expect_true (grepl (txt, out$message))
+               writeLines (x0, f)
+})
