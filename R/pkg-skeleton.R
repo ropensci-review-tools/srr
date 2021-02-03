@@ -53,6 +53,7 @@ write_r_fn <- function (d, pkg_name) {
                 "#' A test funtion",
                 "#' @rssr G1.1, G1.2, G1.3,",
                 "#' G2.0, G2.1",
+                "#' @rssrTODO S1.1 must be done here",
                 "#' @export",
                 "test_fn <- function() {",
                 "  message(\"This function does nothing\")",
@@ -76,14 +77,14 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' NA_standards",
                 "#'",
-                "#' @rssrNA And Here is S3.3 as NA plus some other stuff too.",
+                "#' @rssrNA Here is S3.3 as NA",
                 "#' @noRd",
                 "NULL",
                 "",
                 "#' rssr_standards",
                 "#'",
                 "#' @rssrVerbose TRUE",
-                "#' @rssrTODO And Here is S4.4 as TODO",
+                "#' @rssrTODO Here is S4.4 as TODO",
                 "#' @noRd",
                 "NULL")
     writeLines (rfile, con = file.path (dr, "rssr-standards.R"))
@@ -96,7 +97,7 @@ write_src_fn <- function (d) {
                 "//' src_fn",
                 "//'",
                 "//' A test C++ function",
-                "//' @rssr G3.3 With a reference to rssr standards",
+                "//' @rssr G3.3 in src directory",
                 "//' @noRd",
                 "// [[Rcpp::export]]",
                 "int test () {",
