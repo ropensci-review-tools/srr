@@ -12,7 +12,7 @@ get_roxygen_version <- function () {
 
     ip <- as.data.frame (utils::installed.packages ())
     if (!"roxygen2" %in% ip$Package)
-        return (NULL)
+        return (NULL)               # nocov
 
     return (ip$Version [ip$Package == "roxygen2"])
 }
