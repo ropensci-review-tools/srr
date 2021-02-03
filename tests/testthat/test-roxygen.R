@@ -34,6 +34,15 @@ test_that("roxygen standards", {
                            grep ("@rssr tags:", x))
 
               filename <- file.path (d, "R", "rssr-standards.R")
+              # remove DESC file from directory should error
+              desc <- file.path (d, "DESCRIPTION")
+              temp <- file.path (d, "temp")
+              chk <- file.rename (desc, temp)
+              if (chk) {
+                  expect_error (rssr_standards_roxygen (filename = filename),
+                                "This function must be called within an R package")
+                  chk <- file.rename (temp, desc)
+              }
               # writes all standards with "@rssrTODO" tags:
               rssr_standards_roxygen (category = "regression",
                                       filename = filename,
