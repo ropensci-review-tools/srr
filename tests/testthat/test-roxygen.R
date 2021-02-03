@@ -101,4 +101,46 @@ test_that ("roclet errors", {
                txt <- "The @rssrVerbose tag should only have 'TRUE' or 'FALSE'"
                expect_true (grepl (txt, out$message))
                writeLines (x0, f)
+
+               # -------4. Should not be a comma after last listed standard
+               f <- file.path (d, "R", "test.R")
+               x0 <- x <- readLines (f)
+               i1 <- grep ("@rssr", x)
+               i2 <- grep ("@export", x)
+               i <- which (seq (i) > max (i1) & seq (i) < min (i2))
+               x [i] <- paste0 (x [i], ",")
+               writeLines (x, con = f)
+               out <- tryCatch (roxygen2::roxygenise (d),
+                                error = function (e) e)
+               expect_s3_class (out, "simpleError")
+               txt <- "It appears you've got a comma after the last @rssr entry"
+               expect_true (grepl (txt, out$message))
+               writeLines (x0, f)
+
+               # --------5. Multi-line standards should end each line but last
+               # --------   with comma
+               x <- x0
+               i <- grep ("@rssr", x)
+               x [i] <- gsub (",$", "", x [i])
+               writeLines (x, con = f)
+               out <- tryCatch (roxygen2::roxygenise (d),
+                                error = function (e) e)
+               expect_s3_class (out, "simpleError")
+               txt <- "Each @rssr standard should be separated by a comma"
+               expect_true (grepl (txt, out$message))
+               writeLines (x0, f)
+
+               # --------6. @rssrNA tags should only be in a block named
+               # --------   "NA_standards"
+               f <- file.path (d, "R", "rssr-standards.R")
+               x <- x0 <- readLines (f)
+               i <- grep ("NA\\_standards", x)
+               x [i] <- "#' not_NA_standards"
+               writeLines (x, con = f)
+               out <- tryCatch (roxygen2::roxygenise (d),
+                                error = function (e) e)
+               expect_s3_class (out, "simpleError")
+               txt <- paste0 ("@rssrNA tags should only appear in a block with a ",
+                              "title of NA_standards")
+               expect_true (grepl (txt, out$message))
 })
