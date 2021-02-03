@@ -2,14 +2,13 @@ test_that("download standards", {
 
               Sys.setenv("CLIPR_ALLOW" = TRUE)
 
-              filename <- tempfile ()
-              mdname <- paste0 (filename, ".md")
-              expect_false (file.exists (mdname))
+              filename <- tempfile (fileext = ".md")
+              expect_false (file.exists (filename))
               expect_message (
                   s <- rssr_standards_checklist (c ("regression", "ml"),
                                                  filename = filename)
               )
-              expect_true (file.exists (mdname))
+              expect_true (file.exists (filename))
 
               expect_type (s, "character")
               expect_true (length (s) > 100)
@@ -17,5 +16,6 @@ test_that("download standards", {
               expect_true (any (grepl ("Regression and Supervised Learning Standards", s)))
               expect_true (any (grepl ("Machine Learning Standards", s)))
 
-              expect_identical (s, readLines (mdname))
+              expect_identical (s, readLines (filename))
+
 })
