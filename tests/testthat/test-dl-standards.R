@@ -1,5 +1,7 @@
 test_that("download standards", {
 
+              Sys.setenv("CLIPR_ALLOW" = TRUE)
+
               filename <- tempfile ()
               mdname <- paste0 (filename, ".md")
               expect_false (file.exists (mdname))
