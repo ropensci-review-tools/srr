@@ -30,8 +30,16 @@ test_that("download standards", {
               expect_true (any (grepl (txt, x)))
 
               # ------- test checklist_check: -------
+              expect_error (rssr_checklist_check (),
+                            "argument \"file\" is missing")
+              tf <- tempfile (fileext = ".txt")
+              writeLines ("blah", con = tf)
+              expect_error (rssr_checklist_check (tf),
+                            "file must be in '.md' format")
+
+              # modify start of standard: by changing one bold markdown format
+              # to single "*":
               i <- grep ("\\*\\*G", s2) [1]
-              # change one bold markdown format to single "*":
               s2 [i] <- gsub ("\\*\\*G", "\\*G", s2 [i])
               writeLines (s2, filename)
               x <- capture.output (
@@ -42,4 +50,20 @@ test_that("download standards", {
               expect_true (any (grep (txt, x)))
               expect_true (s3 [i] != s2 [i]) # file has been fixed
               expect_true (grepl ("\\*\\*G", s3 [i]))
+
+              # modify end of standard
+              i <- grep ("\\*\\*G", s2) [2]
+              j <- regexpr ("[0-9]\\*\\*", s2 [i])
+              num <- substring (s2 [i], j, j)
+              s2 [i] <- gsub (paste0 (num, "\\*\\*"),
+                              paste0 (num, "\\*"), s2 [i])
+              writeLines (s2, filename)
+              x <- capture.output (
+                  s4 <- rssr_checklist_check (filename),
+                  type = "message"
+              )
+              txt <- "file contained incorrect formatting and has been modified"
+              expect_true (any (grep (txt, x)))
+              expect_true (s4 [i] != s2 [i]) # file has been fixed
+              expect_true (grepl (paste0 (num, "\\*\\*"), s4 [i]))
 })
