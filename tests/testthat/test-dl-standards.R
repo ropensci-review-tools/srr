@@ -66,4 +66,36 @@ test_that("download standards", {
               expect_true (any (grep (txt, x)))
               expect_true (s4 [i] != s2 [i]) # file has been fixed
               expect_true (grepl (paste0 (num, "\\*\\*"), s4 [i]))
+
+              # join standards with hyphen which not NOT be within bold markers
+              s2 <- s
+              s2 [i] <- gsub (paste0 (num, "\\*\\*"),
+                              paste0 (num, "--G5.5\\*\\*"), s2 [i])
+              # The function which repairs those by re-inserting "**":
+              tmp <- fix_sequences (s2 [i], sym = "*")
+              expect_true (grepl (paste0 (num, "\\*\\*--\\*\\*G5.5"), tmp))
+              writeLines (s2, filename)
+              x <- capture.output (
+                  s5 <- rssr_checklist_check (filename),
+                  type = "message"
+              )
+              expect_identical (s5 [i], tmp)
+
+              # fix NA -> N/A
+              s2 <- s
+              s2 [i] <- paste0 (strsplit (s [i], "\\*\\*\\s") [[1]] [1],
+                                "** *NA*")
+              tmp <- fix_nas (s2 [i])
+              expect_true (grepl ("\\*\\*N\\/A\\*\\*$", tmp))
+              writeLines (s2, filename)
+              x <- capture.output (
+                  s6 <- rssr_checklist_check (filename),
+                  type = "message"
+              )
+              expect_identical (s6 [i], tmp)
+})
+
+test_that ("checklist_check", {
+               expect_error (rssr_checklist_check (),
+                             "argument \"file\" is missing")
 })
