@@ -2,17 +2,18 @@ test_that("roxygen standards", {
 
               #Sys.setenv("CLIPR_ALLOW" = TRUE)
 
-              d <- rssr_pkg_skeleton (pkg_name = "demo")
-              expect_true (file.exists (file.path (tempdir (), "demo")))
-              fp <- file.path (tempdir (), "demo", "DESCRIPTION")
+              pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+              d <- rssr_pkg_skeleton (pkg_name = pkg_name)
+              expect_true (file.exists (file.path (tempdir (), pkg_name)))
+              fp <- file.path (tempdir (), pkg_name, "DESCRIPTION")
               expect_true (file.exists (fp))
-              fp <- file.path (tempdir (), "demo", "NAMESPACE")
+              fp <- file.path (tempdir (), pkg_name, "NAMESPACE")
               expect_true (file.exists (fp))
-              fp <- file.path (tempdir (), "demo", "R")
+              fp <- file.path (tempdir (), pkg_name, "R")
               expect_true (file.exists (fp))
-              fp <- file.path (tempdir (), "demo", "src")
+              fp <- file.path (tempdir (), pkg_name, "src")
               expect_true (file.exists (fp))
-              fp <- file.path (tempdir (), "demo", "tests")
+              fp <- file.path (tempdir (), pkg_name, "tests")
               expect_true (file.exists (fp))
 
               x <- capture.output (
@@ -21,7 +22,7 @@ test_that("roxygen standards", {
                   )
 
               expect_true (length (x) > 10)
-              expect_true (length (grep ("Re-compiling demo", x)) == 1)
+              expect_true (length (grep ("Re-compiling", x)) == 1)
               txt <- "rOpenSci Statistical Software Standards"
               expect_true (length (grep (txt, x)) == 1)
               expect_true (length (grep ("@rssr tags:", x)) == 1)
