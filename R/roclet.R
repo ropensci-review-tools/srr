@@ -198,9 +198,6 @@ process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 process_rssrTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
-    if (!block_title == "rssr_standards")
-        stop ("@rssrTODO and @rssrNA tags should only appear ",
-              "in a block with a title of rssr_standards")
 
     standards <- roxygen2::block_get_tags (block, "rssrTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
