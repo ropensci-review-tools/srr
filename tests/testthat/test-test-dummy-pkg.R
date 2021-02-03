@@ -25,3 +25,14 @@ test_that("dummy package", {
               expect_true (grep ("Standards \\[S4\\.4\\]", x) [1] >
                            grep ("@rssrTODO tags:", x) [1])
 })
+
+test_that ("skeleton errors", {
+
+               pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+               d <- file.path (tempdir (), pkg_name)
+               dir.create (d)
+               writeLines ("aaa", con = file.path (d, "aaa"))
+               expect_error (
+                             s <- rssr_pkg_skeleton (pkg_name = pkg_name),
+                             paste0 ("The path \\[", d, "\\] is not empty"))
+})
