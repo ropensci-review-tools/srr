@@ -171,6 +171,7 @@ extract_standard_numbers <- function (standards) {
 process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
+    block_title <- ifelse (length (block_title) == 0L, "", block_title)
     if (!block_title == "NA_standards")
         stop ("@rssrNA tags should only appear in ",
               "a block with a title of NA_standards")
@@ -196,8 +197,6 @@ process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
 process_rssrTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    block_title <- roxygen2::block_get_tag_value (block, "title")
 
     standards <- roxygen2::block_get_tags (block, "rssrTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
