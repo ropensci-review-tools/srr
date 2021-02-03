@@ -40,7 +40,8 @@ test_that("roxygen standards", {
               chk <- file.rename (desc, temp)
               if (chk) {
                   expect_error (rssr_standards_roxygen (filename = filename),
-                                "This function must be called within an R package")
+                                paste0 ("This function must be called ",
+                                        "within an R package"))
                   chk <- file.rename (temp, desc)
               }
               # writes all standards with "@rssrTODO" tags:
@@ -54,8 +55,12 @@ test_that("roxygen standards", {
 
               todo_old <- x [(grep ("@rssrTODO", x) + 1):length (x)]
               todo_new <- x2 [(grep ("@rssrTODO", x2) + 1):length (x2)]
-              expect_length (todo_old, 1L)
-              expect_length (todo_new, 1L)
+              expect_length (todo_old, 2L)
+              expect_length (todo_new, 2L)
+
+              # get only those from the rssr-standards.R file:
+              todo_old <- grep ("rssr-standards\\.R", todo_old, value = TRUE)
+              todo_new <- grep ("rssr-standards\\.R", todo_new, value = TRUE)
 
               expect_true (nchar (todo_new) > nchar (todo_old))
               standards_old <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]", todo_old) [[1]]
@@ -114,9 +119,10 @@ test_that ("roclet errors", {
                # -------4. Should not be a comma after last listed standard
                f <- file.path (d, "R", "test.R")
                x0 <- x <- readLines (f)
-               i1 <- grep ("@rssr", x)
-               i2 <- grep ("@export", x)
-               i <- which (seq (i) > max (i1) & seq (i) < min (i2))
+               i1 <- grep ("@rssr\\s", x)
+               i2 <- grep ("@rssrTODO", x)
+               i <- which (seq_along (x0) > max (i1) &
+                           seq_along (x0) < min (i2))
                x [i] <- paste0 (x [i], ",")
                writeLines (x, con = f)
                out <- tryCatch (roxygen2::roxygenise (d),
@@ -129,7 +135,7 @@ test_that ("roclet errors", {
                # --------5. Multi-line standards should end each line but last
                # --------   with comma
                x <- x0
-               i <- grep ("@rssr", x)
+               i <- grep ("@rssr\\s", x)
                x [i] <- gsub (",$", "", x [i])
                writeLines (x, con = f)
                out <- tryCatch (roxygen2::roxygenise (d),
@@ -149,7 +155,7 @@ test_that ("roclet errors", {
                out <- tryCatch (roxygen2::roxygenise (d),
                                 error = function (e) e)
                expect_s3_class (out, "simpleError")
-               txt <- paste0 ("@rssrNA tags should only appear in a block with a ",
-                              "title of NA_standards")
+               txt <- paste0 ("@rssrNA tags should only appear in a ",
+                              "block with a title of NA_standards")
                expect_true (grepl (txt, out$message))
 })
