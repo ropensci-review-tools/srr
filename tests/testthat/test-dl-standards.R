@@ -18,4 +18,10 @@ test_that("download standards", {
 
               expect_identical (s, readLines (filename))
 
+              x <- capture.output (
+                  s2 <- rssr_checklist_check (filename),
+                  type = "message"
+              )
+              expect_identical (s, s2)
+              expect_true (any (grepl ("No formatting issues found in file", x)))
 })
