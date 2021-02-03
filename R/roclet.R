@@ -37,8 +37,8 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
                                        rcpp_blocks, tag = "rssrTODO")
 
     if (length (msgs_rssr) > 0L | length (msgs_rssr_na) > 0L |
-        length (msgs_rssr_todo) > 0L)
-    {
+        length (msgs_rssr_todo) > 0L) {
+
         txt <- "rOpenSci Statistical Software Standards"
         message (cli::rule (center = cli::col_green (txt), line_col = "green"))
     }
