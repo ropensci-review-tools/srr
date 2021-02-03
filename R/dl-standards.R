@@ -179,9 +179,9 @@ rssr_standards_roxygen <- function (category = NULL,
     filename <- file.path (loc, "R", basename (filename))
 
     if (!overwrite & interactive () & file.exists (filename)) {
-        x <- readline ("Overwrite current file (y/n)? ")
-        if (tolower (substring (x, 1, 1) != "y"))
-            stop ("Okay, we'll stop there")
+        x <- readline ("Overwrite current file (y/n)? ")        # nocov
+        if (tolower (substring (x, 1, 1) != "y"))               # nocov
+            stop ("Okay, we'll stop there")                     # nocov
     }
 
     s <- get_standards_checklists (category = category)
