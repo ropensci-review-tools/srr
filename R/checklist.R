@@ -126,12 +126,14 @@ fix_nas <- function (x, sym = "*") {
                            x [index])
 
     # replace single end symbol with double
-    regex <- paste0 ("\\", sym, "N/A\\", sym, "\\s")
+    regex <- paste0 ("\\", sym, "N\\/A\\", sym, "(\\s|$)")
     index <- grep (regex, x)
-    if (length (index) > 0)
+    if (length (index) > 0) {
         x [index] <- gsub (regex,
                            paste0 (sym, "N/A", sym, sym, " "),
                            x [index])
+        x [index] <- gsub ("\\s$", "", x [index])
+    }
 
     return (x)
 }
