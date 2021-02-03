@@ -153,7 +153,7 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
 # extract the actual standards numbers from arbitrary text strings:
 extract_standard_numbers <- function (standards) {
 
-    gptn <- "[A-Z]+[0-9]+(\\.[0-9]+)?[a-z]?(\\s||\\n\\*)"
+    gptn <- "[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?(\\s||\\n\\*)"
     snum <- lapply (standards, function (i) {
                      res <- gregexpr (gptn, i) [[1]]
                      std_start <- as.integer (res)
