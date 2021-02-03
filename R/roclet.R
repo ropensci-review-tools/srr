@@ -125,7 +125,7 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
     standards <- roxygen2::block_get_tag_value (block, "rssr")
     if (grepl ("\\n", standards)) {
         standards <- strsplit (standards, "\\n") [[1]]
-        has_commas <- grepl ("\\,", standards)
+        has_commas <- grepl ("\\,$", standards)
         last_entry <- has_commas [length (has_commas)]
         has_commas <- has_commas [-length (has_commas)]
         if (!all (has_commas))

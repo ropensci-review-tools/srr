@@ -12,7 +12,7 @@ test_that("dummy package", {
               x <- capture.output (roxygen2::roxygenise (d), type = "message")
 
               expect_true (any (grepl ("@rssr tags:", x)))
-              expect_true (any (grepl ("Standards \\[G1\\.1\\]", x)))
+              expect_true (any (grepl ("Standards \\[G1\\.1,", x)))
 
               expect_true (any (grepl ("@rssrNA tags:", x)))
               expect_true (any (grepl ("Standards \\[S3\\.3\\]", x)))

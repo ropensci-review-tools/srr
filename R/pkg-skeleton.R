@@ -51,7 +51,8 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' test_fn",
                 "#' A test funtion",
-                "#' @rssr G1.1",
+                "#' @rssr G1.1, G1.2, G1.3,",
+                "#' G2.0, G2.1",
                 "#' @export",
                 "test_fn <- function() {",
                 "  message(\"This function does nothing\")",
