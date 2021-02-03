@@ -4,7 +4,11 @@
 \alias{rssr_standards_roxygen}
 \title{rssr_standards_roxygen}
 \usage{
-rssr_standards_roxygen(category = NULL, filename = "rssr-standards.R")
+rssr_standards_roxygen(
+  category = NULL,
+  filename = "rssr-standards.R",
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{category}{One of the names of files given in the directory contents of
@@ -13,6 +17,9 @@ each of which is ultimately formatted into a sub-section of the standards.}
 
 \item{filename}{Name of 'R' source file in which to write
 \pkg{roxygen2}-formatted lists of standards.}
+
+\item{overwrite}{If \code{FALSE} (default) and \code{filename} already exists, a dialog
+will ask whether file should be overwritten.}
 }
 \value{
 Nothing

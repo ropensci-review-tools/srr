@@ -158,10 +158,13 @@ rssr_standards_checklist <- function (category = NULL, filename = NULL) {
 #' @inheritParams rssr_standards_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
+#' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
+#' will ask whether file should be overwritten.
 #' @return Nothing
 #' @export
 rssr_standards_roxygen <- function (category = NULL,
-                                    filename = "rssr-standards.R") {
+                                    filename = "rssr-standards.R",
+                                    overwrite = FALSE) {
 
     loc <- here::here ()
     if (dirname (filename) != ".") {
@@ -175,7 +178,7 @@ rssr_standards_roxygen <- function (category = NULL,
 
     filename <- file.path (loc, "R", basename (filename))
 
-    if (interactive () & file.exists (filename)) {
+    if (!overwrite & interactive () & file.exists (filename)) {
         x <- readline ("Overwrite current file (y/n)? ")
         if (tolower (substring (x, 1, 1) != "y"))
             stop ("Okay, we'll stop there")
