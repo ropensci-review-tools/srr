@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rssr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.087</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.089</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@
 <h2 class="hasAnchor">
 <a href="#for-package-developers" class="anchor"></a>For Package Developers</h2>
 <p>People intending to develop packages for submission to our system for peer reviewing statistical software will need to following the following three general steps. The main mechanism is implemented via custom-developed <a href="https://roxygen2.r-lib.org"><code>roxygen2</code> “roclets”</a>. Once you’ve loaded these (as explained below), running <a href="https://devtools.r-lib.org/reference/document.html"><code>devtools::document()</code></a> or the equivalent <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>, will cause the roclet to scan your package’s documentation for the state of standards, and to summarise the result on your screen. In order to submit, you’ll need to document within your package code itself how and where you’ve addressed each of these standards. The steps to achieve this are:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li><p>Ensure the package successfully passes all <a href="https://github.com/ropenscilabs/autotest"><code>autotest</code></a> tests, including setting <code>test = FALSE</code> flags to switch off any particular tests.</p></li>
 <li>
 <p>Decide which of our in-scope categories of statistical software best describe your package. The function <a href="https://ropenscilabs.github.io/statistical-software-review/reference/rssr_available_categories.html"><code>rssr_available_categories()</code></a> provides a list of currently developed categories for which standards have been developed, along with links to the online standards for each category:</p>
