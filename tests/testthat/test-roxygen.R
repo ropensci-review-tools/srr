@@ -25,13 +25,13 @@ test_that("roxygen standards", {
               expect_true (length (grep ("Re-compiling", x)) == 1)
               txt <- "rOpenSci Statistical Software Standards"
               expect_true (length (grep (txt, x)) == 1)
-              expect_true (length (grep ("@rssr tags:", x)) == 1)
-              expect_true (length (grep ("@rssrNA tags:", x)) == 1)
-              expect_true (length (grep ("@rssrTODO tags:", x)) == 1)
-              expect_true (grep ("@rssrTODO tags:", x) >
-                           grep ("@rssrNA tags:", x))
-              expect_true (grep ("@rssrNA tags:", x) >
-                           grep ("@rssr tags:", x))
+              expect_true (length (grep ("@rssr standards:", x)) == 1)
+              expect_true (length (grep ("@rssrNA standards:", x)) == 1)
+              expect_true (length (grep ("@rssrTODO standards:", x)) == 1)
+              expect_true (grep ("@rssrTODO standards:", x) >
+                           grep ("@rssrNA standards:", x))
+              expect_true (grep ("@rssrNA standards:", x) >
+                           grep ("@rssr standards:", x))
 
               filename <- file.path (d, "R", "rssr-standards.R")
               # remove DESC file from directory should error

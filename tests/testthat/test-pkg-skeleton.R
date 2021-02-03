@@ -11,19 +11,19 @@ test_that("dummy package", {
 
               x <- capture.output (roxygen2::roxygenise (d), type = "message")
 
-              expect_true (any (grepl ("@rssr tags:", x)))
-              expect_true (any (grepl ("Standards \\[G1\\.1,", x)))
+              expect_true (any (grepl ("@rssr standards:", x)))
+              expect_true (any (grepl ("\\s\\*\\s\\[G1\\.1,", x)))
 
-              expect_true (any (grepl ("@rssrNA tags:", x)))
-              expect_true (any (grepl ("Standards \\[S3\\.3\\]", x)))
+              expect_true (any (grepl ("@rssrNA standards:", x)))
+              expect_true (any (grepl ("\\s\\*\\s\\[S3\\.3\\]", x)))
               # S3.3 is an @rssrNA tag
-              expect_true (grep ("Standards \\[S3\\.3\\]", x) [1] >
-                           grep ("@rssrNA tags:", x) [1])
+              expect_true (grep ("\\s\\*\\s\\[S3\\.3\\]", x) [1] >
+                           grep ("@rssrNA standards:", x) [1])
 
-              expect_true (any (grepl ("@rssrTODO tags:", x)))
-              expect_true (any (grepl ("Standards \\[S4\\.4\\]", x)))
-              expect_true (grep ("Standards \\[S4\\.4\\]", x) [1] >
-                           grep ("@rssrTODO tags:", x) [1])
+              expect_true (any (grepl ("@rssrTODO standards:", x)))
+              expect_true (any (grepl ("\\s\\*\\s\\[S4\\.4\\]", x)))
+              expect_true (grep ("\\s\\*\\s\\[S4\\.4\\]", x) [1] >
+                           grep ("@rssrTODO standards:", x) [1])
 })
 
 test_that ("skeleton errors", {

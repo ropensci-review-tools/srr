@@ -44,17 +44,17 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     }
 
     if (length (msgs_rssr) > 0L) {
-        cli::cli_h3 ("@rssr tags:")
+        cli::cli_h3 ("@rssr standards:")
         print_one_msg_list (msgs_rssr)
     }
 
     if (length (msgs_rssr_na) > 0L) {
-        cli::cli_h3 ("@rssrNA tags:")
+        cli::cli_h3 ("@rssrNA standards:")
         print_one_msg_list (msgs_rssr_na)
     }
 
     if (length (msgs_rssr_todo) > 0L) {
-        cli::cli_h3 ("@rssrTODO tags:")
+        cli::cli_h3 ("@rssrTODO standards:")
         print_one_msg_list (msgs_rssr_todo)
     }
 
@@ -140,7 +140,7 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("Standards [", paste0 (snum, collapse = ", "), "]")
+    msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
     if (fn_name)
         msg <- paste0 (msg, " in function '", func_name, "()'")
     msg <- paste0 (msg, " on line#", block_line,
@@ -184,7 +184,7 @@ process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("NA Standards [", paste0 (snum, collapse = ", "),
+    msg <- paste0 ("[", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
                    " of file [",
                    file.path (dir, basename (block_backref)), "]")
@@ -206,7 +206,7 @@ process_rssrTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("TODO Standards [", paste0 (snum, collapse = ", "),
+    msg <- paste0 ("[", paste0 (snum, collapse = ", "),
                    "] on line#", block_line,
                    " of file [",
                    file.path (dir, basename (block_backref)), "]")
@@ -275,10 +275,9 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
             snum <- extract_standard_numbers (tag$val)
 
             this_src <- file.path ("src", basename (this_src))
-            msgs <- c (msgs, paste0 ("Standards [",
-                                     paste0 (snum, collapse = ", "),
+            msgs <- c (msgs, paste0 ("[", paste0 (snum, collapse = ", "),
                                      "] in function '", this_fn,
-                                     "# on line#", line_num, " of file [",
+                                     "()' on line#", line_num, " of file [",
                                      file.path ("src", basename (this_src)),
                                      "]"))
 
