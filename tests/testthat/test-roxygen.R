@@ -53,8 +53,9 @@ test_that("roxygen standards", {
                   type = "message"
                   )
 
-              todo_old <- x [(grep ("@rssrTODO", x) + 1):length (x)]
-              todo_new <- x2 [(grep ("@rssrTODO", x2) + 1):length (x2)]
+              # -1 at end because they finish with a cli::rule line
+              todo_old <- x [(grep ("@rssrTODO", x) + 1):(length (x) - 1)]
+              todo_new <- x2 [(grep ("@rssrTODO", x2) + 1):(length (x2) - 1)]
               expect_length (todo_old, 2L)
               expect_length (todo_new, 2L)
 
