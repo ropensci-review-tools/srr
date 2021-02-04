@@ -122,7 +122,6 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
 process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     func_name <- block$object$alias
-    #standards <- roxygen2::block_get_tag_value (block, "rssr")
     standards <- roxygen2::block_get_tags (block, "rssr")
     standards <- unlist (lapply (standards, function (i) i$val))
     # function to ensure first of any multi line standards ends with comma, and
