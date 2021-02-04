@@ -127,6 +127,13 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
 process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     func_name <- block$object$alias
+
+    block_title <- roxygen2::block_get_tag_value (block, "title")
+    block_title <- ifelse (is.null (block_title), "", block_title)
+    if (block_title == "NA_standards")
+        stop ("An NA_standards block should only contain '@rssrNA' tags,",
+              " and no @rssr tags.")
+
     standards <- roxygen2::block_get_tags (block, "rssr")
     standards <- unlist (lapply (standards, function (i) i$val))
     # function to ensure first of any multi line standards ends with comma, and
