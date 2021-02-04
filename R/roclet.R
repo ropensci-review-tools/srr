@@ -36,8 +36,10 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     msgs_rssr_todo <- collect_one_tag (base_path, blocks, test_blocks,
                                        rcpp_blocks, tag = "rssrTODO")
 
-    if (length (msgs_rssr) > 0L | length (msgs_rssr_na) > 0L |
-        length (msgs_rssr_todo) > 0L) {
+    has_output <- (length (msgs_rssr) > 0L |
+                   length (msgs_rssr_na) > 0L |
+                   length (msgs_rssr_todo) > 0L)
+    if (has_output) {
 
         txt <- "rOpenSci Statistical Software Standards"
         message (cli::rule (center = cli::col_green (txt), line_col = "green"))
@@ -56,6 +58,9 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     if (length (msgs_rssr_todo) > 0L) {
         cli::cli_h3 ("@rssrTODO standards:")
         print_one_msg_list (msgs_rssr_todo)
+    }
+    if (has_output) {
+        message (cli::rule (line_col = "green"))
     }
 
     return (NULL)
