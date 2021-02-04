@@ -135,10 +135,11 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
             if (!all (has_commas))
                 stop ("Each @rssr standard should be separated by a comma.")
             if (last_entry)
-                stop ("It appears you've got a comma after the last @rssr entry")
+                stop ("It appears you've got a comma after ",
+                      "the last @rssr entry")
         }
     }
-    chk <- lapply (standards, chk_commas)
+    chk <- lapply (standards, chk_commas) # nolint - unused variable
     #standards <- unlist (strsplit (standards, ","))
 
     snum <- extract_standard_numbers (standards)
