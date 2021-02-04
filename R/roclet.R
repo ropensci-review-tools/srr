@@ -139,7 +139,7 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
         }
     }
     chk <- lapply (standards, chk_commas)
-    standards <- unlist (strsplit (standards, ","))
+    #standards <- unlist (strsplit (standards, ","))
 
     snum <- extract_standard_numbers (standards)
 
