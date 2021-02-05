@@ -27,14 +27,17 @@ roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
     rcpp_blocks <- blocks [which (rcpp)]
     blocks <- blocks [which (!rcpp)]
     test_blocks <- get_test_blocks (base_path)
+    readme_blocks <- get_readme_blocks (base_path)
+
+    blocks <- list (R = blocks,
+                    src = rcpp_blocks,
+                    tests = test_blocks,
+                    readme = readme_blocks)
 
     # ------ @rssr tags:
-    msgs_rssr <- collect_one_tag (base_path, blocks, test_blocks, rcpp_blocks,
-                                  tag = "rssr")
-    msgs_rssr_na <- collect_one_tag (base_path, blocks, test_blocks,
-                                     rcpp_blocks, tag = "rssrNA")
-    msgs_rssr_todo <- collect_one_tag (base_path, blocks, test_blocks,
-                                       rcpp_blocks, tag = "rssrTODO")
+    msgs_rssr <- collect_one_tag (base_path, blocks, tag = "rssr")
+    msgs_rssr_na <- collect_one_tag (base_path, blocks, tag = "rssrNA")
+    msgs_rssr_todo <- collect_one_tag (base_path, blocks, tag = "rssrTODO")
 
     has_output <- (length (msgs_rssr) > 0L |
                    length (msgs_rssr_na) > 0L |
@@ -87,6 +90,23 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
+get_readme_blocks <- function (base_path) {
+
+    blocks <- NULL
+
+    f <- file.path (base_path, "README.Rmd")
+    if (file.exists (f)) {
+        fout <- tempfile ()
+        rcpp_parse_rmd (f, fout)
+        blocks <- roxygen2::parse_file (fout, env = NULL)
+        blocks <- lapply (blocks, function (i) {
+                              i$file <- f
+                              return (i)    })
+    }
+
+    return (blocks)
+}
+
 parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
@@ -111,11 +131,12 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
                              tag = "rssr") {
 
     msgs <- list ()
-    for (block in blocks) {
+    for (block in blocks$R) {
         msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
     }
-    msgs <- c (msgs, get_test_tags (test_blocks, tag = tag))
-    msgs <- c (msgs, get_src_tags (rcpp_blocks, base_path, tag = tag))
+    msgs <- c (msgs, get_other_tags (blocks$tests, tag = tag, dir = "tests"))
+    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
+    msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
 
     return (msgs)
 }
@@ -321,9 +342,9 @@ get_test_blocks <- function (base_path) {
     return (blocks)
 }
 
-get_test_tags <- function (blocks, tag = "rssr") {
+get_other_tags <- function (blocks, tag = "rssr", dir = "tests") {
 
-    msgs <- list () # nolint
+    msgs <- list ()
 
     for (block in blocks) {
 
@@ -331,7 +352,7 @@ get_test_tags <- function (blocks, tag = "rssr") {
                                     block,
                                     tag = tag,
                                     fn_name = FALSE,
-                                    dir = "tests")
+                                    dir = dir)
 
     }
 

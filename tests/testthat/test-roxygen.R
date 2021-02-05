@@ -56,8 +56,8 @@ test_that("roxygen standards", {
               # -1 at end because they finish with a cli::rule line
               todo_old <- x [(grep ("@rssrTODO", x) + 1):(length (x) - 1)]
               todo_new <- x2 [(grep ("@rssrTODO", x2) + 1):(length (x2) - 1)]
-              expect_length (todo_old, 2L)
-              expect_length (todo_new, 2L)
+              expect_length (todo_old, 3L)
+              expect_length (todo_new, 3L)
 
               # get only those from the rssr-standards.R file:
               todo_old <- grep ("rssr-standards\\.R", todo_old, value = TRUE)
