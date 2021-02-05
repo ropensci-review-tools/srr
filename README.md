@@ -159,12 +159,33 @@ roclets.
     the roclet will scan your package’s documentation for the state of
     standards, and will generate a summary of the result on your screen.
 
-Note that individual standards may be moved to, and addressed in, any
-location including the directories `R/`, `src/`, or `tests/`. The
-[`roxygen2` roclet](https://roxygen2.r-lib.org) associated with this
-package is able to parse the various `@rssr` tags in all of these
-locations. Note, however, that tags in `src/` directories are only able
-to be parsed form C++ files compiled with
-[`Rcpp`](https://cran.r-project.org/package=Rcpp). Equivalent parsing of
-C++ packages compiled with [`cpp11`](https://cpp11.r-lib.org) should
-hopefully soon be possible.
+To help developers understand how to use these roclets, this package
+includes a function,
+[`rssr_pkg_skeleton()`](https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html),
+which will generate a skeleton of a package with several
+[`roxygen2`](https://roxygen2.r-lib.org) tags inserted throughout the
+code. This function returns the directory where the skeleton package has
+been created, so running the following two lines will illustrate the
+roclets in action:
+
+``` r
+d <- rssr_pkg_skeleton ()
+roxygen2::roxygenise (d)
+```
+
+Note that the skeleton package also includes C++ code in a `src/`
+directory, so will be compiled the first time your run
+[`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)).
+Running a second time will generate cleaner output from the `rssr`
+roclets only. The tags included in
+[`roxygen2`](https://roxygen2.r-lib.org/) blocks in this skeleton
+package may be modified, moved, copied, and changed in any way you like
+to help you understand how the roclets work. Simply play around with the
+[`roxygen2`](https://roxygen2.r-lib.org/) lines and run
+[`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html))
+each time to see the effect.
+
+Individual standards may be moved to, and addressed in, any location
+including the directories `R/`, `src/`, or `tests/`. The [`roxygen2`
+roclet](https://roxygen2.r-lib.org) associated with this package is able
+to parse the various `@rssr` tags in all of these locations.
