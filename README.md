@@ -11,9 +11,9 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 # rssr
 
-[**r**OpenSci](https://ropensci.org) **S**tatistical **S**software
+[**r**OpenSci](https://ropensci.org) **S**tatistical **S**oftware
 **R**eview. This is an R package with functions to help those developing
-and reviewing package submitted to rOpenSci’s system for [Statistical
+and reviewing packages submitted to rOpenSci’s system for [Statistical
 Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of
@@ -25,7 +25,7 @@ This package can be installed with,
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("ropenscilabs/statistical-software-review")
+remotes::install_github("ropenscilabs/rssr")
 ```
 
 and loaded for use with,
@@ -38,9 +38,8 @@ All functions of the package are prefixed with `rssr_`. The remainder of
 this document is in two main sections. If you’re developing a package
 for submission to our peer review system, keep straight on reading. If
 you’ve been invited to review a package, you may skip the following
-section and proceed straight to the subsequent section. The general
-procedures for both developers and reviewers are described at length in
-the [SSR
+section and just read the subsequent section. The general procedures for
+both developers and reviewers are described at length in the [SSR
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
 with this `README` intended to provide supporting technical details.
 
@@ -48,12 +47,12 @@ with this `README` intended to provide supporting technical details.
 
 People intending to develop packages for submission to our system for
 peer reviewing statistical software will need to follow the following
-three general steps. Note that, while the `rssr` package has a few
-functions which developers may call directly to aid their submission
-process, most functionality of this package is implemented via custom
-[`roxygen2` “roclets”](https://roxygen2.r-lib.org). The third of the
-following steps describes how to link your package with package in order
-to use these roclets.
+general steps. Note that, while the `rssr` package has a few functions
+which developers may call directly to aid their submission process, most
+functionality of this package is implemented via custom [`roxygen2`
+“roclets”](https://roxygen2.r-lib.org). The third of the following steps
+describes how to link your package with `rssr` in order to use these
+roclets.
 
 1.  Ensure the package successfully passes all
     [`autotest`](https://github.com/ropenscilabs/autotest) tests,
@@ -96,9 +95,9 @@ to use these roclets.
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
-    this package to insert standards within your actual code. Note that
-    you do not need to add, import, or depend upon the `rssr` package
-    anywhere else within the `DESCRIPTION` file.
+    this package to process standards as documented within your actual
+    code. Note that you do not need to add, import, or depend upon the
+    `rssr` package anywhere else within the `DESCRIPTION` file.
 
 4.  Load the `rssr` package and generate lists of standards within your
     package’s `/R` folder by running,
@@ -107,12 +106,12 @@ to use these roclets.
     `R/rssr_standards.R`, the first few lines of which will look like
     this:
 
-        ## [1] "#' rssr_standards"                                                       
-        ## [2] "#'"                                                                      
-        ## [3] "#' @rssrVerbose TRUE"                                                    
-        ## [4] "#'"                                                                      
-        ## [5] "#' # All of the following standards initially have `@rssrTODO` tags."    
-        ## [6] "#' # These may be moved at any time to any other locations in your code."
+        ## [1] "#' rssr_standards"                                                      
+        ## [2] "#'"                                                                     
+        ## [3] "#' All of the following standards initially have `@rssrTODO` tags."     
+        ## [4] "#' These may be moved at any time to any other locations in your code." 
+        ## [5] "#' Once addressed, please modify the tag from `@rssrTODO` to `@rssr`,"  
+        ## [6] "#' or `@rssrNA`, ensuring that references to every one of the following"
 
     The file will contain a list of all standards from your nominated
     categories. This file may be renamed, and the individual items moved
@@ -138,7 +137,7 @@ to use these roclets.
     actual standard should be changed to provide a brief description of
     how that standard has been met. Tags for one particular standard may
     be repeated in multiple places within your code, and we encourage
-    locating an `@rssr` tag reference to a particular standard at all
+    locating an `@rssr` tag which refers to a particular standard at all
     locations which directly address that standard.
 
 6.  Alternatively, any standards which you consider not applicable to
@@ -146,7 +145,12 @@ to use these roclets.
     document, with their tag changed from `@rssrTODO` to `@rssrNA`, and
     the description of the standard removed and replaced by an
     explanation of why you consider that standard not applicable to your
-    software.
+    software. These `@rssrNA` tags should be collected together within a
+    single `roxygen2` block with a title of `NA_standards`. The
+    [`rssr_standards_roxygen()`](https://ropenscilabs.github.io/statistical-software-review/reference/rssr_standards_roxygen.html)
+    function generates a blank template for this block. Any
+    non-applicable standards can then just be moved into this block,
+    with their `@rssrTODO` tags changed to `@rssrNA`
 
 7.  Each time you run
     [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
@@ -163,4 +167,4 @@ locations. Note, however, that tags in `src/` directories are only able
 to be parsed form C++ files compiled with
 [`Rcpp`](https://cran.r-project.org/package=Rcpp). Equivalent parsing of
 C++ packages compiled with [`cpp11`](https://cpp11.r-lib.org) should
-hopefully [soon be possible](https://github.com/r-lib/cpp11/issues/147).
+hopefully soon be possible.
