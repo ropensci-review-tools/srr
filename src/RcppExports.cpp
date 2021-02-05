@@ -6,19 +6,19 @@
 using namespace Rcpp;
 
 // rcpp_parse_rmd
-Rcpp::CharacterVector rcpp_parse_rmd(const Rcpp::CharacterVector rmd);
-RcppExport SEXP _rssr_rcpp_parse_rmd(SEXP rmdSEXP) {
+void rcpp_parse_rmd(const std::string filename, const std::string tempfile);
+RcppExport SEXP _rssr_rcpp_parse_rmd(SEXP filenameSEXP, SEXP tempfileSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::CharacterVector >::type rmd(rmdSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_parse_rmd(rmd));
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< const std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type tempfile(tempfileSEXP);
+    rcpp_parse_rmd(filename, tempfile);
+    return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rssr_rcpp_parse_rmd", (DL_FUNC) &_rssr_rcpp_parse_rmd, 1},
+    {"_rssr_rcpp_parse_rmd", (DL_FUNC) &_rssr_rcpp_parse_rmd, 2},
     {NULL, NULL, 0}
 };
 
