@@ -121,7 +121,7 @@ write_readme <- function (d, pkg_name) {
                 "This `README.Rmd` file is here to demonstrate how to embed `rssr` roclet tags.",
                 "These tags need to be within dedicated *code chunks*, like the following:",
                 "",
-                "```{r rssr-tags, eval = FALSE}",
+                "```{r rssr-tags, eval = FALSE, echo = FALSE}",
                 "#' roxygen_block_name",
                 "#'",
                 "#' (Add some text if you like)",
@@ -131,7 +131,8 @@ write_readme <- function (d, pkg_name) {
                 "```",
                 "",
                 "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,",
-                "and nothing else at all.")
+                "and nothing else at all. Please change the `eval` and `echo` parameters to",
+                "see what happens when you knit the document.")
 
     writeLines (rfile, con = file.path (d, "README.Rmd"))
 }

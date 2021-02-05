@@ -1,6 +1,6 @@
 Package: rssr
 Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.114
+Version: 0.0.0.115
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
