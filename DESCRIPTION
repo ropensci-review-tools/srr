@@ -1,6 +1,6 @@
 Package: rssr
 Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.109
+Version: 0.0.0.110
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -21,6 +21,8 @@ Imports:
     roxygen2
 Suggests: 
     testthat (>= 3.0.0)
+LinkingTo:
+    Rcpp
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

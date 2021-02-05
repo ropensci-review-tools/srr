@@ -8,7 +8,7 @@
   "description": "Companion package to 'rOpenSci' statistical\n    software review project.",
   "name": "rssr: 'rOpenSci' Statistical Software Review",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.0.109",
+  "version": "0.0.0.110",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -127,7 +127,7 @@
   ],
   "codeRepository": "https://github.com/ropenscilabs/rssr",
   "readme": "https://github.com/ropenscilabs/rssr/blob/master/README.md",
-  "fileSize": "90.653KB",
+  "fileSize": "668.165KB",
   "issueTracker": "https://github.com/ropenscilabs/rssr/issues",
   "contIntegration": "https://codecov.io/gh/ropenscilabs/rssr",
   "developmentStatus": "https://www.repostatus.org/#concept"
