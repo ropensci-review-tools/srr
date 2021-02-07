@@ -1,0 +1,27 @@
+---
+title: "rssr"
+author: 
+  - "Mark Padgham"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: true
+        toc_float: true
+        number_sections: false
+        theme: flatly
+vignette: >
+  %\VignetteIndexEntry{1. osmdata}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## 1. Introduction
+
+[**r**OpenSci](https://ropensci.org) **S**tatistical **S**oftware **R**eview.
+This is an R package with functions to help those developing and reviewing
+packages submitted to rOpenSci's system for [Statistical Software
+Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
+The functions are mostly intended to ease alignment and assessment of software
+against the standards detailed in the [main project
+book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
+(from here on referred to as the "SSR Book").
