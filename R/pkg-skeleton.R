@@ -51,9 +51,9 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' test_fn",
                 "#' A test funtion",
-                "#' @rssr G1.1, G1.2, G1.3,",
-                "#' G2.0, G2.1",
-                "#' @rssrTODO S1.1 must be done here",
+                "#' @rssr {G1.1, G1.2, G1.3} and some text",
+                "#' @rssr {G2.0, G2.1}",
+                "#' @rssrTODO {S1.1} must be done here",
                 "#' @export",
                 "test_fn <- function() {",
                 "  message(\"This function does nothing\")",
@@ -77,14 +77,16 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' NA_standards",
                 "#'",
-                "#' @rssrNA Here is S3.3 as NA",
+                "#' @rssrNA {S3.3} is not applicable",
                 "#' @noRd",
                 "NULL",
                 "",
                 "#' rssr_standards",
                 "#'",
                 "#' @rssrVerbose TRUE",
-                "#' @rssrTODO Here is S4.4 as TODO",
+                "#' @rssrTODO Here is {S4.4} as TODO, noting that text can",
+                "#' precede the standard number, as long as standards are",
+                "#' given within the first set of square brackets.",
                 "#' @noRd",
                 "NULL")
     writeLines (rfile, con = file.path (dr, "rssr-standards.R"))
@@ -97,7 +99,7 @@ write_src_fn <- function (d) {
                 "//' src_fn",
                 "//'",
                 "//' A test C++ function",
-                "//' @rssr G3.3 in src directory",
+                "//' @rssr {G3.3} in src directory",
                 "//' @noRd",
                 "// [[Rcpp::export]]",
                 "int test () {",
@@ -112,6 +114,7 @@ write_src_fn <- function (d) {
 
 write_readme <- function (d, pkg_name) {
 
+    # nolint start --- lines > 80 characters
     rfile <- c (paste0 ("# ", pkg_name),
                 "",
                 "This is a skeleton of an [`rssr`](https://github.com/ropenscilabs/rssr) package,",
@@ -126,13 +129,14 @@ write_readme <- function (d, pkg_name) {
                 "#'",
                 "#' (Add some text if you like)",
                 "#'",
-                "#' @rssr G1.1 Here is a reference to a standard",
-                "#' @rssrTODO G1.2 And here is a reference to a standard yet to be addressed",
+                "#' @rssr {G1.1} Here is a reference to a standard",
+                "#' @rssrTODO {G1.2} And here is a reference to a standard yet to be addressed",
                 "```",
                 "",
                 "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,",
                 "and nothing else at all. Please change the `eval` and `echo` parameters to",
                 "see what happens when you knit the document.")
+    # nolint end
 
     writeLines (rfile, con = file.path (d, "README.Rmd"))
 }
@@ -158,7 +162,7 @@ write_test_files <- function (d, pkg_name) {
         dir.create (dt, recursive = TRUE)
     writeLines (tfile, con = file.path (d, "tests", "testthat.R"))
 
-    tfile <- c ("#' @rssr G2.2 is addressed here",
+    tfile <- c ("#' @rssr {G2.2} is addressed here",
                 "test_that(\"dummy test\", {",
                 "    expect_true (TRUE)",
                 "})")
