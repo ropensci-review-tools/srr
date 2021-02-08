@@ -1,6 +1,6 @@
 LFILE = rssr
 
-all: knith open 
+all: knith
 
 knith: $(LFILE).Rmd
 	echo "rmarkdown::render('$(LFILE).Rmd',output_file='$(LFILE).html')" | R --no-save -q

@@ -1,6 +1,6 @@
 Package: rssr
 Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.119
+Version: 0.0.0.121
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -20,7 +20,9 @@ Imports:
     Rcpp,
     roxygen2
 Suggests: 
+    fs,
     knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 LinkingTo:
     Rcpp

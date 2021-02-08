@@ -15,13 +15,39 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## 1. Introduction
-
-[**r**OpenSci](https://ropensci.org) **S**tatistical **S**oftware **R**eview.
-This is an R package with functions to help those developing and reviewing
-packages submitted to rOpenSci's system for [Statistical Software
+`rssr` stands for [**r**OpenSci](https://ropensci.org) **S**tatistical
+**S**oftware **R**eview, and is an R package with functions to help those
+developing and reviewing packages submitted to rOpenSci's system for
+[Statistical Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of software
 against the standards detailed in the [main project
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
-(from here on referred to as the "SSR Book").
+(from here on referred to as the "SSR Book"). This vignette demonstrates how
+developers are intended to use this package to document the alignment of their
+software with rOpenSci's [standards for statistical
+software](https://ropenscilabs.github.io/statistical-software-review-book/standards.html).
+
+## 1. The package skeleton
+
+The [`rssr_pkg_skeleton()`
+function](https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html)
+included with this package differs from
+[other](https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html)
+[package](https://usethis.r-lib.org/reference/create_package.html)
+[skeleton](https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html) functions.
+Rather than providing a skeleton from which you can construct your own package,
+the [`rssr_pkg_skeleton()`
+function](https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html)
+generates a skeleton to help developers understand this package works. This
+skeleton of a package is intended to be modified to help you understand which
+kinds of modifications are allowed, and which generate errors. The package is
+by default called `"demo"`, is constructed in R's
+[`tempdir()`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/tempfile.html),
+and looks like this:
+
+```{r dir-tree}
+library (rssr)
+d <- rssr_pkg_skeleton ()
+fs::dir_tree (d)
+```
