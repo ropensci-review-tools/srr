@@ -190,8 +190,14 @@ rssr_standards_roxygen <- function (category = NULL,
     s <- s [-which (s == "" | grepl ("^\\#|^\\-+$", s))]
     # replace initial checklist characters
     s <- gsub ("^\\s?\\-\\s+\\[\\s\\]\\s+", "", s)
-    # remove bold/italic formatting characters
-    s <- gsub ("\\*", "", s)
+    # replace bold/italic formatting characters with curly braces.
+    # This uses regexpr so only first match is modified
+    gptn <- "\\*\\*[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?\\*\\*"
+    g <- regexpr (gptn, s)
+    s_end <- substring (s, g + attr (g, "match.length"), nchar (s))
+    m <- regmatches (s, g)
+    s_start <- gsub ("\\*\\*$", "}", gsub ("^\\*\\*", "{", m))
+    s <- paste0 (s_start, s_end)
 
     # nolint start -------- lines > 80 character --------
     x <- c ("#' rssr_standards",

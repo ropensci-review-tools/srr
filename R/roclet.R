@@ -157,25 +157,10 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     standards <- roxygen2::block_get_tags (block, "rssr")
     standards <- unlist (lapply (standards, function (i) i$val))
-    # function to ensure first of any multi line standards ends with comma, and
-    # last line does NOT have trailing comma:
-    chk_commas <- function (s) {
-        if (grepl ("\\n", s)) {
-            s <- strsplit (s, "\\n") [[1]]
-            has_commas <- grepl ("\\,$", s)
-            last_entry <- has_commas [length (has_commas)]
-            has_commas <- has_commas [-length (has_commas)]
-            if (!all (has_commas))
-                stop ("Each @rssr standard should be separated by a comma.")
-            if (last_entry)
-                stop ("It appears you've got a comma after ",
-                      "the last @rssr entry")
-        }
-    }
-    chk <- lapply (standards, chk_commas) # nolint - unused variable
-    #standards <- unlist (strsplit (standards, ","))
 
     snum <- extract_standard_numbers (standards)
+    if (length (snum) < 1)
+        stop ("rssr tags found but no correctly-formatted standard numbers")
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
@@ -190,8 +175,12 @@ process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
     return (msg)
 }
 
-# extract the actual standards numbers from arbitrary text strings:
+# extract the actual standards numbers from arbitrary text strings, first
+# capturing everything inside first "[...]":
 extract_standard_numbers <- function (standards) {
+
+    g <- regexpr ("\\{.*\\}", standards)
+    standards <- gsub ("\\{|\\}", "", regmatches (standards, g))
 
     gptn <- "[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?(\\s||\\n\\*)"
     snum <- lapply (standards, function (i) {
@@ -289,6 +278,8 @@ get_src_tags <- function (blocks, base_path, tag = "rssr") {
         for (tag in block_tags) {
 
             tag_txt <- paste0 (tag$tag, "\\s+", tag$val)
+            tag_txt <- gsub ("\\{", "\\\\{", tag_txt)
+            tag_txt <- gsub ("\\}", "\\\\}", tag_txt)
             which_file <- vapply (src_files, function (f)
                                   any (grepl (tag_txt, readLines (f))),
                                   logical (1))
