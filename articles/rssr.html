@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rssr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.119</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.120</span>
       </span>
     </div>
 
@@ -76,10 +76,31 @@
 
     
     
-<div id="introduction" class="section level2">
+<p><code>rssr</code> stands for <a href="https://ropensci.org"><strong>r</strong>OpenSci</a> <strong>S</strong>tatistical <strong>S</strong>oftware <strong>R</strong>eview, and is an R package with functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a> (from here on referred to as the “SSR Book”). This vignette demonstrates how developers are intended to use this package to document the alignment of their software with rOpenSci’s <a href="https://ropenscilabs.github.io/statistical-software-review-book/standards.html">standards for statistical software</a>.</p>
+<div id="the-package-skeleton" class="section level2">
 <h2 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>1. Introduction</h2>
-<p><a href="https://ropensci.org"><strong>r</strong>OpenSci</a> <strong>S</strong>tatistical <strong>S</strong>oftware <strong>R</strong>eview. This is an R package with functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a> (from here on referred to as the “SSR Book”).</p>
+<a href="#the-package-skeleton" class="anchor"></a>1. The package skeleton</h2>
+<p>The <a href="https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html"><code>rssr_pkg_skeleton()</code> function</a> included with this package differs from <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html">other</a> <a href="https://usethis.r-lib.org/reference/create_package.html">package</a> <a href="https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html">skeleton</a> functions. Rather than providing a skeleton from which you can construct your own package, the <a href="https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html"><code>rssr_pkg_skeleton()</code> function</a> generates a skeleton to help developers understand this package works. This skeleton of a package is intended to be modified to help you understand which kinds of modifications are allowed, and which generate errors. The package is by default called <code>"demo"</code>, is constructed in R’s <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/tempfile.html"><code>tempdir()</code></a>, and looks like this:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/rssr">rssr</a></span><span class="op">)</span>
+<span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rssr_pkg_skeleton.html">rssr_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
+<span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_tree.html">dir_tree</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
+<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpdECsh6/demo
+## ├── DESCRIPTION
+## ├── NAMESPACE
+## ├── R
+## │   ├── RcppExports.R
+## │   ├── demo-package.R
+## │   ├── rssr-standards.R
+## │   └── test.R
+## ├── README.Rmd
+## ├── src
+## │   ├── RcppExports.cpp
+## │   └── cpptest.cpp
+## └── tests
+##     ├── testthat
+##     │   └── test-a.R
+##     └── testthat.R</code></pre>
 </div>
   </div>
 
