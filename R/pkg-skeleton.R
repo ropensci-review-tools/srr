@@ -50,14 +50,18 @@ write_desc <- function (d, pkg_name) {
 write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' test_fn",
+                "#'",
                 "#' A test funtion",
-                "#' @rssr {G1.1, G1.2, G1.3} and some text",
-                "#' @rssr {G2.0, G2.1}",
-                "#' @rssrTODO {S1.1} must be done here",
+                "#'",
+                "#' @rssr {G1.1, G1.2, G1.3} with some text",
+                "#' @rssr Text can also appear before standards {G2.0, G2.1}",
+                "#' @rssrTODO {S1.1} standards which are still to be addressed",
+                "#' are tagged 'rssrTODO'",
+                "#'",
                 "#' @export",
                 "test_fn <- function() {",
                 "  message(\"This function does nothing\")",
-                "  }")
+                "}")
     dr <- file.path (d, "R")
     if (!file.exists (dr))
         dir.create (dr)
