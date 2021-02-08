@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rssr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.121</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.123</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/rssr">rssr</a></span><span class="op">)</span>
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rssr_pkg_skeleton.html">rssr_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_tree.html">dir_tree</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
-<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpHNZ5Qt/demo
+<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpnpKXTB/demo
 ## ├── DESCRIPTION
 ## ├── NAMESPACE
 ## ├── R
@@ -101,6 +101,165 @@
 ##     ├── testthat
 ##     │   └── test-a.R
 ##     └── testthat.R</code></pre>
+<p>The files listed there mostly exist to illustrate how standards can be included within code. The format of standards can be seen by examining any of those files. For example, the <code>test.R</code> file looks like this:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span> <span class="op">(</span><span class="va">d</span>, <span class="st">"R"</span>, <span class="st">"test.R"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>##  [1] "#' test_fn"                                                   
+##  [2] "#'"                                                           
+##  [3] "#' A test funtion"                                            
+##  [4] "#'"                                                           
+##  [5] "#' @rssr {G1.1, G1.2, G1.3} with some text"                   
+##  [6] "#' @rssr Text can also appear before standards {G2.0, G2.1}"  
+##  [7] "#' @rssrTODO {S1.1} standards which are still to be addressed"
+##  [8] "#' are tagged 'rssrTODO'"                                     
+##  [9] "#'"                                                           
+## [10] "#' @export"                                                   
+## [11] "test_fn &lt;- function() {"                                      
+## [12] "  message(\"This function does nothing\")"                    
+## [13] "}"</code></pre>
+<p>That file illustrates some of the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tags defined by this package, and described in detail below. These tags are parsed whenever package documentation is updated with <a href="https://devtools.r-lib.org/reference/document.html"><code>devtools::document()</code></a> or the equivalent <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>, which will produce output like the following:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
+<pre><code>## Loading demo</code></pre>
+<pre><code>## Writing NAMESPACE</code></pre>
+<pre><code>## ──────────────────── rOpenSci Statistical Software Standards ───────────────────</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── @rssr standards:</code></pre>
+<pre><code>##   * [G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]
+##   * [G2.2] on line#2 of file [tests/test-a.R]
+##   * [G3.3] in function 'test()' on line#6 of file [src/cpptest.cpp]
+##   * [G1.1] on line#17 of file [./README.Rmd]</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── @rssrNA standards:</code></pre>
+<pre><code>##   * [S3.3] on line#5 of file [R/rssr-standards.R]</code></pre>
+<pre><code>## </code></pre>
+<pre><code>## ── @rssrTODO standards:</code></pre>
+<pre><code>##   * [S4.4] on line#14 of file [R/rssr-standards.R]
+##   * [S1.1] on line#11 of file [R/test.R]
+##   * [G1.2] on line#17 of file [./README.Rmd]</code></pre>
+<pre><code>## ────────────────────────────────────────────────────────────────────────────────</code></pre>
+<pre><code>## Writing NAMESPACE</code></pre>
+<p>The “roclets” contained within this package parse any instances of the package-specified tags described below, and summarise the output by listing all locations of each kind of tag. Locations are given as file and line numbers, and where appropriate, the names of associated functions. We recommend that developers familiarise themselves with the system by simply modifying any <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block in any of the files of this package skeleton.</p>
+</div>
+<div id="enabling-rssr-roclets-for-a-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#enabling-rssr-roclets-for-a-package" class="anchor"></a>2. Enabling <code>rssr</code> roclets for a package</h2>
+<p>The “roclets” can be enabled for a package by modifying the <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Roxygen</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>markdown <span class="op">=</span> <span class="cn">TRUE</span>, roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span> <span class="op">(</span><span class="st">"namespace"</span>, <span class="st">"rd"</span>, <span class="st">"rssr::rssr_roclet"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>That will load the <a href="https://roxygen2.r-lib.org">“roclets”</a> used by this package to process standards as documented within your actual code. Note that you do not need to add, import, or depend upon the <code>rssr</code> package anywhere else within the <code>DESCRIPTION</code> file.</p>
+</div>
+<div id="roxygen2-tags" class="section level2">
+<h2 class="hasAnchor">
+<a href="#roxygen2-tags" class="anchor"></a>3. <code>roxygen2</code> tags</h2>
+<p>The <code>rssr</code> packages recognises and uses the following three tags, each of which may be inserted into <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> documentation blocks anywhere in your code. The tags are:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>@rssr</code> tags to indicate standards which have been addressed. These should be placed at the locations within your code where specific standards have been addressed, and should include a brief textual description of how the code at that location addresses the nominated standard.</li>
+<li>
+<code>@rssrTODO</code> tags to indicate standards which have not yet been addressed. The <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code> function</a> described below will place all standards for your nominated categories in an initial file in the <code>/R</code> directory of your project. Each of these will have a tag of <code>@rssrTODO</code>. As you address each standard, you’ll need to move it from that initial location to that point in your code where that standard is addressed, and change the tag from <code>@rssrTODO</code> to <code>@rssr</code>. It may help to break the initial, commonly very long, single list of standards into smaller groups, and to move each of these into the approximate location within your code where these are likely to be addressed. For example, all standards which pertain to tests can be moved into the <code>/tests</code> (or <code>/tests/testthat</code>) directory.</li>
+<li>
+<code>@rssrNA</code> tags to indicate standards which you deem not applicable to your package. These need to be grouped together in a single block with a title of <code>NA_standards</code>. Such a block is both included in the package skeleton, and also in the output of <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code> function</a>. The numbers of any non-applicable standards can then be moved to this block, with a note explaining why these standards have been deemed not to apply to your package.</li>
+</ol>
+<p>The output illustrated above shows how the <code>rssr</code> package groups these three tags together, first collecting the output of standards which have been addressed (via <code>@rssr</code> tags), then showing output of non-applicable standards (via <code>@rssrNA</code> tags), and finally standards which are still to be addressed (via <code>@rssrTODO</code> tags).</p>
+<div id="format-of-rssr-documentation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#format-of-rssr-documentation" class="anchor"></a>3.1 Format of <code>rssr</code> documentation</h3>
+<p>The tags shown above from the skeleton package function <code>test.R</code> indicates the expected format of standards within <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> documentation blocks. The package is designed to error on attempting to run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> with any inappropriately formatted entries, and so should provide informative messages to help rectify any problems. <code>rssr</code> documentation must adhere to the following formatting requirements:</p>
+<ol style="list-style-type: decimal">
+<li><p>The tags must appear immediately after the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>-style comment symbols. This will almost always mean <code>#' @rssr</code> (but see details below, under <em>Locations of <code>rssr</code> documentation</em>).</p></li>
+<li><p>The standards number(s) must be enclosed within curly braces, such as <code>#' @rssr {G1.0}</code>. Multiple standards may be associated with a single tag by including them within the same single pair of curly braces, and separating each by a comma, such as <code>#' @rssr {G1.0, G1.1}</code>.</p></li>
+<li><p>Explanatory text may be placed anywhere before or after curly braces enclosing standards, such that <code>#' @rssr some text {G1.0}</code> is entirely equivalent to <code>#' @rssr {G1.0} some text</code>.</p></li>
+<li>
+<p>Only the first pair of curly braces is parsed to determine standards numbers; any subsequent curly braces within one expression will be ignored. (Where an expression is everything that comes after one <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag, and extends until the start of the next tag.) The following will accordingly only refer to G1.0, and not G1.1:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R">   <span class="co">#' @rssr {G1.0} as well as {G1.1}.</span></code></pre></div>
+<p>The appropriate way to refer to multiple tags is to include them in the one set of curly braces, as shown above, or to use separate tags, like this:</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#' @rssr {G1.0} as well as</span>
+<span class="co">#' @rssr {G1.1}</span></code></pre></div>
+</li>
+<li><p>Any standard may occur arbitrarily many times in any file(s) within a package. The only requirement is that any one standard should only be associated with one single kind of tag; thus should only be <code>@rssr</code> (a standard which has been addressed), <em>or</em> <code>@rssrNA</code> (a standard which is not applicable), <em>or</em> <code>@rssrTODO</code> (a standard which has not yet been addressed).</p></li>
+</ol>
+<p>In almost all cases, all tags for a package will be generated by the initial call to <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code></a>, and should simply be moved to appropriate locations within a package’s code without modifying the format.</p>
+</div>
+<div id="locations-of-rssr-documentation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#locations-of-rssr-documentation" class="anchor"></a>3.2 Locations of <code>rssr</code> documentation</h3>
+<p><code>rssr</code> tags and accompanying text can be placed almost anywhere within a package, especially in any file in the main <code>/R</code>, <code>/tests</code>, or <code>src/</code> directories. Within the <code>/R</code> directory, tags should be placed only in <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> blocks. These tags, and all associated text, will be ignored by the roclets used by <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> to generate package documentation, and will only appear on screen output like that shown above, and generated when running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>. If tags need to be inserted where there is no <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> block, then a new block will need to be created, the minimal requirement for which is that it then have an additional <code>#' @noRd</code> tag to suppress generation of documentation (<code>.Rd</code>) files. If that block is associated with a function, the following two lines will suffice:</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#' @rssr G1.0 This standard belongs here</span>
+<span class="co">#' @noRd</span>
+<span class="va">myfunction</span> <span class="op">&lt;-</span> <span class="kw">function</span> <span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+    <span class="co"># ...</span>
+<span class="op">}</span></code></pre></div>
+<p>If that block is not associated with a function, the documentation can be followed by a <code>NULL</code>, like this:</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#' @rssr G1.0 This standard belongs here</span>
+<span class="co">#' @noRd</span>
+<span class="cn">NULL</span></code></pre></div>
+<p>Unlike <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>, which only processes blocks from within the main <code>R/</code> directory, the <code>rssr</code> package process blocks from within other directories too. As these blocks will never be passed through to the main <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> function, they need neither <code>#' @noRd</code> tags, nor <code>NULL</code> definitions where none otherwise exist. An example is in the <code>tests/</code> directory of the package skeleton:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span> <span class="op">(</span><span class="va">d</span>, <span class="st">"tests"</span>, <span class="st">"testthat"</span>, <span class="st">"test-a.R"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "#' @rssr {G2.2} is addressed here"
+## [2] "test_that(\"dummy test\", {"      
+## [3] "    expect_true (TRUE)"           
+## [4] "})"</code></pre>
+<p>While <code>rssr</code> tags can also be placed in the <code>src/</code> directory, the package currently only parses <a href="https://github.com/doxygen/doxygen"><code>doxygen</code></a>-style blocks for code written in C or C++. (Note that <code>rssr</code> is currently further restricted to C++ code compiled with <a href="https://cran.r-project.org/package=Rcpp"><code>Rcpp</code></a>, but will soon be adapted to work with other C++ interfaces such as <a href="https://cpp11.r-lib.org"><code>cpp11</code></a>.) These blocks are converted by <a href="https://cran.r-project.org/package=Rcpp"><code>Rcpp</code></a> into <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> blocks in a file called <code>R/RcppExports.R</code>, and so need to include an additional <code>@noRd</code> tag to (optionally) suppress generation of <code>.Rd</code> documentation. The skeleton package again gives an example:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span> <span class="op">(</span><span class="va">d</span>, <span class="st">"src"</span>, <span class="st">"cpptest.cpp"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>##  [1] "#include &lt;Rcpp.h&gt;"                
+##  [2] ""                                 
+##  [3] "//' src_fn"                       
+##  [4] "//'"                              
+##  [5] "//' A test C++ function"          
+##  [6] "//' @rssr {G3.3} in src directory"
+##  [7] "//' @noRd"                        
+##  [8] "// [[Rcpp::export]]"              
+##  [9] "int test () {"                    
+## [10] "    return 1L; }"</code></pre>
+</div>
+<div id="documenting-standards-for-documentation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#documenting-standards-for-documentation" class="anchor"></a>3.3 Documenting standards for documentation</h3>
+<p>Many standards refer to general package documentation, particularly in a <code>README</code> document, or in package vignettes. All such documents are presumed to be written in <code>.Rmd</code> format, for which <code>rssr</code> tags must be included within distinct code chunks. Again, the skeleton package has an example as follows:</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span> <span class="op">(</span><span class="va">d</span>, <span class="st">"README.Rmd"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>##  [1] "# demo"                                                                          
+##  [2] ""                                                                                
+##  [3] "This is a skeleton of an [`rssr`](https://github.com/ropenscilabs/rssr) package,"
+##  [4] "intended developers to tweak as they like, in order to understand how the"       
+##  [5] "package's roclets work."                                                         
+##  [6] ""                                                                                
+##  [7] "This `README.Rmd` file is here to demonstrate how to embed `rssr` roclet tags."  
+##  [8] "These tags need to be within dedicated *code chunks*, like the following:"       
+##  [9] ""                                                                                
+## [10] "```{r rssr-tags, eval = FALSE, echo = FALSE}"                                    
+## [11] "#' roxygen_block_name"                                                           
+## [12] "#'"                                                                              
+## [13] "#' (Add some text if you like)"                                                  
+## [14] "#'"                                                                              
+## [15] "#' @rssr {G1.1} Here is a reference to a standard"                               
+## [16] "#' @rssrTODO {G1.2} And here is a reference to a standard yet to be addressed"   
+## [17] "```"                                                                             
+## [18] ""                                                                                
+## [19] "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,"    
+## [20] "and nothing else at all. Please change the `eval` and `echo` parameters to"      
+## [21] "see what happens when you knit the document."</code></pre>
+<p>Those lines illustrate the expected form. <code>rssr</code> tags should be within a single block contained within a dedicated code chunk. This chunk will generally use <code>echo = FALSE</code> to prevent it appearing in the rendered document. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> lines do not need to be followed by a <code>NULL</code> (or any other non- <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> statement, although for any reason additional R code is necessary, you may also need to add <code>eval = FALSE</code>.</p>
+</div>
+<div id="rssrna-tags-for-non-applicable-standards" class="section level3">
+<h3 class="hasAnchor">
+<a href="#rssrna-tags-for-non-applicable-standards" class="anchor"></a>3.4 <code>@rssrNA</code> tags for non-applicable standards</h3>
+<p>While <code>@rssrTODO</code> and <code>@rssr</code> tags may be placed anywhere within a package, <code>@rssrNA</code> tags must be placed within a dedicated <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block with a title of <code>NA_standards</code>. As described above, both the package skeleton and the file produced by calling <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code></a> include templates for this block. The following illustrates a minimal form:</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#' NA_standards</span>
+<span class="co">#'</span>
+<span class="co">#' @rssrNA {S3.3} is not applicable</span>
+<span class="co">#' @noRd</span>
+<span class="cn">NULL</span></code></pre></div>
+<p>An <code>NA_standards</code> block must end with <code>NULL</code>, rather than be associated with a function definition. There can be multiple <code>NA_standards</code> blocks in any location, enabling these standards to be moved to approximately locations where they might otherwise have been addressed. (For example, non-applicable standards referring to tests might all be grouped together in a single <code>NA_standards</code> block in the <code>tests/</code> directory.)</p>
+</div>
 </div>
   </div>
 
