@@ -28,6 +28,20 @@ developers are intended to use this package to document the alignment of their
 software with rOpenSci's [standards for statistical
 software](https://ropenscilabs.github.io/statistical-software-review-book/standards.html).
 
+The main functions of the package are constructed as [`roxygen2`
+"roclets"](https://roxygen2.r-lib.org), meaning that these functions are called
+each time package documentation is updated by calling
+[`devtools::document()`](https://devtools.r-lib.org/reference/document.html) or
+equivalently
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html).
+The former is just a wrapper around the latter, to enable documentation to
+updated by a single call from within the [`devtools`
+package](https://devtools.r-lib.org). From here on, this stage of updating
+documentation and triggering the `rssr` roclets will be referred to as "running
+[`roxygenise`](https://roxygen2.r-lib.org/reference/roxygenize.html)."
+
+
+
 ## 1. The package skeleton
 
 The [`rssr_pkg_skeleton()`
@@ -65,9 +79,7 @@ print (readLines (file.path (d, "R", "test.R")), width = 20)
 That file illustrates some of the [`roxygen2`](https://roxygen2.r-lib.org) tags
 defined by this package, and described in detail below. These tags are parsed
 whenever package documentation is updated with
-[`devtools::document()`](https://devtools.r-lib.org/reference/document.html) or
-the equivalent
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
+[`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
 which will produce output like the following:
 
 ```{r skeleton-output1-compile, eval = TRUE, echo = FALSE, message = FALSE, results = "hide"}
@@ -88,7 +100,7 @@ and where appropriate, the names of associated functions. We recommend that
 developers familiarise themselves with the system by simply modifying any
 [`roxygen2`](https://roxygen2.r-lib.org) block in any of the files of this
 package skeleton, and running
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+[`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
 to see what happens.
 
 ## 2. Enabling `rssr` roclets for a package
@@ -150,10 +162,10 @@ addressed (via `@rssr` tags), then showing output of non-applicable standards
 The tags shown above from the skeleton package function `test.R` indicates the
 expected format of standards within [`roxygen2`](https://roxygen2.r-lib.org)
 documentation blocks. The package is designed to error on attempting to run
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
-with any inappropriately formatted entries, and so should provide informative
-messages to help rectify any problems. `rssr` documentation must adhere to the
-following formatting requirements:
+[`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html) with any
+inappropriately formatted entries, and so should provide informative messages
+to help rectify any problems. `rssr` documentation must adhere to the following
+formatting requirements:
 
 1. The tags must appear immediately after the
    [`roxygen2`](https://roxygen2.r-lib.org)-style comment symbols. This will
@@ -201,14 +213,14 @@ directories. Within the `/R` directory, tags should be placed only in
 text, will be ignored by the roclets used by
 [`roxygen2`](https://roxygen2.r-lib.org) to generate package documentation, and
 will only appear on screen output like that shown above, and generated when
-running
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html).
+running [`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html).
 If tags need to be inserted where there is no
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
-block, then a new block will need to be created, the minimal requirement for
-which is that it then have an additional `#' @noRd` tag to suppress generation
-of documentation (`.Rd`) files. If that block is associated with a function,
-the following two lines will suffice:
+[`roxygen2`](https://roxygen2.r-lib.org/reference/roxygenize.html) block, then
+a new block will need to be created, the minimal requirement for which is that
+it then have an additional `#' @noRd` tag to suppress generation of
+documentation (`.Rd`) files. If that block is associated with a function, the
+following two lines will suffice:
+
 ```{r doc-ex-with-fn}
 #' @rssr G1.0 This standard belongs here
 #' @noRd
@@ -225,8 +237,8 @@ NULL
 ```
 Unlike [`roxygen2`](https://roxygen2.r-lib.org), which only processes blocks
 from within the main `R/` directory, the `rssr` package process blocks from
-within other directories too. As these blocks will never be passed through to the main 
-[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+within other directories too. As these blocks will never be passed through to
+the main [`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
 function, they need neither `#' @noRd` tags, nor `NULL` definitions where none
 otherwise exist. An example is in the `tests/` directory of the package
 skeleton:
@@ -268,20 +280,23 @@ readLines (file.path (d, "README.Rmd"))
 ```
 
 Those lines illustrate the expected form. `rssr` tags should be within a single
-block contained within a dedicated code chunk. This chunk will generally use
-`echo = FALSE` to prevent it appearing in the rendered document. The
-[`roxygen2`](https://roxygen2.r-lib.org) lines do not need to be followed by a
-`NULL` (or any other non- [`roxygen2`](https://roxygen2.r-lib.org) statement,
-although for any reason additional R code is necessary, you may also need to
-add `eval = FALSE`.
+block contained within a dedicated code chunk. `rssr` chunks within `.Rmd`
+files will generally use `echo = FALSE` to prevent them appearing in the
+rendered documents. The [`roxygen2`](https://roxygen2.r-lib.org) lines do not
+need to be followed by a `NULL` (or any other non-
+[`roxygen2`](https://roxygen2.r-lib.org) statement), although if additional
+R code is necessary for any reason, you may also need to add `eval = FALSE`.
 
 ### 3.4 `@rssrNA` tags for non-applicable standards
 
-While `@rssrTODO` and `@rssr` tags may be placed anywhere within a package, `@rssrNA` tags must be placed within a dedicated 
-[`roxygen2`](https://roxygen2.r-lib.org) block with a title of `NA_standards`.
-As described above, both the package skeleton and the file produced by calling
+While `@rssrTODO` and `@rssr` tags may be placed anywhere within a package,
+`@rssrNA` tags used to denote non-applicable standards must be placed within
+a dedicated [`roxygen2`](https://roxygen2.r-lib.org) block with a title of
+`NA_standards`. As described above, both the package skeleton and the file
+produced by calling
 [`rssr_standards_roxygen()`](https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html)
 include templates for this block. The following illustrates a minimal form:
+
 ```{r na-block, eval = FALSE}
 #' NA_standards
 #'
@@ -289,10 +304,10 @@ include templates for this block. The following illustrates a minimal form:
 #' @noRd
 NULL
 ```
-An `NA_standards` block must end with `NULL`, rather than be associated with a
-function definition. There can be multiple `NA_standards` blocks in any
-location, enabling these
-standards to be moved to approximately locations where they might otherwise
-have been addressed. (For example, non-applicable standards referring to tests
-might all be grouped together in a single `NA_standards` block in the `tests/`
-directory.)
+
+An `NA_standards` block must end with `NULL`, rather than be associated with
+a function definition. There can be multiple `NA_standards` blocks in any
+location, enabling these standards to be moved to approximate locations where
+they might otherwise have been addressed. (For example, non-applicable
+standards referring to tests might all be grouped together in a single
+`NA_standards` block in the `tests/` directory.)
