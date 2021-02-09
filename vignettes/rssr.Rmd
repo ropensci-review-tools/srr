@@ -74,7 +74,10 @@ which will produce output like the following:
 # need to run once to compile /src so compile output does not appear on 2nd time
 roxygen2::roxygenise (d)
 ```
-```{r skeleton-output1, eval = TRUE, echo = TRUE}
+```{r skeleton-output-dummy, eval = FALSE, echo = TRUE, collapse = TRUE}
+roxygen2::roxygenise (d)
+```
+```{r skeleton-output, eval = TRUE, echo = FALSE, message = TRUE, collapse = TRUE}
 roxygen2::roxygenise (d)
 ```
 
@@ -84,7 +87,9 @@ locations of each kind of tag. Locations are given as file and line numbers,
 and where appropriate, the names of associated functions. We recommend that
 developers familiarise themselves with the system by simply modifying any
 [`roxygen2`](https://roxygen2.r-lib.org) block in any of the files of this
-package skeleton.
+package skeleton, and running
+[`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
+to see what happens.
 
 ## 2. Enabling `rssr` roclets for a package
 
@@ -98,7 +103,8 @@ Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rssr::rssr_rocle
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package
 to process standards as documented within your actual code. Note that you do
 not need to add, import, or depend upon the `rssr` package anywhere else within
-the `DESCRIPTION` file.
+the `DESCRIPTION` file. See the `DESCRIPTION` file of the package skeleton for
+an example.
 
 ## 3. `roxygen2` tags
 
