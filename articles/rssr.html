@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rssr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.124</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.125</span>
       </span>
     </div>
 
@@ -77,6 +77,7 @@
     
     
 <p><code>rssr</code> stands for <a href="https://ropensci.org"><strong>r</strong>OpenSci</a> <strong>S</strong>tatistical <strong>S</strong>oftware <strong>R</strong>eview, and is an R package with functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a> (from here on referred to as the “SSR Book”). This vignette demonstrates how developers are intended to use this package to document the alignment of their software with rOpenSci’s <a href="https://ropenscilabs.github.io/statistical-software-review-book/standards.html">standards for statistical software</a>.</p>
+<p>The main functions of the package are constructed as <a href="https://roxygen2.r-lib.org"><code>roxygen2</code> “roclets”</a>, meaning that these functions are called each time package documentation is updated by calling <a href="https://devtools.r-lib.org/reference/document.html"><code>devtools::document()</code></a> or equivalently <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>. The former is just a wrapper around the latter, to enable documentation to updated by a single call from within the <a href="https://devtools.r-lib.org"><code>devtools</code> package</a>. From here on, this stage of updating documentation and triggering the <code>rssr</code> roclets will be referred to as “running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise</code></a>.”</p>
 <div id="the-package-skeleton" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-package-skeleton" class="anchor"></a>1. The package skeleton</h2>
@@ -85,7 +86,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/rssr">rssr</a></span><span class="op">)</span>
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rssr_pkg_skeleton.html">rssr_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_tree.html">dir_tree</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
-<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp3ah3Tk/demo
+<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpAz69ie/demo
 ## ├── DESCRIPTION
 ## ├── NAMESPACE
 ## ├── R
@@ -117,7 +118,7 @@
 ## [11] "test_fn &lt;- function() {"                                      
 ## [12] "  message(\"This function does nothing\")"                    
 ## [13] "}"</code></pre>
-<p>That file illustrates some of the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tags defined by this package, and described in detail below. These tags are parsed whenever package documentation is updated with <a href="https://devtools.r-lib.org/reference/document.html"><code>devtools::document()</code></a> or the equivalent <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>, which will produce output like the following:</p>
+<p>That file illustrates some of the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tags defined by this package, and described in detail below. These tags are parsed whenever package documentation is updated with <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise()</code></a>, which will produce output like the following:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
 <pre><code>## Loading demo
@@ -139,7 +140,7 @@
 ##   * [G1.2] on line#17 of file [./README.Rmd]
 ## ────────────────────────────────────────────────────────────────────────────────
 ## Writing NAMESPACE</code></pre>
-<p>The “roclets” contained within this package parse any instances of the package-specified tags described below, and summarise the output by listing all locations of each kind of tag. Locations are given as file and line numbers, and where appropriate, the names of associated functions. We recommend that developers familiarise themselves with the system by simply modifying any <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block in any of the files of this package skeleton, and running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> to see what happens.</p>
+<p>The “roclets” contained within this package parse any instances of the package-specified tags described below, and summarise the output by listing all locations of each kind of tag. Locations are given as file and line numbers, and where appropriate, the names of associated functions. We recommend that developers familiarise themselves with the system by simply modifying any <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block in any of the files of this package skeleton, and running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise()</code></a> to see what happens.</p>
 </div>
 <div id="enabling-rssr-roclets-for-a-package" class="section level2">
 <h2 class="hasAnchor">
@@ -165,7 +166,7 @@
 <div id="format-of-rssr-documentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#format-of-rssr-documentation" class="anchor"></a>3.1 Format of <code>rssr</code> documentation</h3>
-<p>The tags shown above from the skeleton package function <code>test.R</code> indicates the expected format of standards within <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> documentation blocks. The package is designed to error on attempting to run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> with any inappropriately formatted entries, and so should provide informative messages to help rectify any problems. <code>rssr</code> documentation must adhere to the following formatting requirements:</p>
+<p>The tags shown above from the skeleton package function <code>test.R</code> indicates the expected format of standards within <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> documentation blocks. The package is designed to error on attempting to run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise()</code></a> with any inappropriately formatted entries, and so should provide informative messages to help rectify any problems. <code>rssr</code> documentation must adhere to the following formatting requirements:</p>
 <ol style="list-style-type: decimal">
 <li><p>The tags must appear immediately after the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>-style comment symbols. This will almost always mean <code>#' @rssr</code> (but see details below, under <em>Locations of <code>rssr</code> documentation</em>).</p></li>
 <li><p>The standards number(s) must be enclosed within curly braces, such as <code>#' @rssr {G1.0}</code>. Multiple standards may be associated with a single tag by including them within the same single pair of curly braces, and separating each by a comma, such as <code>#' @rssr {G1.0, G1.1}</code>.</p></li>
@@ -186,7 +187,7 @@
 <div id="locations-of-rssr-documentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#locations-of-rssr-documentation" class="anchor"></a>3.2 Locations of <code>rssr</code> documentation</h3>
-<p><code>rssr</code> tags and accompanying text can be placed almost anywhere within a package, especially in any file in the main <code>/R</code>, <code>/tests</code>, or <code>src/</code> directories. Within the <code>/R</code> directory, tags should be placed only in <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> blocks. These tags, and all associated text, will be ignored by the roclets used by <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> to generate package documentation, and will only appear on screen output like that shown above, and generated when running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>. If tags need to be inserted where there is no <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> block, then a new block will need to be created, the minimal requirement for which is that it then have an additional <code>#' @noRd</code> tag to suppress generation of documentation (<code>.Rd</code>) files. If that block is associated with a function, the following two lines will suffice:</p>
+<p><code>rssr</code> tags and accompanying text can be placed almost anywhere within a package, especially in any file in the main <code>/R</code>, <code>/tests</code>, or <code>src/</code> directories. Within the <code>/R</code> directory, tags should be placed only in <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> blocks. These tags, and all associated text, will be ignored by the roclets used by <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> to generate package documentation, and will only appear on screen output like that shown above, and generated when running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise()</code></a>. If tags need to be inserted where there is no <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2</code></a> block, then a new block will need to be created, the minimal requirement for which is that it then have an additional <code>#' @noRd</code> tag to suppress generation of documentation (<code>.Rd</code>) files. If that block is associated with a function, the following two lines will suffice:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' @rssr G1.0 This standard belongs here</span>
 <span class="co">#' @noRd</span>
@@ -198,7 +199,7 @@
 <code class="sourceCode R"><span class="co">#' @rssr G1.0 This standard belongs here</span>
 <span class="co">#' @noRd</span>
 <span class="cn">NULL</span></code></pre></div>
-<p>Unlike <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>, which only processes blocks from within the main <code>R/</code> directory, the <code>rssr</code> package process blocks from within other directories too. As these blocks will never be passed through to the main <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a> function, they need neither <code>#' @noRd</code> tags, nor <code>NULL</code> definitions where none otherwise exist. An example is in the <code>tests/</code> directory of the package skeleton:</p>
+<p>Unlike <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>, which only processes blocks from within the main <code>R/</code> directory, the <code>rssr</code> package process blocks from within other directories too. As these blocks will never be passed through to the main <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygenise()</code></a> function, they need neither <code>#' @noRd</code> tags, nor <code>NULL</code> definitions where none otherwise exist. An example is in the <code>tests/</code> directory of the package skeleton:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/readLines.html">readLines</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span> <span class="op">(</span><span class="va">d</span>, <span class="st">"tests"</span>, <span class="st">"testthat"</span>, <span class="st">"test-a.R"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "#' @rssr {G2.2} is addressed here"
@@ -246,19 +247,19 @@
 ## [19] "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,"    
 ## [20] "and nothing else at all. Please change the `eval` and `echo` parameters to"      
 ## [21] "see what happens when you knit the document."</code></pre>
-<p>Those lines illustrate the expected form. <code>rssr</code> tags should be within a single block contained within a dedicated code chunk. This chunk will generally use <code>echo = FALSE</code> to prevent it appearing in the rendered document. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> lines do not need to be followed by a <code>NULL</code> (or any other non- <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> statement, although for any reason additional R code is necessary, you may also need to add <code>eval = FALSE</code>.</p>
+<p>Those lines illustrate the expected form. <code>rssr</code> tags should be within a single block contained within a dedicated code chunk. <code>rssr</code> chunks within <code>.Rmd</code> files will generally use <code>echo = FALSE</code> to prevent them appearing in the rendered documents. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> lines do not need to be followed by a <code>NULL</code> (or any other non- <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> statement), although if additional R code is necessary for any reason, you may also need to add <code>eval = FALSE</code>.</p>
 </div>
 <div id="rssrna-tags-for-non-applicable-standards" class="section level3">
 <h3 class="hasAnchor">
 <a href="#rssrna-tags-for-non-applicable-standards" class="anchor"></a>3.4 <code>@rssrNA</code> tags for non-applicable standards</h3>
-<p>While <code>@rssrTODO</code> and <code>@rssr</code> tags may be placed anywhere within a package, <code>@rssrNA</code> tags must be placed within a dedicated <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block with a title of <code>NA_standards</code>. As described above, both the package skeleton and the file produced by calling <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code></a> include templates for this block. The following illustrates a minimal form:</p>
+<p>While <code>@rssrTODO</code> and <code>@rssr</code> tags may be placed anywhere within a package, <code>@rssrNA</code> tags used to denote non-applicable standards must be placed within a dedicated <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> block with a title of <code>NA_standards</code>. As described above, both the package skeleton and the file produced by calling <a href="https://ropenscilabs.github.io/rssr/reference/rssr_standards_roxygen.html"><code>rssr_standards_roxygen()</code></a> include templates for this block. The following illustrates a minimal form:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' NA_standards</span>
 <span class="co">#'</span>
 <span class="co">#' @rssrNA {S3.3} is not applicable</span>
 <span class="co">#' @noRd</span>
 <span class="cn">NULL</span></code></pre></div>
-<p>An <code>NA_standards</code> block must end with <code>NULL</code>, rather than be associated with a function definition. There can be multiple <code>NA_standards</code> blocks in any location, enabling these standards to be moved to approximately locations where they might otherwise have been addressed. (For example, non-applicable standards referring to tests might all be grouped together in a single <code>NA_standards</code> block in the <code>tests/</code> directory.)</p>
+<p>An <code>NA_standards</code> block must end with <code>NULL</code>, rather than be associated with a function definition. There can be multiple <code>NA_standards</code> blocks in any location, enabling these standards to be moved to approximate locations where they might otherwise have been addressed. (For example, non-applicable standards referring to tests might all be grouped together in a single <code>NA_standards</code> block in the <code>tests/</code> directory.)</p>
 </div>
 </div>
   </div>
