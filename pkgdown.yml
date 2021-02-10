@@ -2,6 +2,6 @@ pandoc: 2.7.3
 pkgdown: 1.6.1.9000
 pkgdown_sha: c931fe24c135c6ca704ae9f300470e9c66d8bfe7
 articles:
-  rssr: rssr.html
-last_built: 2021-02-10T11:17Z
+  rrr-stats: rrr-stats.html
+last_built: 2021-02-10T11:32Z
 

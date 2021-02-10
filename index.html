@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rrr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.136</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.139</span>
       </span>
     </div>
 
@@ -49,7 +49,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/rssr.html">Preparing Statistical Software with the rrr package</a>
+      <a href="articles/rrr-stats.html">Preparing Statistical Software with the rrr package</a>
     </li>
   </ul>
 </li>
@@ -111,7 +111,7 @@
 <li>
 <p>Enable your package to use the <code>rssr</code> roclets by modifying the package’s <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">Roxygen</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>markdown <span class="op">=</span> <span class="cn">TRUE</span>, roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span> <span class="op">(</span><span class="st">"namespace"</span>, <span class="st">"rd"</span>, <span class="st">"rrr::rssr_roclet"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">Roxygen</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>markdown <span class="op">=</span> <span class="cn">TRUE</span>, roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span> <span class="op">(</span><span class="st">"namespace"</span>, <span class="st">"rd"</span>, <span class="st">"rrr::rrr_stats_roclet"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>That will load the <a href="https://roxygen2.r-lib.org">“roclet”</a> used by this package to process statistical standards as documented within your actual code. Note that you do not need to add, import, or depend upon the <code>rrr</code> package anywhere else within the <code>DESCRIPTION</code> file.</p>
 </li>
 <li>
