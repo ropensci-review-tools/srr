@@ -60,8 +60,10 @@ test_that("roxygen standards", {
               expect_length (todo_new, 3L)
 
               # get only those from the rrr-stats-standards.R file:
-              todo_old <- grep ("rrr-stats-standards\\.R", todo_old, value = TRUE)
-              todo_new <- grep ("rrr-stats-standards\\.R", todo_new, value = TRUE)
+              todo_old <- grep ("rrr-stats-standards\\.R",
+                                todo_old, value = TRUE)
+              todo_new <- grep ("rrr-stats-standards\\.R",
+                                todo_new, value = TRUE)
 
               expect_true (nchar (todo_new) > nchar (todo_old))
               standards_old <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]", todo_old) [[1]]
