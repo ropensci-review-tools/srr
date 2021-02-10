@@ -53,10 +53,10 @@ write_r_fn <- function (d, pkg_name) {
                 "#'",
                 "#' A test funtion",
                 "#'",
-                "#' @rssr {G1.1, G1.2, G1.3} with some text",
-                "#' @rssr Text can also appear before standards {G2.0, G2.1}",
-                "#' @rssrTODO {S1.1} standards which are still to be addressed",
-                "#' are tagged 'rssrTODO'",
+                "#' @rrrstats {G1.1, G1.2, G1.3} with some text",
+                "#' @rrrstats Text can appear before standards {G2.0, G2.1}",
+                "#' @rrrstatsTODO {S1.1} standards which are still to be",
+                "#' addressed are tagged 'rrrstatsTODO'",
                 "#'",
                 "#' @export",
                 "test_fn <- function() {",
@@ -81,14 +81,14 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' NA_standards",
                 "#'",
-                "#' @rssrNA {S3.3} is not applicable",
+                "#' @rrrstatsNA {S3.3} is not applicable",
                 "#' @noRd",
                 "NULL",
                 "",
-                "#' rssr_standards",
+                "#' rrrstats_standards",
                 "#'",
-                "#' @rssrVerbose TRUE",
-                "#' @rssrTODO Here is {S4.4} as TODO, noting that text can",
+                "#' @rrrstatsVerbose TRUE",
+                "#' @rrrstatsTODO Here is {S4.4} as TODO, noting that text can",
                 "#' precede the standard number, as long as standards are",
                 "#' given within the first set of square brackets.",
                 "#' @noRd",
@@ -103,7 +103,7 @@ write_src_fn <- function (d) {
                 "//' src_fn",
                 "//'",
                 "//' A test C++ function",
-                "//' @rssr {G3.3} in src directory",
+                "//' @rrrstats {G3.3} in src directory",
                 "//' @noRd",
                 "// [[Rcpp::export]]",
                 "int test () {",
@@ -133,8 +133,8 @@ write_readme <- function (d, pkg_name) {
                 "#'",
                 "#' (Add some text if you like)",
                 "#'",
-                "#' @rssr {G1.1} Here is a reference to a standard",
-                "#' @rssrTODO {G1.2} And here is a reference to a standard yet to be addressed",
+                "#' @rrrstats {G1.1} Here is a reference to a standard",
+                "#' @rrrstatsTODO {G1.2} And here is a reference to a standard yet to be addressed",
                 "```",
                 "",
                 "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,",
@@ -166,7 +166,7 @@ write_test_files <- function (d, pkg_name) {
         dir.create (dt, recursive = TRUE)
     writeLines (tfile, con = file.path (d, "tests", "testthat.R"))
 
-    tfile <- c ("#' @rssr {G2.2} is addressed here",
+    tfile <- c ("#' @rrrstats {G2.2} is addressed here",
                 "test_that(\"dummy test\", {",
                 "    expect_true (TRUE)",
                 "})")
@@ -181,7 +181,7 @@ write_test_files <- function (d, pkg_name) {
 #' be used to try out the functionality of this package. Running the example
 #' lines below which activate the 'rrr' roclets, and show you what the output
 #' of those roclets looks like. Feel free to examine the effect of modifying any
-#' of the `@rssr` tags within the code as identified by running those lines.
+#' of the `@rrrstats` tags within the code as identified by running those lines.
 #'
 #' @param base_dir The base directory where the package should be constructed.
 #' @param pkg_name The name of the package. The final location of this package

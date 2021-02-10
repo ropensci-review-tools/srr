@@ -7,9 +7,10 @@
 rrr_stats_roclet()
 }
 \description{
-Get values of all \code{rssr} tags in function documentation
+Get values of all \code{rrrstats} tags in function documentation
 }
 \details{
 Note that this function should never need to be called directly. It only
-exists to enable "@rssr" tags to be parsed from \pkg{roxygen2} documentation.
+exists to enable "@rrrstats" tags to be parsed from \pkg{roxygen2}
+documentation.
 }

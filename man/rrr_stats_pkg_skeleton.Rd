@@ -20,7 +20,7 @@ Make a dummy package skeleton including 'rrr' \pkg{roxygen2} tags which can
 be used to try out the functionality of this package. Running the example
 lines below which activate the 'rrr' roclets, and show you what the output
 of those roclets looks like. Feel free to examine the effect of modifying any
-of the \verb{@rssr} tags within the code as identified by running those lines.
+of the \verb{@rrrstats} tags within the code as identified by running those lines.
 }
 \examples{
 d <- rrr_stats_pkg_skeleton ()

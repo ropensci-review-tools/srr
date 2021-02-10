@@ -25,13 +25,13 @@ test_that("roxygen standards", {
               expect_true (length (grep ("Re-compiling", x)) == 1)
               txt <- "rOpenSci Statistical Software Standards"
               expect_true (length (grep (txt, x)) == 1)
-              expect_true (length (grep ("@rssr standards:", x)) == 1)
-              expect_true (length (grep ("@rssrNA standards:", x)) == 1)
-              expect_true (length (grep ("@rssrTODO standards:", x)) == 1)
-              expect_true (grep ("@rssrTODO standards:", x) >
-                           grep ("@rssrNA standards:", x))
-              expect_true (grep ("@rssrNA standards:", x) >
-                           grep ("@rssr standards:", x))
+              expect_true (length (grep ("@rrrstats standards:", x)) == 1)
+              expect_true (length (grep ("@rrrstatsNA standards:", x)) == 1)
+              expect_true (length (grep ("@rrrstatsTODO standards:", x)) == 1)
+              expect_true (grep ("@rrrstatsTODO standards:", x) >
+                           grep ("@rrrstatsNA standards:", x))
+              expect_true (grep ("@rrrstatsNA standards:", x) >
+                           grep ("@rrrstats standards:", x))
 
               filename <- file.path (d, "R", "rrr-stats-standards.R")
               # remove DESC file from directory should error
@@ -44,7 +44,7 @@ test_that("roxygen standards", {
                                         "within an R package"))
                   chk <- file.rename (temp, desc)
               }
-              # writes all standards with "@rssrTODO" tags:
+              # writes all standards with "@rrrstatsTODO" tags:
               rrr_stats_roxygen (category = "regression",
                                  filename = filename,
                                  overwrite = TRUE)
@@ -54,8 +54,10 @@ test_that("roxygen standards", {
                   )
 
               # -1 at end because they finish with a cli::rule line
-              todo_old <- x [(grep ("@rssrTODO", x) + 1):(length (x) - 1)]
-              todo_new <- x2 [(grep ("@rssrTODO", x2) + 1):(length (x2) - 1)]
+              index <- (grep ("@rrrstatsTODO", x) + 1):(length (x) - 1)
+              todo_old <- x [index]
+              index2 <- (grep ("@rrrstatsTODO", x2) + 1):(length (x2) - 1)
+              todo_new <- x2 [index2]
               expect_length (todo_old, 3L)
               expect_length (todo_new, 3L)
 
@@ -77,28 +79,28 @@ test_that ("roclet errors", {
                nm <- paste0 (sample (letters, size = 7), collapse = "")
                d <- rrr_stats_pkg_skeleton (pkg_name = nm)
 
-               # ------1. Adding extract @rssrVerbose tag should error:
+               # ------1. Adding extract @rrrstatsVerbose tag should error:
                f <- file.path (d, "R", "test.R")
                x <- c (readLines (f),
                        "",
-                       "#' @rssrVerbose TRUE",
+                       "#' @rrrstatsVerbose TRUE",
                        "NULL")
                writeLines (x, f)
 
                out <- tryCatch (roxygen2::roxygenise (d),
                                 error = function (e) e)
                expect_s3_class (out, "simpleError")
-               expect_true (grepl ("There must be only one @rssrVerbose flag",
-                                   out$message))
+               txt <- "There must be only one @rrrstatsVerbose flag"
+               expect_true (grepl (txt, out$message))
 
                x <- x [1:(length (x) - 3)]
                writeLines (x, f)
 
-               # ------2. Docs should be auto-verbose when @rssrVerbose flag is
-               # ------   removed
+               # ------2. Docs should be auto-verbose when @rrrstatsVerbose flag
+               # ------   is removed
                f <- file.path (d, "R", "rrr-stats-standards.R")
                x0 <- readLines (f)
-               x <- x0 [-grep ("@rssrVerbose", x0)]
+               x <- x0 [-grep ("@rrrstatsVerbose", x0)]
                writeLines (x, f)
                x <- capture.output (
                                     roxygen2::roxygenise (d),
@@ -107,19 +109,20 @@ test_that ("roclet errors", {
                expect_true (length (x) > 5) # output is verbose
                writeLines (x0, f)
 
-               # ------3. @rssrVerbose value must be logical
-               i <- grep ("@rssrVerbose", x0)
+               # ------3. @rrrstatsVerbose value must be logical
+               i <- grep ("@rrrstatsVerbose", x0)
                x <- x0
                x [i] <- gsub ("TRUE", "junk", x0 [i])
                writeLines (x, f)
                out <- tryCatch (roxygen2::roxygenise (d),
                                 error = function (e) e)
                expect_s3_class (out, "simpleError")
-               txt <- "The @rssrVerbose tag should only have 'TRUE' or 'FALSE'"
+               txt <- paste0 ("The @rrrstatsVerbose tag should only have ",
+                              "'TRUE' or 'FALSE'")
                expect_true (grepl (txt, out$message))
                writeLines (x0, f)
 
-               # --------4. @rssrNA tags should only be in a block named
+               # --------4. @rrrstatsNA tags should only be in a block named
                # --------   "NA_standards"
                f <- file.path (d, "R", "rrr-stats-standards.R")
                x <- x0 <- readLines (f)
@@ -129,7 +132,7 @@ test_that ("roclet errors", {
                out <- tryCatch (roxygen2::roxygenise (d),
                                 error = function (e) e)
                expect_s3_class (out, "simpleError")
-               txt <- paste0 ("@rssrNA tags should only appear in a ",
+               txt <- paste0 ("@rrrstatsNA tags should only appear in a ",
                               "block with a title of NA_standards")
                expect_true (grepl (txt, out$message))
 })

@@ -1,10 +1,11 @@
 
 #' rrr_stats_roclet
 #'
-#' Get values of all `rssr` tags in function documentation
+#' Get values of all `rrrstats` tags in function documentation
 #'
 #' Note that this function should never need to be called directly. It only
-#' exists to enable "@rssr" tags to be parsed from \pkg{roxygen2} documentation.
+#' exists to enable "@rrrstats" tags to be parsed from \pkg{roxygen2}
+#' documentation.
 #'
 #' @importFrom roxygen2 roclet
 #'
@@ -34,33 +35,34 @@ roclet_process.roclet_rrr_stats <- function (x, blocks, env, base_path) { # noli
                     tests = test_blocks,
                     readme = readme_blocks)
 
-    # ------ @rssr tags:
-    msgs_rssr <- collect_one_tag (base_path, blocks, tag = "rssr")
-    msgs_rssr_na <- collect_one_tag (base_path, blocks, tag = "rssrNA")
-    msgs_rssr_todo <- collect_one_tag (base_path, blocks, tag = "rssrTODO")
+    # ------ @rrrstats tags:
+    msgs_rrrstats <- collect_one_tag (base_path, blocks, tag = "rrrstats")
+    msgs_rrrstats_na <- collect_one_tag (base_path, blocks, tag = "rrrstatsNA")
+    msgs_rrrstats_todo <- collect_one_tag (base_path, blocks,
+                                           tag = "rrrstatsTODO")
 
-    has_output <- (length (msgs_rssr) > 0L |
-                   length (msgs_rssr_na) > 0L |
-                   length (msgs_rssr_todo) > 0L)
+    has_output <- (length (msgs_rrrstats) > 0L |
+                   length (msgs_rrrstats_na) > 0L |
+                   length (msgs_rrrstats_todo) > 0L)
     if (has_output) {
 
         txt <- "rOpenSci Statistical Software Standards"
         message (cli::rule (center = cli::col_green (txt), line_col = "green"))
     }
 
-    if (length (msgs_rssr) > 0L) {
-        cli::cli_h3 ("@rssr standards:")
-        print_one_msg_list (msgs_rssr)
+    if (length (msgs_rrrstats) > 0L) {
+        cli::cli_h3 ("@rrrstats standards:")
+        print_one_msg_list (msgs_rrrstats)
     }
 
-    if (length (msgs_rssr_na) > 0L) {
-        cli::cli_h3 ("@rssrNA standards:")
-        print_one_msg_list (msgs_rssr_na)
+    if (length (msgs_rrrstats_na) > 0L) {
+        cli::cli_h3 ("@rrrstatsNA standards:")
+        print_one_msg_list (msgs_rrrstats_na)
     }
 
-    if (length (msgs_rssr_todo) > 0L) {
-        cli::cli_h3 ("@rssrTODO standards:")
-        print_one_msg_list (msgs_rssr_todo)
+    if (length (msgs_rrrstats_todo) > 0L) {
+        cli::cli_h3 ("@rrrstatsTODO standards:")
+        print_one_msg_list (msgs_rrrstats_todo)
     }
     if (has_output) {
         message (cli::rule (line_col = "green"))
@@ -72,19 +74,20 @@ roclet_process.roclet_rrr_stats <- function (x, blocks, env, base_path) { # noli
 get_verbose_flag <- function (blocks) {
 
     n <- vapply (blocks, function (i)
-                 length (roxygen2::block_get_tags (i, "rssrVerbose")),
+                 length (roxygen2::block_get_tags (i, "rrrstatsVerbose")),
                  integer (1))
     if (sum (n) > 1)
-        stop ("There must be only one @rssrVerbose flag in your documentation")
+        stop ("There must be only one @rrrstatsVerbose flag ",
+              "in your documentation")
 
     if (sum (n) == 0)
         return (TRUE)
 
     block <- blocks [[which (n == 1)]]
-    flag <- roxygen2::block_get_tags (block, "rssrVerbose") [[1]]$val
+    flag <- roxygen2::block_get_tags (block, "rrrstatsVerbose") [[1]]$val
 
     if (is.na (as.logical (flag)))
-        stop ("The @rssrVerbose tag should only have ",
+        stop ("The @rrrstatsVerbose tag should only have ",
               "'TRUE' or 'FALSE' after it")
 
     return (as.logical (flag))
@@ -128,7 +131,7 @@ print_one_msg_list <- function (msgs) {
 
 # Collect all messages for one tag
 collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
-                             tag = "rssr") {
+                             tag = "rrrstats") {
 
     msgs <- list ()
     for (block in blocks$R) {
@@ -141,26 +144,26 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
     return (msgs)
 }
 
-#' process_rssr_tags
+#' process_rrrstats_tags
 #'
 #' @param fn_name Include name of calling function in message?
 #' @noRd
-process_rssr_tags <- function (block, fn_name = TRUE, dir = "R") {
+process_rrrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     func_name <- block$object$alias
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (is.null (block_title), "", block_title)
     if (block_title == "NA_standards")
-        stop ("An NA_standards block should only contain '@rssrNA' tags,",
-              " and no @rssr tags.")
+        stop ("An NA_standards block should only contain '@rrrstatsNA' tags,",
+              " and no @rrrstats tags.")
 
-    standards <- roxygen2::block_get_tags (block, "rssr")
+    standards <- roxygen2::block_get_tags (block, "rrrstats")
     standards <- unlist (lapply (standards, function (i) i$val))
 
     snum <- extract_standard_numbers (standards)
     if (length (snum) < 1)
-        stop ("rssr tags found but no correctly-formatted standard numbers")
+        stop ("rrrstats tags found but no correctly-formatted standard numbers")
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
@@ -193,19 +196,19 @@ extract_standard_numbers <- function (standards) {
     return (snum)
 }
 
-#' process_rssr_NA_tags
+#' process_rrrstats_NA_tags
 #'
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
-process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
+process_rrrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (length (block_title) == 0L, "", block_title)
     if (!block_title == "NA_standards")
-        stop ("@rssrNA tags should only appear in ",
+        stop ("@rrrstatsNA tags should only appear in ",
               "a block with a title of NA_standards")
 
-    standards <- roxygen2::block_get_tags (block, "rssrNA")
+    standards <- roxygen2::block_get_tags (block, "rrrstatsNA")
     standards <- unlist (lapply (standards, function (i) i$val))
     snum <- extract_standard_numbers (standards)
     #standards <- gsub ("\\s.*$", "", standards)
@@ -221,13 +224,13 @@ process_rssrNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
     return (msg)
 }
 
-#' process_rssr_TODO_tags
+#' process_rrrstats_TODO_tags
 #'
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
-process_rssrTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
+process_rrrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
-    standards <- roxygen2::block_get_tags (block, "rssrTODO")
+    standards <- roxygen2::block_get_tags (block, "rrrstatsTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
     #standards <- gsub ("\\s.*$", "", standards)
     snum <- extract_standard_numbers (standards)
@@ -257,7 +260,7 @@ get_block_backref <- function (block, base_path = NULL) {
     return (block_backref)
 }
 
-get_src_tags <- function (blocks, base_path, tag = "rssr") {
+get_src_tags <- function (blocks, base_path, tag = "rrrstats") {
 
     n <- vapply (blocks, function (i)
                  length (roxygen2::block_get_tags (i, tag)),
@@ -333,7 +336,7 @@ get_test_blocks <- function (base_path) {
     return (blocks)
 }
 
-get_other_tags <- function (blocks, tag = "rssr", dir = "tests") {
+get_other_tags <- function (blocks, tag = "rrrstats", dir = "tests") {
 
     msgs <- list ()
 
