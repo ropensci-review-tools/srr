@@ -1,6 +1,6 @@
 <!-- badges: start -->
-[![R build status](https://github.com/ropenscilabs/rssr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/rssr/actions)
-[![codecov](https://codecov.io/gh/ropenscilabs/rssr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/rssr)
+[![R build status](https://github.com/ropenscilabs/rrr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/rrr/actions)
+[![codecov](https://codecov.io/gh/ropenscilabs/rrr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/rrr)
 [![Project Status:
 Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
@@ -10,8 +10,10 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 # rrr ([**r**OpenSci](https://ropensci.org) **r**eview **r**oclets)
 
-This is an R package with functions to help those developing and reviewing
-packages submitted to rOpenSci's system for [Statistical Software
+This package contains roclets for use with [rOpenSci](https://ropensci.org)'s
+software review systems. At present, the package only contains roclets and
+associated functions to help those developing and reviewing packages submitted
+to rOpenSci's system for [Statistical Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of software
 against the standards detailed in the [main project
@@ -22,7 +24,7 @@ This package can be installed with,
 
 ```{r install, eval = FALSE}
 # install.packages("remotes")
-remotes::install_github("ropenscilabs/rssr")
+remotes::install_github("ropenscilabs/rrr")
 ```
 
 and loaded for use with,
@@ -33,12 +35,14 @@ library (rrr)
 devtools::load_all (".", export_all = FALSE)
 ```
 
-All functions of the package are prefixed with `rssr_`. The remainder of this
-document is in two main sections. If you're developing a package for submission
-to our peer review system, keep straight on reading. If you've been invited to
-review a package, you may skip the following section and just read the
-subsequent section. The general procedures for both developers and reviewers
-are described at length in the [SSR
+Both this `README`, and the main package vignette, describe the functionality
+of the package in the specific context of the statistical software review
+project. All functions intended for use in this context are prefixed with
+`rssr_`. The remainder of this document is in two main sections. If you're
+developing a package for submission to our peer review system, keep straight on
+reading. If you've been invited to review a package, you may skip the following
+section and just read the subsequent section. The general procedures for both
+developers and reviewers are described at length in the [SSR
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
 with this `README` intended to provide supporting technical details.
 
@@ -46,11 +50,11 @@ with this `README` intended to provide supporting technical details.
 
 People intending to develop packages for submission to our system for peer
 reviewing statistical software will need to follow the following general steps.
-Note that, while the `rssr` package has a few functions which developers may
+Note that, while the `rrr` package has a few functions which developers may
 call directly to aid their submission process, most functionality of this
 package is implemented via custom [`roxygen2`
 "roclets"](https://roxygen2.r-lib.org). The third of the following steps
-describes how to link your package with `rssr` in order to use these roclets.
+describes how to link your package with `rrr` in order to use these roclets.
 
 1. Ensure the package successfully passes all
    [`autotest`](https://github.com/ropenscilabs/autotest) tests, including
@@ -59,7 +63,7 @@ describes how to link your package with `rssr` in order to use these roclets.
    `autotest`](https://ropenscilabs.github.io/autotest/).
 2. Decide which of our in-scope categories of statistical software best
    describe your package. The function
-   [`rssr_available_categories()`](https://ropenscilabs.github.io/statistical-software-review/reference/rssr_available_categories.html)
+   [`rssr_available_categories()`](https://ropenscilabs.github.io/rrr/reference/rssr_available_categories.html)
    provides a list of currently developed categories for which standards
    have been developed, along with links to the online standards for each
    category:
@@ -78,12 +82,12 @@ describes how to link your package with `rssr` in order to use these roclets.
     Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
     ```
     That will load the ["roclet"](https://roxygen2.r-lib.org) used by this
-    package to process standards as documented within your actual code. Note
-    that you do not need to add, import, or depend upon the `rssr` package
-    anywhere else within the `DESCRIPTION` file.
-4. Load the `rssr` package and generate lists of standards within your
+    package to process statistical standards as documented within your actual
+    code. Note that you do not need to add, import, or depend upon the `rrr`
+    package anywhere else within the `DESCRIPTION` file.
+4. Load the `rrr` package and generate lists of standards within your
    package's `/R` folder by running,
-   [`rssr_standards_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/statistical-software-review/reference/rssr_standards_roxygen.html).
+   [`rssr_standards_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/rrr/reference/rssr_standards_roxygen.html).
    This will by default create a new file called by default
    `R/rssr_standards.R`, the first few lines of which will look like this:
     ```{r rssr_standards_roxygen, echo = FALSE, message = FALSE}
@@ -122,7 +126,7 @@ describes how to link your package with `rssr` in order to use these roclets.
    standard not applicable to your software. These `@rssrNA` tags should be
    collected together within a single `roxygen2` block with a title of
    `NA_standards`. The
-   [`rssr_standards_roxygen()`](https://ropenscilabs.github.io/statistical-software-review/reference/rssr_standards_roxygen.html)
+   [`rssr_standards_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rssr_standards_roxygen.html)
    function generates a blank template for this block. Any non-applicable
    standards can then just be moved into this block, with their `@rssrTODO`
    tags changed to `@rssrNA` 
@@ -135,7 +139,7 @@ describes how to link your package with `rssr` in order to use these roclets.
 
 To help developers understand how to use these roclets, this package includes a
 function,
-[`rssr_pkg_skeleton()`](https://ropenscilabs.github.io/rssr/reference/rssr_pkg_skeleton.html),
+[`rssr_pkg_skeleton()`](https://ropenscilabs.github.io/rrr/reference/rssr_pkg_skeleton.html),
 which will generate a skeleton of a package with several
 [`roxygen2`](https://roxygen2.r-lib.org) tags inserted throughout the code.
 This function returns the directory where the skeleton package has been
