@@ -7,7 +7,7 @@ test_that("download standards", {
               filename <- tempfile (fileext = ".md")
               expect_false (file.exists (filename))
               expect_message (
-                  s <- rssr_standards_checklist (c ("regression", "ml"),
+                  s <- rrr_stats_checklist (c ("regression", "ml"),
                                                  filename = filename)
               )
               expect_true (file.exists (filename))

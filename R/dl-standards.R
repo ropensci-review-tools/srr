@@ -120,7 +120,7 @@ category_titles_urls <- function (category) {
     return (ret)
 }
 
-#' rssr_standards_checklist
+#' rrr_stats_checklist
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, and store the result in the
@@ -135,7 +135,7 @@ category_titles_urls <- function (category) {
 #' standards along with standards for any additional categories.
 #'
 #' @export
-rssr_standards_checklist <- function (category = NULL, filename = NULL) {
+rrr_stats_checklist <- function (category = NULL, filename = NULL) {
 
     s <- get_standards_checklists (category = category)
 
@@ -155,7 +155,7 @@ rssr_standards_checklist <- function (category = NULL, filename = NULL) {
 #' category-specific standards, as a checklist, convert to project-specific
 #' \pkg{roxygen2} format, and save in nominated file.
 #'
-#' @inheritParams rssr_standards_checklist
+#' @inheritParams rrr_stats_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
 #' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
