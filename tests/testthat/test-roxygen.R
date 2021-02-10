@@ -39,15 +39,15 @@ test_that("roxygen standards", {
               temp <- file.path (d, "temp")
               chk <- file.rename (desc, temp)
               if (chk) {
-                  expect_error (rssr_standards_roxygen (filename = filename),
+                  expect_error (rrr_stats_roxygen (filename = filename),
                                 paste0 ("This function must be called ",
                                         "within an R package"))
                   chk <- file.rename (temp, desc)
               }
               # writes all standards with "@rssrTODO" tags:
-              rssr_standards_roxygen (category = "regression",
-                                      filename = filename,
-                                      overwrite = TRUE)
+              rrr_stats_roxygen (category = "regression",
+                                 filename = filename,
+                                 overwrite = TRUE)
               x2 <- capture.output (
                   roxygen2::roxygenise (d),
                   type = "message"

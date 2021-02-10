@@ -149,7 +149,7 @@ rrr_stats_checklist <- function (category = NULL, filename = NULL) {
     invisible (clipr::write_clip (s))
 }
 
-#' rssr_standards_roxygen
+#' rrr_stats_roxygen
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, convert to project-specific
@@ -162,7 +162,7 @@ rrr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' will ask whether file should be overwritten.
 #' @return Nothing
 #' @export
-rssr_standards_roxygen <- function (category = NULL,
+rrr_stats_roxygen <- function (category = NULL,
                                     filename = "rssr-standards.R",
                                     overwrite = FALSE) {
 
@@ -200,7 +200,7 @@ rssr_standards_roxygen <- function (category = NULL,
     s <- paste0 (s_start, s_end)
 
     # nolint start -------- lines > 80 character --------
-    x <- c ("#' rssr_standards",
+    x <- c ("#' rrr_stats",
             "#'",
             "#' All of the following standards initially have `@rssrTODO` tags.",
             "#' These may be moved at any time to any other locations in your code.",
@@ -271,7 +271,7 @@ get_standards_checklists <- function (category = NULL) {
 #' descriptions.
 #'
 #' @return A `data.frame` with 3 columns of "category" (the categories to be
-#' submitted to \link{rssr_standards_checklist}), "title" (the full title), and
+#' submitted to \link{rrr_stats_checklist}), "title" (the full title), and
 #' "url".
 #'
 #' @export

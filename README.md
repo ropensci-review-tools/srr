@@ -106,12 +106,12 @@ roclets.
 
 4.  Load the `rrr` package and generate lists of standards within your
     package’s `/R` folder by running,
-    [`rssr_standards_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/rrr/reference/rssr_standards_roxygen.html).
+    [`rrr_stats_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html).
     This will by default create a new file called by default
     `R/rssr_standards.R`, the first few lines of which will look like
     this:
 
-        ## [1] "#' rssr_standards"                                                      
+        ## [1] "#' rrr_stats"                                                           
         ## [2] "#'"                                                                     
         ## [3] "#' All of the following standards initially have `@rssrTODO` tags."     
         ## [4] "#' These may be moved at any time to any other locations in your code." 
@@ -152,7 +152,7 @@ roclets.
     explanation of why you consider that standard not applicable to your
     software. These `@rssrNA` tags should be collected together within a
     single `roxygen2` block with a title of `NA_standards`. The
-    [`rssr_standards_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rssr_standards_roxygen.html)
+    [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
     function generates a blank template for this block. Any
     non-applicable standards can then just be moved into this block,
     with their `@rssrTODO` tags changed to `@rssrNA`

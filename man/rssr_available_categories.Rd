@@ -8,7 +8,7 @@ rssr_available_categories()
 }
 \value{
 A \code{data.frame} with 3 columns of "category" (the categories to be
-submitted to \link{rssr_standards_checklist}), "title" (the full title), and
+submitted to \link{rrr_stats_checklist}), "title" (the full title), and
 "url".
 }
 \description{
