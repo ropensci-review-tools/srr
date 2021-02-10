@@ -1,4 +1,4 @@
-LFILE = rssr
+LFILE = rrr-stats
 
 all: knith
 

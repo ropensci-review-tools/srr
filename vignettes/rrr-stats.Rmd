@@ -107,7 +107,7 @@ The "roclets" can be enabled for a package by modifying the `DESCRIPTION` file
 so that the `Roxygen` line looks like this:
 
 ```{r roxygen, eval = FALSE}
-Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
+Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
 ```
 
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package
@@ -122,24 +122,24 @@ The `rrr` packages recognises and uses the following three tags, each of which
 may be inserted into [`roxygen2`](https://roxygen2.r-lib.org) documentation
 blocks anywhere in your code. The tags are:
 
-1. `@rssr` tags to indicate standards which have been addressed. These should
+1. `@rrrstats` tags to indicate standards which have been addressed. These should
    be placed at the locations within your code where specific standards have
    been addressed, and should include a brief textual description of how the
    code at that location addresses the nominated standard.
-2. `@rssrTODO` tags to indicate standards which have not yet been addressed.
+2. `@rrrstatsTODO` tags to indicate standards which have not yet been addressed.
    The [`rrr_stats_roxygen()`
    function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
    described below will place all standards for your nominated categories in an
    initial file in the `/R` directory of your project. Each of these will have
-   a tag of `@rssrTODO`. As you address each standard, you'll need to move it
+   a tag of `@rrrstatsTODO`. As you address each standard, you'll need to move it
    from that initial location to that point in your code where that standard is
-   addressed, and change the tag from `@rssrTODO` to `@rssr`. It may help to
+   addressed, and change the tag from `@rrrstatsTODO` to `@rrrstats`. It may help to
    break the initial, commonly very long, single list of standards into smaller
    groups, and to move each of these into the approximate location within your
    code where these are likely to be addressed. For example, all standards
    which pertain to tests can be moved into the `/tests` (or `/tests/testthat`)
    directory.
-3. `@rssrNA` tags to indicate standards which you deem not applicable to your
+3. `@rrrstatsNA` tags to indicate standards which you deem not applicable to your
    package. These need to be grouped together in a single block with a title of
    `NA_standards`. Such a block is both included in the package skeleton, and
    also in the output of [`rrr_stats_roxygen()`
@@ -151,9 +151,9 @@ blocks anywhere in your code. The tags are:
 
 The output illustrated above shows how the `rrr` package groups these three
 tags together, first collecting the output of standards which have been
-addressed (via `@rssr` tags), then showing output of non-applicable standards
-(via `@rssrNA` tags), and finally standards which are still to be addressed
-(via `@rssrTODO` tags).
+addressed (via `@rrrstats` tags), then showing output of non-applicable standards
+(via `@rrrstatsNA` tags), and finally standards which are still to be addressed
+(via `@rrrstatsTODO` tags).
 
 ### 3.1 Format of `rrr` documentation
 
@@ -167,15 +167,15 @@ formatting requirements:
 
 1. The tags must appear immediately after the
    [`roxygen2`](https://roxygen2.r-lib.org)-style comment symbols. This will
-   almost always mean `#' @rssr` (but see details below, under *Locations of
-   `rssr` documentation*).
+   almost always mean `#' @rrrstats` (but see details below, under *Locations of
+   `rrrstats` documentation*).
 2. The standards number(s) must be enclosed within curly braces, such as 
-   `#' @rssr {G1.0}`. Multiple standards may be associated with a single tag by
+   `#' @rrrstats {G1.0}`. Multiple standards may be associated with a single tag by
    including them within the same single pair of curly braces, and separating
-   each by a comma, such as `#' @rssr {G1.0, G1.1}`.
+   each by a comma, such as `#' @rrrstats {G1.0, G1.1}`.
 3. Explanatory text may be placed anywhere before or after curly braces
-   enclosing standards, such that `#' @rssr some text {G1.0}` is entirely
-   equivalent to `#' @rssr {G1.0} some text`.
+   enclosing standards, such that `#' @rrrstats some text {G1.0}` is entirely
+   equivalent to `#' @rrrstats {G1.0} some text`.
 4. Only the first pair of curly braces is parsed to determine standards
    numbers; any subsequent curly braces within one expression will be ignored.
    (Where an expression is everything that comes after one
@@ -183,18 +183,18 @@ formatting requirements:
    the next tag.) The following will accordingly only refer to G1.0, and not
    G1.1:
     ```{r}
-   #' @rssr {G1.0} as well as {G1.1}.
+   #' @rrrstats {G1.0} as well as {G1.1}.
     ```
     The appropriate way to refer to multiple tags is to include them in the one set of curly braces, as shown above, or to use separate tags, like this:
     ```{r}
-    #' @rssr {G1.0} as well as
-    #' @rssr {G1.1}
+    #' @rrrstats {G1.0} as well as
+    #' @rrrstats {G1.1}
     ```
 5. Any standard may occur arbitrarily many times in any file(s) within a
    package. The only requirement is that any one standard should only be
-   associated with one single kind of tag; thus should only be `@rssr` (a
-   standard which has been addressed), *or* `@rssrNA` (a standard which is not
-   applicable), *or* `@rssrTODO` (a standard which has not yet been addressed).
+   associated with one single kind of tag; thus should only be `@rrrstats` (a
+   standard which has been addressed), *or* `@rrrstatsNA` (a standard which is not
+   applicable), *or* `@rrrstatsTODO` (a standard which has not yet been addressed).
 
 In almost all cases, all tags for a package will be generated by the initial
 call to
@@ -202,9 +202,9 @@ call to
 and should simply be moved to appropriate locations within a package's code
 without modifying the format.
 
-### 3.2 Locations of `rrr` documentation
+### 3.2 Locations of `rrrstats` documentation
 
-`rssr` tags and accompanying text can be placed almost anywhere within a
+`rrrstats` tags and accompanying text can be placed almost anywhere within a
 package, especially in any file in the main `/R`, `/tests`, or `src/`
 directories. Within the `/R` directory, tags should be placed only in
 [`roxygen2`](https://roxygen2.r-lib.org) blocks. These tags, and all associated
@@ -220,7 +220,7 @@ documentation (`.Rd`) files. If that block is associated with a function, the
 following two lines will suffice:
 
 ```{r doc-ex-with-fn}
-#' @rssr G1.0 This standard belongs here
+#' @rrrstats G1.0 This standard belongs here
 #' @noRd
 myfunction <- function (...) {
     # ...
@@ -229,7 +229,7 @@ myfunction <- function (...) {
 If that block is not associated with a function, the documentation can be
 followed by a `NULL`, like this:
 ```{r doc-ex-with-null, eval = FALSE}
-#' @rssr G1.0 This standard belongs here
+#' @rrrstats G1.0 This standard belongs here
 #' @noRd
 NULL
 ```
@@ -248,7 +248,7 @@ print (readLines (file.path (d, "tests", "testthat", "test-a.R")),
        width = 20)
 ```
 
-While `rssr` tags can also be placed in the `src/` directory, the package
+While `rrrstats` tags can also be placed in the `src/` directory, the package
 currently only parses [`doxygen`](https://github.com/doxygen/doxygen)-style
 blocks for code written in C or C++. (Note that `rrr` is currently further
 restricted to C++ code compiled with
@@ -271,24 +271,24 @@ print (readLines (file.path (d, "src", "cpptest.cpp")), width = 20)
 
 Many standards refer to general package documentation, particularly in a
 `README` document, or in package vignettes. All such documents are presumed to
-be written in `.Rmd` format, for which `@rssr` tags must be included within
+be written in `.Rmd` format, for which `@rrrstats` tags must be included within
 distinct code chunks. Again, the skeleton package has an example as follows:
 ```{r readme-ex}
 readLines (file.path (d, "README.Rmd"))
 ```
 
-Those lines illustrate the expected form. `@rssr` tags should be within
-a single block contained within a dedicated code chunk. `@rssr` chunks within
+Those lines illustrate the expected form. `@rrrstats` tags should be within
+a single block contained within a dedicated code chunk. `@rrrstats` chunks within
 `.Rmd` files will generally use `echo = FALSE` to prevent them appearing in the
 rendered documents. The [`roxygen2`](https://roxygen2.r-lib.org) lines do not
 need to be followed by a `NULL` (or any other non-
 [`roxygen2`](https://roxygen2.r-lib.org) statement), although if additional
 R code is necessary for any reason, you may also need to add `eval = FALSE`.
 
-### 3.4 `@rssrNA` tags for non-applicable standards
+### 3.4 `@rrrstatsNA` tags for non-applicable standards
 
-While `@rssrTODO` and `@rssr` tags may be placed anywhere within a package,
-`@rssrNA` tags used to denote non-applicable standards must be placed within
+While `@rrrstatsTODO` and `@rrrstats` tags may be placed anywhere within a package,
+`@rrrstatsNA` tags used to denote non-applicable standards must be placed within
 a dedicated [`roxygen2`](https://roxygen2.r-lib.org) block with a title of
 `NA_standards`. As described above, both the package skeleton and the file
 produced by calling
@@ -298,7 +298,7 @@ include templates for this block. The following illustrates a minimal form:
 ```{r na-block, eval = FALSE}
 #' NA_standards
 #'
-#' @rssrNA {S3.3} is not applicable
+#' @rrrstatsNA {S3.3} is not applicable
 #' @noRd
 NULL
 ```
@@ -334,7 +334,7 @@ following general steps:
    the outset, as well as in the package skeleton.
 3. Run [`roxygenise`](https://roxygen2.r-lib.org/reference/roxygenize.html) to
    confirm that the roclets work on your package. You should initially see only
-   a single list of `@rssrTODO` standards.
+   a single list of `@rrrstatsTODO` standards.
 4. We recommend as a first step cutting-and-pasting standards to approximate
    locations within your package's code where you anticipate these standards
    being addressed. Multiple copies of any one standard may exist in multiple
@@ -346,7 +346,7 @@ following general steps:
     - Ensuring your code conforms;
     - Moving each standard to the one or more location(s) where you think your
       code most directly addresses them; 
-    - Modifying the `@rssrTODO` tag to `@rssr`
+    - Modifying the `@rrrstatsTODO` tag to `@rrrstats`
     - Changing the initial text describing the standard itself to a brief
       description of how your code addresses that standard.
 6. Standards which you deem not to be applicable to your package should be
@@ -356,4 +356,4 @@ following general steps:
    function).
 7. Update your documentation as frequently as you like or need, and use the
    output of the roclets to inform and guide the process of converting all
-   `@rssrTODO` tags into either `@rssr` or `@rssrNA` tags.
+   `@rrrstatsTODO` tags into either `@rrrstats` or `@rrrstatsNA` tags.
