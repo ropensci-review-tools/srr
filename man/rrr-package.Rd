@@ -12,8 +12,8 @@ Companion package to 'rOpenSci' statistical
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/ropenscilabs/rssr}
-  \item Report bugs at \url{https://github.com/ropenscilabs/rssr/issues}
+  \item \url{https://github.com/ropenscilabs/rrr}
+  \item Report bugs at \url{https://github.com/ropenscilabs/rrr/issues}
 }
 
 }
