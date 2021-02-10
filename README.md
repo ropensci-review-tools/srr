@@ -38,8 +38,8 @@ library (rrr)
 Both this `README`, and the main package vignette, describe the
 functionality of the package in the specific context of the statistical
 software review project. All functions intended for use in this context
-are prefixed with `rssr_`. The remainder of this document is in two main
-sections. If you’re developing a package for submission to our peer
+are prefixed with `rrr_stats_`. The remainder of this document is in two
+main sections. If you’re developing a package for submission to our peer
 review system, keep straight on reading. If you’ve been invited to
 review a package, you may skip the following section and just read the
 subsequent section. The general procedures for both developers and
@@ -90,7 +90,7 @@ roclets.
     Any software within one or more of these categories may be
     considered for review.
 
-3.  Enable your package to use the `rssr` roclets by modifying the
+3.  Enable your package to use the `rrr_stats` roclets by modifying the
     package’s `DESCRIPTION` file so that the `Roxygen` line looks like
     this:
 
@@ -108,15 +108,15 @@ roclets.
     package’s `/R` folder by running,
     [`rrr_stats_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html).
     This will by default create a new file called by default
-    `R/rssr_standards.R`, the first few lines of which will look like
-    this:
+    `R/rrr_stats_standards.R`, the first few lines of which will look
+    like this:
 
-        ## [1] "#' rrr_stats"                                                           
-        ## [2] "#'"                                                                     
-        ## [3] "#' All of the following standards initially have `@rssrTODO` tags."     
-        ## [4] "#' These may be moved at any time to any other locations in your code." 
-        ## [5] "#' Once addressed, please modify the tag from `@rssrTODO` to `@rssr`,"  
-        ## [6] "#' or `@rssrNA`, ensuring that references to every one of the following"
+        ## [1] "#' rrr_stats"                                                                 
+        ## [2] "#'"                                                                           
+        ## [3] "#' All of the following standards initially have `@rrrstatsTODO` tags."       
+        ## [4] "#' These may be moved at any time to any other locations in your code."       
+        ## [5] "#' Once addressed, please modify the tag from `@rrrstatsTODO` to `@rrrstats`,"
+        ## [6] "#' or `@rrrstatsNA`, ensuring that references to every one of the following"
 
     The file will contain a list of all standards from your nominated
     categories. This file may be renamed, and the individual items moved
@@ -124,38 +124,39 @@ roclets.
     should remain somewhere in [`roxygen2`](https://roxygen2.r-lib.org)
     blocks somewhere in your source code.
 
-    The `@rssrVerbose` line defines a variable which may be used to
-    suppress output from the `rssr` roclet when updating package
+    The `@rrrstatsVerbose` line defines a variable which may be used to
+    suppress output from the `rrrstats` roclet when updating package
     documentation (by setting to `FALSE`). After that comes the list of
     standards, each of which is prefixed by a
-    [`roxygen2`](https://roxygen2.r-lib.org) tag, `@rssrTODO`. A package
-    can only be submitted once all of these `TODO` items have been
-    addressed via one of the options described in the following two
+    [`roxygen2`](https://roxygen2.r-lib.org) tag, `@rrrstatsTODO`. A
+    package can only be submitted once all of these `TODO` items have
+    been addressed via one of the options described in the following two
     items.
 
 5.  A standard may be addressed by moving the item in the
-    `rssr_standards.R` file (or wherever you’ve chosen to list these
-    within your own package) to one or more places in your code where
-    these standards have been addressed. In doing so, the
+    `rrr-stats-standards.R` file (or wherever you’ve chosen to list
+    these within your own package) to one or more places in your code
+    where these standards have been addressed. In doing so, the
     [`roxygen2`](https://roxygen2.r-lib.org) tag should be changed from
-    `@rssrTODO` to `@rssr`, and the text which initially lists the
-    actual standard should be changed to provide a brief description of
-    how that standard has been met. Tags for one particular standard may
-    be repeated in multiple places within your code, and we encourage
-    locating an `@rssr` tag which refers to a particular standard at all
-    locations which directly address that standard.
+    `@rrrstatsTODO` to `@rrrstats`, and the text which initially lists
+    the actual standard should be changed to provide a brief description
+    of how that standard has been met. Tags for one particular standard
+    may be repeated in multiple places within your code, and we
+    encourage locating an `@rrrstats` tag which refers to a particular
+    standard at all locations which directly address that standard.
 
 6.  Alternatively, any standards which you consider not applicable to
-    your software may remain listed in the main `rssr_standards.R`
-    document, with their tag changed from `@rssrTODO` to `@rssrNA`, and
-    the description of the standard removed and replaced by an
-    explanation of why you consider that standard not applicable to your
-    software. These `@rssrNA` tags should be collected together within a
-    single `roxygen2` block with a title of `NA_standards`. The
+    your software may remain listed in the main `rrr-stats-standards.R`
+    document, with their tag changed from `@rrrstatsTODO` to
+    `@rrrstatsNA`, and the description of the standard removed and
+    replaced by an explanation of why you consider that standard not
+    applicable to your software. These `@rrrstatsNA` tags should be
+    collected together within a single `roxygen2` block with a title of
+    `NA_standards`. The
     [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
     function generates a blank template for this block. Any
     non-applicable standards can then just be moved into this block,
-    with their `@rssrTODO` tags changed to `@rssrNA`
+    with their `@rrrstatsTODO` tags changed to `@rrrstatsNA`
 
 7.  Each time you run
     [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
@@ -181,7 +182,7 @@ roxygen2::roxygenise (d)
 Note that the skeleton package also includes C++ code in a `src/`
 directory, so will be compiled the first time your run
 [`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)).
-Running a second time will generate cleaner output from the `rssr`
+Running a second time will generate cleaner output from the `rrrstats`
 roclets only. The tags included in
 [`roxygen2`](https://roxygen2.r-lib.org/) blocks in this skeleton
 package may be modified, moved, copied, and changed in any way you like
@@ -193,4 +194,4 @@ each time to see the effect.
 Individual standards may be moved to, and addressed in, any location
 including the directories `R/`, `src/`, or `tests/`. The [`roxygen2`
 roclet](https://roxygen2.r-lib.org) associated with this package is able
-to parse the various `@rssr` tags in all of these locations.
+to parse the various `@rrrstats` tags in all of these locations.
