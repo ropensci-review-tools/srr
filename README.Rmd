@@ -8,7 +8,7 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# [**r**OpenSci](https://ropensci.org) **r**eview **r**oclets (rrr)j
+# [**r**OpenSci](https://ropensci.org) **r**eview **r**oclets (rrr)
 
 This package contains roclets for use with [rOpenSci](https://ropensci.org)'s
 software review systems. At present, the package only contains roclets and
