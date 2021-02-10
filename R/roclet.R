@@ -36,33 +36,35 @@ roclet_process.roclet_rrr_stats <- function (x, blocks, env, base_path) { # noli
                     readme = readme_blocks)
 
     # ------ @rrrstats tags:
-    msgs_rrrstats <- collect_one_tag (base_path, blocks, tag = "rrrstats")
-    msgs_rrrstats_na <- collect_one_tag (base_path, blocks, tag = "rrrstatsNA")
-    msgs_rrrstats_todo <- collect_one_tag (base_path, blocks,
+    msgs <- collect_one_tag (base_path, blocks, tag = "rrrstats")
+    msgs_na <- collect_one_tag (base_path, blocks, tag = "rrrstatsNA")
+    msgs_todo <- collect_one_tag (base_path, blocks,
                                            tag = "rrrstatsTODO")
 
-    has_output <- (length (msgs_rrrstats) > 0L |
-                   length (msgs_rrrstats_na) > 0L |
-                   length (msgs_rrrstats_todo) > 0L)
+    check_no_mixed_tags (msgs, msgs_na, msgs_todo)
+
+    has_output <- (length (msgs) > 0L |
+                   length (msgs_na) > 0L |
+                   length (msgs_todo) > 0L)
     if (has_output) {
 
         txt <- "rOpenSci Statistical Software Standards"
         message (cli::rule (center = cli::col_green (txt), line_col = "green"))
     }
 
-    if (length (msgs_rrrstats) > 0L) {
+    if (length (msgs) > 0L) {
         cli::cli_h3 ("@rrrstats standards:")
-        print_one_msg_list (msgs_rrrstats)
+        print_one_msg_list (msgs)
     }
 
-    if (length (msgs_rrrstats_na) > 0L) {
+    if (length (msgs_na) > 0L) {
         cli::cli_h3 ("@rrrstatsNA standards:")
-        print_one_msg_list (msgs_rrrstats_na)
+        print_one_msg_list (msgs_na)
     }
 
-    if (length (msgs_rrrstats_todo) > 0L) {
+    if (length (msgs_todo) > 0L) {
         cli::cli_h3 ("@rrrstatsTODO standards:")
-        print_one_msg_list (msgs_rrrstats_todo)
+        print_one_msg_list (msgs_todo)
     }
     if (has_output) {
         message (cli::rule (line_col = "green"))
