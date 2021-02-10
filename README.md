@@ -95,7 +95,7 @@ roclets.
     this:
 
     ``` r
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
+    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by

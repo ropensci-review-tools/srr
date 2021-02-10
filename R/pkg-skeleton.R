@@ -38,7 +38,7 @@ write_desc <- function (d, pkg_name) {
                "Encoding: UTF-8",
                paste0 ("Roxygen: list(markdown = TRUE, ",
                        "roclets = c (\"rd\", \"namespace\", ",
-                       "\"rrr::rssr_roclet\"))"))
+                       "\"rrr::rrr_stats_roclet\"))"))
 
     rv <- get_roxygen_version ()
     if (!is.null (rv))

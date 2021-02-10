@@ -79,7 +79,7 @@ describes how to link your package with `rrr` in order to use these roclets.
 3. Enable your package to use the `rssr` roclets by modifying the package's
    `DESCRIPTION` file so that the `Roxygen` line looks like this:
     ```{r roxygen, eval = FALSE}
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
+    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
     ```
     That will load the ["roclet"](https://roxygen2.r-lib.org) used by this
     package to process statistical standards as documented within your actual

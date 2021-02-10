@@ -1,5 +1,5 @@
 
-#' rssr_roclet
+#' rrr_stats_roclet
 #'
 #' Get values of all `rssr` tags in function documentation
 #'
@@ -9,14 +9,14 @@
 #' @importFrom roxygen2 roclet
 #'
 #' @export
-rssr_roclet <- function () {
-    roxygen2::roclet ("rssr")
+rrr_stats_roclet <- function () {
+    roxygen2::roclet ("rrr_stats")
 }
 
 #' @importFrom roxygen2 roclet_process
 #'
 #' @export
-roclet_process.roclet_rssr <- function (x, blocks, env, base_path) { # nolint
+roclet_process.roclet_rrr_stats <- function (x, blocks, env, base_path) { # nolint
 
     if (!get_verbose_flag (blocks))
         return (NULL)
@@ -353,6 +353,6 @@ get_other_tags <- function (blocks, tag = "rssr", dir = "tests") {
 #' @importFrom roxygen2 roclet_output
 #'
 #' @export
-roclet_output.roclet_rssr <- function (x, results, base_path, ...) { # nolint
+roclet_output.roclet_rrr_stats <- function (x, results, base_path, ...) { # nolint
     return (NULL)
 }

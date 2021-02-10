@@ -107,7 +107,7 @@ The "roclets" can be enabled for a package by modifying the `DESCRIPTION` file
 so that the `Roxygen` line looks like this:
 
 ```{r roxygen, eval = FALSE}
-Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
+Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
 ```
 
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package
@@ -330,7 +330,7 @@ following general steps:
    can also be passed to the function (or the file can be renamed after it has
    initially been created).
 2. Change your package's `DESCRIPTION` file to use the `rrr` roclets by adding
-   `roclets = "rrr::rssr_roclet"`) to the `Roxygen` line, as demonstrated at
+   `roclets = "rrr::rrr_stats_roclet"`) to the `Roxygen` line, as demonstrated at
    the outset, as well as in the package skeleton.
 3. Run [`roxygenise`](https://roxygen2.r-lib.org/reference/roxygenize.html) to
    confirm that the roclets work on your package. You should initially see only
