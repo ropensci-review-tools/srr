@@ -265,7 +265,7 @@ get_standards_checklists <- function (category = NULL) {
     return (s)
 }
 
-#' rssr_available_categories
+#' rrr_stats_categories
 #'
 #' List all currently available categories and associated URLs to full category
 #' descriptions.
@@ -275,7 +275,7 @@ get_standards_checklists <- function (category = NULL) {
 #' "url".
 #'
 #' @export
-rssr_available_categories <- function () {
+rrr_stats_categories <- function () {
     cats <- list_categories ()
     cat_full <- unlist (lapply (cats, function (i)
                                 category_titles_urls (i)))

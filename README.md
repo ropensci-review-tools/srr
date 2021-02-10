@@ -66,13 +66,13 @@ roclets.
 
 2.  Decide which of our in-scope categories of statistical software best
     describe your package. The function
-    [`rssr_available_categories()`](https://ropenscilabs.github.io/rrr/reference/rssr_available_categories.html)
+    [`rrr_stats_categories()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_categories.html)
     provides a list of currently developed categories for which
     standards have been developed, along with links to the online
     standards for each category:
 
     ``` r
-    rssr_available_categories ()$title
+    rrr_stats_categories ()$title
     ```
 
         ## [1] "General"                                                        
@@ -167,7 +167,7 @@ roclets.
 To help developers understand how to use these roclets, this package
 includes a function,
 [`rssr_pkg_skeleton()`](https://ropenscilabs.github.io/rrr/reference/rssr_pkg_skeleton.html),
-which can be used to generate a skeleton of a package with several
+which will generate a skeleton of a package with several
 [`roxygen2`](https://roxygen2.r-lib.org) tags inserted throughout the
 code. This function returns the directory where the skeleton package has
 been created, so running the following two lines will illustrate the

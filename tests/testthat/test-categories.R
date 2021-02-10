@@ -1,7 +1,7 @@
 test_that("available categories", {
 
               expect_silent (
-                  x <- rssr_available_categories ()
+                  x <- rrr_stats_categories ()
                   )
               expect_s3_class (x, "data.frame")
               expect_equal (ncol (x), 3)
