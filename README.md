@@ -166,7 +166,7 @@ roclets.
 
 To help developers understand how to use these roclets, this package
 includes a function,
-[`rssr_pkg_skeleton()`](https://ropenscilabs.github.io/rrr/reference/rssr_pkg_skeleton.html),
+[`rrr_stats_pkg_skeleton()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html),
 which will generate a skeleton of a package with several
 [`roxygen2`](https://roxygen2.r-lib.org) tags inserted throughout the
 code. This function returns the directory where the skeleton package has
@@ -174,7 +174,7 @@ been created, so running the following two lines will illustrate the
 roclets in action:
 
 ``` r
-d <- rssr_pkg_skeleton ()
+d <- rrr_stats_pkg_skeleton ()
 roxygen2::roxygenise (d)
 ```
 

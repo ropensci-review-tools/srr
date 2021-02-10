@@ -2,7 +2,7 @@ test_that("dummy package", {
 
               pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
                                   collapse = "")
-              d <- rssr_pkg_skeleton (pkg_name = pkg_name)
+              d <- rrr_stats_pkg_skeleton (pkg_name = pkg_name)
               expect_true (file.exists (d))
               files <- list.files (d)
               expect_true ("DESCRIPTION" %in% files)
@@ -33,6 +33,6 @@ test_that ("skeleton errors", {
                dir.create (d)
                writeLines ("aaa", con = file.path (d, "aaa"))
                expect_error (
-                             s <- rssr_pkg_skeleton (pkg_name = pkg_name),
+                             s <- rrr_stats_pkg_skeleton (pkg_name = pkg_name),
                              paste0 ("The path \\[", d, "\\] is not empty"))
 })

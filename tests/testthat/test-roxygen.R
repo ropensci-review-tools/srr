@@ -3,7 +3,7 @@ test_that("roxygen standards", {
               #Sys.setenv("CLIPR_ALLOW" = TRUE)
 
               pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
-              d <- rssr_pkg_skeleton (pkg_name = pkg_name)
+              d <- rrr_stats_pkg_skeleton (pkg_name = pkg_name)
               expect_true (file.exists (file.path (tempdir (), pkg_name)))
               fp <- file.path (tempdir (), pkg_name, "DESCRIPTION")
               expect_true (file.exists (fp))
@@ -73,7 +73,7 @@ test_that("roxygen standards", {
 test_that ("roclet errors", {
 
                nm <- paste0 (sample (letters, size = 7), collapse = "")
-               d <- rssr_pkg_skeleton (pkg_name = nm)
+               d <- rrr_stats_pkg_skeleton (pkg_name = nm)
 
                # ------1. Adding extract @rssrVerbose tag should error:
                f <- file.path (d, "R", "test.R")

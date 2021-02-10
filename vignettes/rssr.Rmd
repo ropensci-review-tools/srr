@@ -42,15 +42,15 @@ documentation and triggering the `rrr` roclets will be referred to as "running
 
 ## 1. The package skeleton
 
-The [`rssr_pkg_skeleton()`
-function](https://ropenscilabs.github.io/rrr/reference/rssr_pkg_skeleton.html)
+The [`rrr_stats_pkg_skeleton()`
+function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html)
 included with this package differs from
 [other](https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html)
 [package](https://usethis.r-lib.org/reference/create_package.html)
 [skeleton](https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html) functions.
 Rather than providing a skeleton from which you can construct your own package,
-the [`rssr_pkg_skeleton()`
-function](https://ropenscilabs.github.io/rrr/reference/rssr_pkg_skeleton.html)
+the [`rrr_stats_pkg_skeleton()`
+function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html)
 generates a skeleton to help developers understand this package works. This
 skeleton of a package is intended to be modified to help you understand which
 kinds of modifications are allowed, and which generate errors. The package is
@@ -60,7 +60,7 @@ and looks like this:
 
 ```{r dir-tree}
 library (rrr)
-d <- rssr_pkg_skeleton ()
+d <- rrr_stats_pkg_skeleton ()
 fs::dir_tree (d)
 ```
 

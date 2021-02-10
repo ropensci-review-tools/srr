@@ -121,14 +121,14 @@ write_readme <- function (d, pkg_name) {
     # nolint start --- lines > 80 characters
     rfile <- c (paste0 ("# ", pkg_name),
                 "",
-                "This is a skeleton of an [`rssr`](https://github.com/ropenscilabs/rssr) package,",
-                "intended developers to tweak as they like, in order to understand how the",
-                "package's roclets work.",
+                "This is a skeleton of an [`rrr` statistics](https://github.com/ropenscilabs/rrr)",
+                "package, intended developers to tweak as they like, in order to understand ",
+                "how the package's roclets work.",
                 "",
-                "This `README.Rmd` file is here to demonstrate how to embed `rssr` roclet tags.",
+                "This `README.Rmd` file is here to demonstrate how to embed `rrr` roclet tags.",
                 "These tags need to be within dedicated *code chunks*, like the following:",
                 "",
-                "```{r rssr-tags, eval = FALSE, echo = FALSE}",
+                "```{r rrr-tags, eval = FALSE, echo = FALSE}",
                 "#' roxygen_block_name",
                 "#'",
                 "#' (Add some text if you like)",
@@ -175,11 +175,11 @@ write_test_files <- function (d, pkg_name) {
 }
 
 
-#' rssr_pkg_skeleton
+#' rrr_stats_pkg_skeleton
 #'
-#' Make a dummy package skeleton including 'rssr' \pkg{roxygen2} tags which can
+#' Make a dummy package skeleton including 'rrr' \pkg{roxygen2} tags which can
 #' be used to try out the functionality of this package. Running the example
-#' lines below which activate the 'rssr' roclets, and show you what the output
+#' lines below which activate the 'rrr' roclets, and show you what the output
 #' of those roclets looks like. Feel free to examine the effect of modifying any
 #' of the `@rssr` tags within the code as identified by running those lines.
 #'
@@ -188,10 +188,10 @@ write_test_files <- function (d, pkg_name) {
 #' will be in `file.path(base_dir, pkg_name)`.
 #' @return The path to the directory holding the newly created package
 #' @examples
-#' d <- rssr_pkg_skeleton ()
+#' d <- rrr_stats_pkg_skeleton ()
 #' roxygen2::roxygenise (d)
 #' @export
-rssr_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
+rrr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 
