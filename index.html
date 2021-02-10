@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rrr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.140</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.143</span>
       </span>
     </div>
 
@@ -56,7 +56,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/ropenscilabs/rssr/">
+  <a href="https://github.com/ropenscilabs/rrr/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,8 +86,8 @@
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"ropenscilabs/rrr"</span><span class="op">)</span></code></pre></div>
 <p>and loaded for use with,</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/rssr">rrr</a></span><span class="op">)</span></code></pre></div>
-<p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. All functions intended for use in this context are prefixed with <code>rssr_</code>. The remainder of this document is in two main sections. If you’re developing a package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/rrr">rrr</a></span><span class="op">)</span></code></pre></div>
+<p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. All functions intended for use in this context are prefixed with <code>rrr_stats_</code>. The remainder of this document is in two main sections. If you’re developing a package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
 <div id="for-package-developers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#for-package-developers" class="anchor"></a>For Package Developers</h2>
@@ -109,32 +109,32 @@
 <p>That function also returns links to the full descriptions of each category in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a>. Any software within one or more of these categories may be considered for review.</p>
 </li>
 <li>
-<p>Enable your package to use the <code>rssr</code> roclets by modifying the package’s <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
+<p>Enable your package to use the <code>rrr_stats</code> roclets by modifying the package’s <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Roxygen</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>markdown <span class="op">=</span> <span class="cn">TRUE</span>, roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span> <span class="op">(</span><span class="st">"namespace"</span>, <span class="st">"rd"</span>, <span class="st">"rrr::rrr_stats_roclet"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>That will load the <a href="https://roxygen2.r-lib.org">“roclet”</a> used by this package to process statistical standards as documented within your actual code. Note that you do not need to add, import, or depend upon the <code>rrr</code> package anywhere else within the <code>DESCRIPTION</code> file.</p>
 </li>
 <li>
-<p>Load the <code>rrr</code> package and generate lists of standards within your package’s <code>/R</code> folder by running, <a href="https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html"><code>rrr_stats_roxygen(category = c("&lt;my-category-1&gt;", "&lt;my-category-2&gt;"))</code></a>. This will by default create a new file called by default <code>R/rssr_standards.R</code>, the first few lines of which will look like this:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## [1] "#' rrr_stats"                                                           </span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## [2] "#'"                                                                     </span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## [3] "#' All of the following standards initially have `@rssrTODO` tags."     </span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## [4] "#' These may be moved at any time to any other locations in your code." </span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## [5] "#' Once addressed, please modify the tag from `@rssrTODO` to `@rssr`,"  </span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">## [6] "#' or `@rssrNA`, ensuring that references to every one of the following"</span></span></code></pre></div>
+<p>Load the <code>rrr</code> package and generate lists of standards within your package’s <code>/R</code> folder by running, <a href="https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html"><code>rrr_stats_roxygen(category = c("&lt;my-category-1&gt;", "&lt;my-category-2&gt;"))</code></a>. This will by default create a new file called by default <code>R/rrr_stats_standards.R</code>, the first few lines of which will look like this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## [1] "#' rrr_stats"                                                                 </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## [2] "#'"                                                                           </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## [3] "#' All of the following standards initially have `@rrrstatsTODO` tags."       </span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## [4] "#' These may be moved at any time to any other locations in your code."       </span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## [5] "#' Once addressed, please modify the tag from `@rrrstatsTODO` to `@rrrstats`,"</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">## [6] "#' or `@rrrstatsNA`, ensuring that references to every one of the following"</span></span></code></pre></div>
 <p>The file will contain a list of all standards from your nominated categories. This file may be renamed, and the individual items moved to other locations in other files, but all nominated standards should remain somewhere in <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> blocks somewhere in your source code.</p>
-<p>The <code>@rssrVerbose</code> line defines a variable which may be used to suppress output from the <code>rssr</code> roclet when updating package documentation (by setting to <code>FALSE</code>). After that comes the list of standards, each of which is prefixed by a <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag, <code>@rssrTODO</code>. A package can only be submitted once all of these <code>TODO</code> items have been addressed via one of the options described in the following two items.</p>
+<p>The <code>@rrrstatsVerbose</code> line defines a variable which may be used to suppress output from the <code>rrrstats</code> roclet when updating package documentation (by setting to <code>FALSE</code>). After that comes the list of standards, each of which is prefixed by a <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag, <code>@rrrstatsTODO</code>. A package can only be submitted once all of these <code>TODO</code> items have been addressed via one of the options described in the following two items.</p>
 </li>
-<li><p>A standard may be addressed by moving the item in the <code>rssr_standards.R</code> file (or wherever you’ve chosen to list these within your own package) to one or more places in your code where these standards have been addressed. In doing so, the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag should be changed from <code>@rssrTODO</code> to <code>@rssr</code>, and the text which initially lists the actual standard should be changed to provide a brief description of how that standard has been met. Tags for one particular standard may be repeated in multiple places within your code, and we encourage locating an <code>@rssr</code> tag which refers to a particular standard at all locations which directly address that standard.</p></li>
-<li><p>Alternatively, any standards which you consider not applicable to your software may remain listed in the main <code>rssr_standards.R</code> document, with their tag changed from <code>@rssrTODO</code> to <code>@rssrNA</code>, and the description of the standard removed and replaced by an explanation of why you consider that standard not applicable to your software. These <code>@rssrNA</code> tags should be collected together within a single <code>roxygen2</code> block with a title of <code>NA_standards</code>. The <a href="https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html"><code>rrr_stats_roxygen()</code></a> function generates a blank template for this block. Any non-applicable standards can then just be moved into this block, with their <code>@rssrTODO</code> tags changed to <code>@rssrNA</code></p></li>
+<li><p>A standard may be addressed by moving the item in the <code>rrr-stats-standards.R</code> file (or wherever you’ve chosen to list these within your own package) to one or more places in your code where these standards have been addressed. In doing so, the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tag should be changed from <code>@rrrstatsTODO</code> to <code>@rrrstats</code>, and the text which initially lists the actual standard should be changed to provide a brief description of how that standard has been met. Tags for one particular standard may be repeated in multiple places within your code, and we encourage locating an <code>@rrrstats</code> tag which refers to a particular standard at all locations which directly address that standard.</p></li>
+<li><p>Alternatively, any standards which you consider not applicable to your software may remain listed in the main <code>rrr-stats-standards.R</code> document, with their tag changed from <code>@rrrstatsTODO</code> to <code>@rrrstatsNA</code>, and the description of the standard removed and replaced by an explanation of why you consider that standard not applicable to your software. These <code>@rrrstatsNA</code> tags should be collected together within a single <code>roxygen2</code> block with a title of <code>NA_standards</code>. The <a href="https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html"><code>rrr_stats_roxygen()</code></a> function generates a blank template for this block. Any non-applicable standards can then just be moved into this block, with their <code>@rrrstatsTODO</code> tags changed to <code>@rrrstatsNA</code></p></li>
 <li><p>Each time you run <a href="https://devtools.r-lib.org/reference/document.html"><code>devtools::document()</code></a> or the equivalent <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygen2::roxygenise()</code></a>, the roclet will scan your package’s documentation for the state of standards, and will generate a summary of the result on your screen.</p></li>
 </ol>
 <p>To help developers understand how to use these roclets, this package includes a function, <a href="https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html"><code>rrr_stats_pkg_skeleton()</code></a>, which will generate a skeleton of a package with several <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> tags inserted throughout the code. This function returns the directory where the skeleton package has been created, so running the following two lines will illustrate the roclets in action:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/rrr_stats_pkg_skeleton.html">rrr_stats_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
-<p>Note that the skeleton package also includes C++ code in a <code>src/</code> directory, so will be compiled the first time your run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygensise()</code></a>). Running a second time will generate cleaner output from the <code>rssr</code> roclets only. The tags included in <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> blocks in this skeleton package may be modified, moved, copied, and changed in any way you like to help you understand how the roclets work. Simply play around with the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> lines and run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygensise()</code></a>) each time to see the effect.</p>
-<p>Individual standards may be moved to, and addressed in, any location including the directories <code>R/</code>, <code>src/</code>, or <code>tests/</code>. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code> roclet</a> associated with this package is able to parse the various <code>@rssr</code> tags in all of these locations.</p>
+<p>Note that the skeleton package also includes C++ code in a <code>src/</code> directory, so will be compiled the first time your run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygensise()</code></a>). Running a second time will generate cleaner output from the <code>rrrstats</code> roclets only. The tags included in <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> blocks in this skeleton package may be modified, moved, copied, and changed in any way you like to help you understand how the roclets work. Simply play around with the <a href="https://roxygen2.r-lib.org/"><code>roxygen2</code></a> lines and run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html"><code>roxygensise()</code></a>) each time to see the effect.</p>
+<p>Individual standards may be moved to, and addressed in, any location including the directories <code>R/</code>, <code>src/</code>, or <code>tests/</code>. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code> roclet</a> associated with this package is able to parse the various <code>@rrrstats</code> tags in all of these locations.</p>
 </div>
 </div>
 
@@ -146,9 +146,9 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=rrr">https://​cloud.r-project.org/​package=rrr</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/ropenscilabs/rssr/">https://​github.com/​ropenscilabs/​rssr/​</a>
+<li>Browse source code at <br><a href="https://github.com/ropenscilabs/rrr/">https://​github.com/​ropenscilabs/​rrr/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/ropenscilabs/rssr/issues">https://​github.com/​ropenscilabs/​rssr/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/ropenscilabs/rrr/issues">https://​github.com/​ropenscilabs/​rrr/​issues</a>
 </li>
 </ul>
 </div>
