@@ -1,6 +1,6 @@
-Package: rssr
-Title: 'rOpenSci' Statistical Software Review
-Version: 0.0.0.126
+Package: rrr
+Title: 'rOpenSci' Review Roclets
+Version: 0.0.0.127
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",

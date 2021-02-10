@@ -61,7 +61,7 @@ by default called `"demo"`, is constructed in R's
 and looks like this:
 
 ```{r dir-tree}
-library (rssr)
+library (rrr)
 d <- rssr_pkg_skeleton ()
 fs::dir_tree (d)
 ```
@@ -109,7 +109,7 @@ The "roclets" can be enabled for a package by modifying the `DESCRIPTION` file
 so that the `Roxygen` line looks like this:
 
 ```{r roxygen, eval = FALSE}
-Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rssr::rssr_roclet"))
+Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
 ```
 
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package

@@ -8,10 +8,8 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rssr
+# rrr ([**r**OpenSci](https://ropensci.org) **r**eview **r**oclets)
 
-
-[**r**OpenSci](https://ropensci.org) **S**tatistical **S**oftware **R**eview.
 This is an R package with functions to help those developing and reviewing
 packages submitted to rOpenSci's system for [Statistical Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
@@ -29,7 +27,7 @@ remotes::install_github("ropenscilabs/rssr")
 
 and loaded for use with,
 ```{r lib-fakey, eval = FALSE}
-library (rssr)
+library (rrr)
 ```
 ```{r lib, echo = FALSE, message = FALSE}
 devtools::load_all (".", export_all = FALSE)
@@ -77,7 +75,7 @@ describes how to link your package with `rssr` in order to use these roclets.
 3. Enable your package to use the `rssr` roclets by modifying the package's
    `DESCRIPTION` file so that the `Roxygen` line looks like this:
     ```{r roxygen, eval = FALSE}
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rssr::rssr_roclet"))
+    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
     ```
     That will load the ["roclet"](https://roxygen2.r-lib.org) used by this
     package to process standards as documented within your actual code. Note

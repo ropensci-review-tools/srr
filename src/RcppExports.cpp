@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // rcpp_parse_rmd
 void rcpp_parse_rmd(const std::string filename, const std::string tempfile);
-RcppExport SEXP _rssr_rcpp_parse_rmd(SEXP filenameSEXP, SEXP tempfileSEXP) {
+RcppExport SEXP _rrr_rcpp_parse_rmd(SEXP filenameSEXP, SEXP tempfileSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const std::string >::type filename(filenameSEXP);
@@ -18,11 +18,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rssr_rcpp_parse_rmd", (DL_FUNC) &_rssr_rcpp_parse_rmd, 2},
+    {"_rrr_rcpp_parse_rmd", (DL_FUNC) &_rrr_rcpp_parse_rmd, 2},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_rssr(DllInfo *dll) {
+RcppExport void R_init_rrr(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

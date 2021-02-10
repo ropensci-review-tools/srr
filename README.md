@@ -9,11 +9,10 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rssr
+# rrr ([**r**OpenSci](https://ropensci.org) **r**eview **r**oclets)
 
-[**r**OpenSci](https://ropensci.org) **S**tatistical **S**oftware
-**R**eview. This is an R package with functions to help those developing
-and reviewing packages submitted to rOpenSci’s system for [Statistical
+This is an R package with functions to help those developing and
+reviewing packages submitted to rOpenSci’s system for [Statistical
 Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of
@@ -31,7 +30,7 @@ remotes::install_github("ropenscilabs/rssr")
 and loaded for use with,
 
 ``` r
-library (rssr)
+library (rrr)
 ```
 
 All functions of the package are prefixed with `rssr_`. The remainder of
@@ -91,7 +90,7 @@ roclets.
     this:
 
     ``` r
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rssr::rssr_roclet"))
+    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rssr_roclet"))
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
