@@ -6,7 +6,7 @@
 \usage{
 rrr_stats_roxygen(
   category = NULL,
-  filename = "rssr-standards.R",
+  filename = "rrr-stats-standards.R",
   overwrite = FALSE
 )
 }

@@ -93,7 +93,7 @@ write_r_fn <- function (d, pkg_name) {
                 "#' given within the first set of square brackets.",
                 "#' @noRd",
                 "NULL")
-    writeLines (rfile, con = file.path (dr, "rssr-standards.R"))
+    writeLines (rfile, con = file.path (dr, "rrr-stats-standards.R"))
 }
 
 write_src_fn <- function (d) {

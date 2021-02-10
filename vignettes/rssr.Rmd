@@ -326,8 +326,8 @@ following general steps:
    standards in your package by running
    [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
    (in the main package directory). This will by default generate a file in the
-   `R/` directory called `rssr-standards.R`, although any alternative name can
-   also be passed to the function (or the file can be renamed after it has
+   `R/` directory called `rrr-stats-standards.R`, although any alternative name
+   can also be passed to the function (or the file can be renamed after it has
    initially been created).
 2. Change your package's `DESCRIPTION` file to use the `rrr` roclets by adding
    `roclets = "rrr::rssr_roclet"`) to the `Roxygen` line, as demonstrated at

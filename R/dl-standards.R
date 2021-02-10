@@ -163,7 +163,7 @@ rrr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @return Nothing
 #' @export
 rrr_stats_roxygen <- function (category = NULL,
-                                    filename = "rssr-standards.R",
+                                    filename = "rrr-stats-standards.R",
                                     overwrite = FALSE) {
 
     loc <- here::here ()

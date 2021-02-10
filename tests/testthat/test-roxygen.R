@@ -33,7 +33,7 @@ test_that("roxygen standards", {
               expect_true (grep ("@rssrNA standards:", x) >
                            grep ("@rssr standards:", x))
 
-              filename <- file.path (d, "R", "rssr-standards.R")
+              filename <- file.path (d, "R", "rrr-stats-standards.R")
               # remove DESC file from directory should error
               desc <- file.path (d, "DESCRIPTION")
               temp <- file.path (d, "temp")
@@ -59,9 +59,9 @@ test_that("roxygen standards", {
               expect_length (todo_old, 3L)
               expect_length (todo_new, 3L)
 
-              # get only those from the rssr-standards.R file:
-              todo_old <- grep ("rssr-standards\\.R", todo_old, value = TRUE)
-              todo_new <- grep ("rssr-standards\\.R", todo_new, value = TRUE)
+              # get only those from the rrr-stats-standards.R file:
+              todo_old <- grep ("rrr-stats-standards\\.R", todo_old, value = TRUE)
+              todo_new <- grep ("rrr-stats-standards\\.R", todo_new, value = TRUE)
 
               expect_true (nchar (todo_new) > nchar (todo_old))
               standards_old <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]", todo_old) [[1]]
@@ -94,7 +94,7 @@ test_that ("roclet errors", {
 
                # ------2. Docs should be auto-verbose when @rssrVerbose flag is
                # ------   removed
-               f <- file.path (d, "R", "rssr-standards.R")
+               f <- file.path (d, "R", "rrr-stats-standards.R")
                x0 <- readLines (f)
                x <- x0 [-grep ("@rssrVerbose", x0)]
                writeLines (x, f)
@@ -119,7 +119,7 @@ test_that ("roclet errors", {
 
                # --------4. @rssrNA tags should only be in a block named
                # --------   "NA_standards"
-               f <- file.path (d, "R", "rssr-standards.R")
+               f <- file.path (d, "R", "rrr-stats-standards.R")
                x <- x0 <- readLines (f)
                i <- grep ("NA\\_standards", x)
                x [i] <- "#' not_NA_standards"
