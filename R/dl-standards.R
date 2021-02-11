@@ -120,7 +120,7 @@ category_titles_urls <- function (category) {
     return (ret)
 }
 
-#' rrr_stats_checklist
+#' srr_stats_checklist
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, and store the result in the
@@ -135,7 +135,7 @@ category_titles_urls <- function (category) {
 #' standards along with standards for any additional categories.
 #'
 #' @export
-rrr_stats_checklist <- function (category = NULL, filename = NULL) {
+srr_stats_checklist <- function (category = NULL, filename = NULL) {
 
     s <- get_standards_checklists (category = category)
 
@@ -149,21 +149,21 @@ rrr_stats_checklist <- function (category = NULL, filename = NULL) {
     invisible (clipr::write_clip (s))
 }
 
-#' rrr_stats_roxygen
+#' srr_stats_roxygen
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, convert to project-specific
 #' \pkg{roxygen2} format, and save in nominated file.
 #'
-#' @inheritParams rrr_stats_checklist
+#' @inheritParams srr_stats_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
 #' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
 #' will ask whether file should be overwritten.
 #' @return Nothing
 #' @export
-rrr_stats_roxygen <- function (category = NULL,
-                                    filename = "rrr-stats-standards.R",
+srr_stats_roxygen <- function (category = NULL,
+                                    filename = "srr-stats-standards.R",
                                     overwrite = FALSE) {
 
     loc <- here::here ()
@@ -200,18 +200,18 @@ rrr_stats_roxygen <- function (category = NULL,
     s <- paste0 (s_start, s_end)
 
     # nolint start -------- lines > 80 character --------
-    x <- c ("#' rrr_stats",
+    x <- c ("#' srr_stats",
             "#'",
-            "#' All of the following standards initially have `@rrrstatsTODO` tags.",
+            "#' All of the following standards initially have `@srrstatsTODO` tags.",
             "#' These may be moved at any time to any other locations in your code.",
-            "#' Once addressed, please modify the tag from `@rrrstatsTODO` to `@rrrstats`,",
-            "#' or `@rrrstatsNA`, ensuring that references to every one of the following",
+            "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,",
+            "#' or `@srrstatsNA`, ensuring that references to every one of the following",
             "#' standards remain somewhere within your code.",
             "#' (These comments may be deleted at any time.)",
             "#'",
-            "#' @rrrstatsVerbose TRUE",
+            "#' @srrstatsVerbose TRUE",
             "#'",
-            paste0 ("#' @rrrstatsTODO ", s),
+            paste0 ("#' @srrstatsTODO ", s),
             "#' @noRd",
             "NULL")
 
@@ -220,8 +220,8 @@ rrr_stats_roxygen <- function (category = NULL,
             "",
             "#' NA_standards",
             "#'",
-            "#' Any non-applicable standards can have their tags changed from `@rrrstatsTODO`",
-            "#' to `@rrrstatsNA`, and placed together in this block, along with explanations",
+            "#' Any non-applicable standards can have their tags changed from `@srrstatsTODO`",
+            "#' to `@srrstatsNA`, and placed together in this block, along with explanations",
             "#' for why each of these standards have been deemed not applicable.",
             "#' (These comments may also be deleted at any time.)",
             "#' @noRd",
@@ -265,17 +265,17 @@ get_standards_checklists <- function (category = NULL) {
     return (s)
 }
 
-#' rrr_stats_categories
+#' srr_stats_categories
 #'
 #' List all currently available categories and associated URLs to full category
 #' descriptions.
 #'
 #' @return A `data.frame` with 3 columns of "category" (the categories to be
-#' submitted to \link{rrr_stats_checklist}), "title" (the full title), and
+#' submitted to \link{srr_stats_checklist}), "title" (the full title), and
 #' "url".
 #'
 #' @export
-rrr_stats_categories <- function () {
+srr_stats_categories <- function () {
     cats <- list_categories ()
     cat_full <- unlist (lapply (cats, function (i)
                                 category_titles_urls (i)))

@@ -38,7 +38,7 @@ write_desc <- function (d, pkg_name) {
                "Encoding: UTF-8",
                paste0 ("Roxygen: list(markdown = TRUE, ",
                        "roclets = c (\"rd\", \"namespace\", ",
-                       "\"rrr::rrr_stats_roclet\"))"))
+                       "\"srr::srr_stats_roclet\"))"))
 
     rv <- get_roxygen_version ()
     if (!is.null (rv))
@@ -53,10 +53,10 @@ write_r_fn <- function (d, pkg_name) {
                 "#'",
                 "#' A test funtion",
                 "#'",
-                "#' @rrrstats {G1.1, G1.2, G1.3} with some text",
-                "#' @rrrstats Text can appear before standards {G2.0, G2.1}",
-                "#' @rrrstatsTODO {S1.1} standards which are still to be",
-                "#' addressed are tagged 'rrrstatsTODO'",
+                "#' @srrstats {G1.1, G1.2, G1.3} with some text",
+                "#' @srrstats Text can appear before standards {G2.0, G2.1}",
+                "#' @srrstatsTODO {S1.1} standards which are still to be",
+                "#' addressed are tagged 'srrstatsTODO'",
                 "#'",
                 "#' @export",
                 "test_fn <- function() {",
@@ -81,19 +81,19 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' NA_standards",
                 "#'",
-                "#' @rrrstatsNA {S3.3} is not applicable",
+                "#' @srrstatsNA {S3.3} is not applicable",
                 "#' @noRd",
                 "NULL",
                 "",
-                "#' rrrstats_standards",
+                "#' srrstats_standards",
                 "#'",
-                "#' @rrrstatsVerbose TRUE",
-                "#' @rrrstatsTODO Here is {S4.4} as TODO, noting that text can",
+                "#' @srrstatsVerbose TRUE",
+                "#' @srrstatsTODO Here is {S4.4} as TODO, noting that text can",
                 "#' precede the standard number, as long as standards are",
                 "#' given within the first set of square brackets.",
                 "#' @noRd",
                 "NULL")
-    writeLines (rfile, con = file.path (dr, "rrr-stats-standards.R"))
+    writeLines (rfile, con = file.path (dr, "srr-stats-standards.R"))
 }
 
 write_src_fn <- function (d) {
@@ -103,7 +103,7 @@ write_src_fn <- function (d) {
                 "//' src_fn",
                 "//'",
                 "//' A test C++ function",
-                "//' @rrrstats {G3.3} in src directory",
+                "//' @srrstats {G3.3} in src directory",
                 "//' @noRd",
                 "// [[Rcpp::export]]",
                 "int test () {",
@@ -121,20 +121,20 @@ write_readme <- function (d, pkg_name) {
     # nolint start --- lines > 80 characters
     rfile <- c (paste0 ("# ", pkg_name),
                 "",
-                "This is a skeleton of an [`rrr` statistics](https://github.com/ropenscilabs/rrr)",
+                "This is a skeleton of an [`srr` statistics](https://github.com/ropenscilabs/srr)",
                 "package, intended developers to tweak as they like, in order to understand ",
                 "how the package's roclets work.",
                 "",
-                "This `README.Rmd` file is here to demonstrate how to embed `rrr` roclet tags.",
+                "This `README.Rmd` file is here to demonstrate how to embed `srr` roclet tags.",
                 "These tags need to be within dedicated *code chunks*, like the following:",
                 "",
-                "```{r rrr-tags, eval = FALSE, echo = FALSE}",
+                "```{r srr-tags, eval = FALSE, echo = FALSE}",
                 "#' roxygen_block_name",
                 "#'",
                 "#' (Add some text if you like)",
                 "#'",
-                "#' @rrrstats {G1.1} Here is a reference to a standard",
-                "#' @rrrstatsTODO {G1.2} And here is a reference to a standard yet to be addressed",
+                "#' @srrstats {A1.4} Here is a reference to a standard",
+                "#' @srrstatsTODO {A1.5} And here is a reference to a standard yet to be addressed",
                 "```",
                 "",
                 "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,",
@@ -166,7 +166,7 @@ write_test_files <- function (d, pkg_name) {
         dir.create (dt, recursive = TRUE)
     writeLines (tfile, con = file.path (d, "tests", "testthat.R"))
 
-    tfile <- c ("#' @rrrstats {G2.2} is addressed here",
+    tfile <- c ("#' @srrstats {T2.2} is addressed here",
                 "test_that(\"dummy test\", {",
                 "    expect_true (TRUE)",
                 "})")
@@ -175,23 +175,23 @@ write_test_files <- function (d, pkg_name) {
 }
 
 
-#' rrr_stats_pkg_skeleton
+#' srr_stats_pkg_skeleton
 #'
-#' Make a dummy package skeleton including 'rrr' \pkg{roxygen2} tags which can
+#' Make a dummy package skeleton including 'srr' \pkg{roxygen2} tags which can
 #' be used to try out the functionality of this package. Running the example
-#' lines below which activate the 'rrr' roclets, and show you what the output
+#' lines below which activate the 'srr' roclets, and show you what the output
 #' of those roclets looks like. Feel free to examine the effect of modifying any
-#' of the `@rrrstats` tags within the code as identified by running those lines.
+#' of the `@srrstats` tags within the code as identified by running those lines.
 #'
 #' @param base_dir The base directory where the package should be constructed.
 #' @param pkg_name The name of the package. The final location of this package
 #' will be in `file.path(base_dir, pkg_name)`.
 #' @return The path to the directory holding the newly created package
 #' @examples
-#' d <- rrr_stats_pkg_skeleton ()
+#' d <- srr_stats_pkg_skeleton ()
 #' roxygen2::roxygenise (d)
 #' @export
-rrr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
+srr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 

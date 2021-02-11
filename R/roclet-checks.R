@@ -38,9 +38,9 @@ check_no_mixed_tags <- function (msgs, msgs_na, msgs_todo) {
     stds_na <- msgs_to_standards (msgs_na)
     stds_todo <- msgs_to_standards (msgs_todo)
 
-    chk <- mixed_tag_error (stds, stds_na, "@rrrstats", "@rrrstatsNA")
-    chk <- mixed_tag_error (stds, stds_todo, "@rrrstats", "@rrrstatsTODO")
-    chk <- mixed_tag_error (stds_na, stds_todo, "@rrrstatsNA", "@rrrstatsTODO")
+    chk <- mixed_tag_error (stds, stds_na, "@srrstats", "@srrstatsNA")
+    chk <- mixed_tag_error (stds, stds_todo, "@srrstats", "@srrstatsTODO")
+    chk <- mixed_tag_error (stds_na, stds_todo, "@srrstatsNA", "@srrstatsTODO")
 
     invisible (chk)
 }

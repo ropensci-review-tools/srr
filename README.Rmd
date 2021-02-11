@@ -1,6 +1,6 @@
 <!-- badges: start -->
-[![R build status](https://github.com/ropenscilabs/rrr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/rrr/actions)
-[![codecov](https://codecov.io/gh/ropenscilabs/rrr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/rrr)
+[![R build status](https://github.com/ropenscilabs/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/srr/actions)
+[![codecov](https://codecov.io/gh/ropenscilabs/srr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/srr)
 [![Project Status:
 Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
@@ -8,7 +8,7 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# [**r**OpenSci](https://ropensci.org) **r**eview **r**oclets (rrr)
+# [rOpenSci](https://ropensci.org) **S**oftware **R**eview **R**oclets (srr)
 
 This package contains roclets for use with [rOpenSci](https://ropensci.org)'s
 software review systems. At present, the package only contains roclets and
@@ -24,12 +24,12 @@ This package can be installed with,
 
 ```{r install, eval = FALSE}
 # install.packages("remotes")
-remotes::install_github("ropenscilabs/rrr")
+remotes::install_github("ropenscilabs/srr")
 ```
 
 and loaded for use with,
 ```{r lib-fakey, eval = FALSE}
-library (rrr)
+library (srr)
 ```
 ```{r lib, echo = FALSE, message = FALSE}
 devtools::load_all (".", export_all = FALSE)
@@ -38,7 +38,7 @@ devtools::load_all (".", export_all = FALSE)
 Both this `README`, and the main package vignette, describe the functionality
 of the package in the specific context of the statistical software review
 project. Both the roclet and all functions intended for use in this context are
-prefixed with `rrr_stats_`. The remainder of this document is in two main
+prefixed with `srr_stats_`. The remainder of this document is in two main
 sections. If you're developing a statistics package for submission to our peer
 review system, keep straight on reading. If you've been invited to review a
 package, you may skip the following section and just read the subsequent
@@ -51,11 +51,11 @@ with this `README` intended to provide supporting technical details.
 
 People intending to develop packages for submission to our system for peer
 reviewing statistical software will need to follow the following general steps.
-Note that, while the `rrr` package has a few functions which developers may
+Note that, while the `srr` package has a few functions which developers may
 call directly to aid their submission process, most functionality of this
 package is implemented via custom [`roxygen2`
 "roclets"](https://roxygen2.r-lib.org). The third of the following steps
-describes how to link your package with `rrr` in order to use these roclets.
+describes how to link your package with `srr` in order to use these roclets.
 
 1. Ensure that your package successfully passes all
    [`autotest`](https://github.com/ropenscilabs/autotest) tests, potentially
@@ -64,38 +64,38 @@ describes how to link your package with `rrr` in order to use these roclets.
    documentation for `autotest`](https://ropenscilabs.github.io/autotest/).
 2. Decide which of our in-scope categories of statistical software best
    describe your package. The function
-   [`rrr_stats_categories()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_categories.html)
+   [`srr_stats_categories()`](https://ropenscilabs.github.io/srr/reference/srr_stats_categories.html)
    provides a list of currently developed categories for which standards
    have been developed, along with links to the online standards for each
    category:
 
     ```{r available}
-    rrr_stats_categories ()$title
+    srr_stats_categories ()$title
     ```
     That function also returns links to the full descriptions of each category
     in the [main project
     book](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
     Any software within one or more of these categories may be considered for
     review. 
-3. Enable your package to use the `rrr_stats` roclets by modifying the
+3. Enable your package to use the `srr_stats` roclets by modifying the
    package's `DESCRIPTION` file so that the `Roxygen` line looks like this:
     ```{r roxygen, eval = FALSE}
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
+    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
     ```
     That will load the ["roclet"](https://roxygen2.r-lib.org) used by this
     package to process the documentation of statistical standards within your
     actual code. Note that you do not need to add, import, or depend upon the
-    `rrr` package anywhere else within the `DESCRIPTION` file or your actual
+    `srr` package anywhere else within the `DESCRIPTION` file or your actual
     package.
-4. Load the `rrr` package and generate lists of standards within your
+4. Load the `srr` package and generate lists of standards within your
    package's `/R` folder by running,
-   [`rrr_stats_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html).
+   [`srr_stats_roxygen(category = c("<my-category-1>", "<my-category-2>"))`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html).
    This will by default create a new file called by default
-   `R/rrr_stats_standards.R`, the first few lines of which will look like this:
-    ```{r rrr_stats_roxygen, echo = FALSE, message = FALSE}
-    f <- "./R/rrr-stats-standards.R"
+   `R/srr_stats_standards.R`, the first few lines of which will look like this:
+    ```{r srr_stats_roxygen, echo = FALSE, message = FALSE}
+    f <- "./R/srr-stats-standards.R"
     if (!file.exists (f))
-        rrr_stats_roxygen ()
+        srr_stats_roxygen ()
     rso <- readLines (f)
     head (rso)
     ```
@@ -105,35 +105,35 @@ describes how to link your package with `rrr` in order to use these roclets.
     in [`roxygen2`](https://roxygen2.r-lib.org) blocks somewhere in your source
     code.
 
-    The `@rrrstatsVerbose` line defines a variable which may be used to
-    suppress output from the `rrrstats` roclet when updating package
+    The `@srrstatsVerbose` line defines a variable which may be used to
+    suppress output from the `srrstats` roclet when updating package
     documentation (by setting to `FALSE`). After that comes the list of
     standards, each of which is prefixed by
-    a [`roxygen2`](https://roxygen2.r-lib.org) tag, `@rrrstatsTODO`. A package
+    a [`roxygen2`](https://roxygen2.r-lib.org) tag, `@srrstatsTODO`. A package
     can only be submitted once all of these `TODO` items have been addressed
     via one of the options described in the following two items.
 5. A standard may be addressed by moving the item in the
-   `rrr-stats-standards.R` file (or wherever you've chosen to list these within
+   `srr-stats-standards.R` file (or wherever you've chosen to list these within
    your own package) to one or more places in your code where these standards
    have been addressed. In doing so, the
    [`roxygen2`](https://roxygen2.r-lib.org) tag should be changed from
-   `@rrrstatsTODO` to `@rrrstats`, and the text which initially lists the
+   `@srrstatsTODO` to `@srrstats`, and the text which initially lists the
    actual standard should be changed to provide a brief description of how that
    standard has been met. Tags for one particular standard may be repeated in
    multiple places within your code, and we encourage locating multiple
-   `@rrrstats` tags which refer to a particular standard at all locations which
+   `@srrstats` tags which refer to a particular standard at all locations which
    directly address that standard.
 6. Alternatively, any standards which you consider not applicable to your
    software may remain listed in the templated section of the main
-   `rrr-stats-standards.R` document (or any alternative location), with their
-   tag changed from `@rrrstatsTODO` to `@rrrstatsNA`, and the description of
+   `srr-stats-standards.R` document (or any alternative location), with their
+   tag changed from `@srrstatsTODO` to `@srrstatsNA`, and the description of
    the standard removed and replaced by an explanation of why you consider that
-   standard not to be applicable to your software. These `@rrrstatsNA` tags
+   standard not to be applicable to your software. These `@srrstatsNA` tags
    should be collected together within a single `roxygen2` block with a title
    of `NA_standards`, as provided in the initial template generated by the
-   [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
+   [`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
    function. Any non-applicable standards can then just be moved into this
-   block, with their `@rrrstatsTODO` tags changed to `@rrrstatsNA` 
+   block, with their `@srrstatsTODO` tags changed to `@srrstatsNA` 
 7. Each time you run 
     [`devtools::document()`](https://devtools.r-lib.org/reference/document.html)
     or the equivalent
@@ -143,7 +143,7 @@ describes how to link your package with `rrr` in order to use these roclets.
 
 To help developers understand how to use these roclets, this package includes a
 function,
-[`rrr_stats_pkg_skeleton()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html),
+[`srr_stats_pkg_skeleton()`](https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html),
 which will generate a skeleton of a package with several
 [`roxygen2`](https://roxygen2.r-lib.org) tags inserted throughout the code.
 This function returns the directory where the skeleton package has been
@@ -151,14 +151,14 @@ created, so running the following two lines will illustrate the roclets in
 action:
 
 ```{r demo, eval = FALSE}
-d <- rrr_stats_pkg_skeleton ()
+d <- srr_stats_pkg_skeleton ()
 roxygen2::roxygenise (d)
 ```
 
 Note that the skeleton package also includes C++ code in a `src/` directory, so
 will be compiled the first time your run
 [`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html).
-Running a second time will generate cleaner output from the `rrrstats` roclets
+Running a second time will generate cleaner output from the `srr_stats` roclets
 only. The tags included in 
 [`roxygen2`](https://roxygen2.r-lib.org/) blocks in this skeleton package may
 be modified, moved, copied, and changed in any way you like to help you
@@ -167,5 +167,5 @@ understand how the roclets work. Simply play around with the
 [`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html) each
 time to see the effect. Individual standards may be moved to, and addressed in,
 any location including the directories `R/`, `src/`, or `tests/`. The
-`rrr_stats` roclet associated with this package is able to parse the various
-`@rrrstats` tags in all of these locations.
+`srr_stats` roclet associated with this package is able to parse the various
+`@srrstats` tags in all of these locations.

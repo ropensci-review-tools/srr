@@ -2,12 +2,12 @@
 
 test_that("download standards", {
 
-              Sys.setenv("CLIPR_ALLOW" = TRUE)
+              Sys.setenv ("CLIPR_ALLOW" = TRUE)
 
               filename <- tempfile (fileext = ".md")
               expect_false (file.exists (filename))
               expect_message (
-                  s <- rrr_stats_checklist (c ("regression", "ml"),
+                  s <- srr_stats_checklist (c ("regression", "ml"),
                                                  filename = filename)
               )
               expect_true (file.exists (filename))
@@ -22,7 +22,7 @@ test_that("download standards", {
               expect_identical (s, readLines (filename))
 
               x <- capture.output (
-                  s2 <- rrr_stats_checklist_check (filename),
+                  s2 <- srr_stats_checklist_check (filename),
                   type = "message"
               )
               expect_identical (s, s2)
@@ -30,11 +30,11 @@ test_that("download standards", {
               expect_true (any (grepl (txt, x)))
 
               # ------- test checklist_check: -------
-              expect_error (rrr_stats_checklist_check (),
+              expect_error (srr_stats_checklist_check (),
                             "argument \"file\" is missing")
               tf <- tempfile (fileext = ".txt")
               writeLines ("blah", con = tf)
-              expect_error (rrr_stats_checklist_check (tf),
+              expect_error (srr_stats_checklist_check (tf),
                             "file must be in '.md' format")
 
               # modify start of standard: by changing one bold markdown format
@@ -43,7 +43,7 @@ test_that("download standards", {
               s2 [i] <- gsub ("\\*\\*G", "\\*G", s2 [i])
               writeLines (s2, filename)
               x <- capture.output (
-                  s3 <- rrr_stats_checklist_check (filename),
+                  s3 <- srr_stats_checklist_check (filename),
                   type = "message"
               )
               txt <- "file contained incorrect formatting and has been modified"
@@ -59,7 +59,7 @@ test_that("download standards", {
                               paste0 (num, "\\*"), s2 [i])
               writeLines (s2, filename)
               x <- capture.output (
-                  s4 <- rrr_stats_checklist_check (filename),
+                  s4 <- srr_stats_checklist_check (filename),
                   type = "message"
               )
               txt <- "file contained incorrect formatting and has been modified"
@@ -76,7 +76,7 @@ test_that("download standards", {
               expect_true (grepl (paste0 (num, "\\*\\*--\\*\\*G5.5"), tmp))
               writeLines (s2, filename)
               x <- capture.output (
-                  s5 <- rrr_stats_checklist_check (filename),
+                  s5 <- srr_stats_checklist_check (filename),
                   type = "message"
               )
               expect_identical (s5 [i], tmp)
@@ -89,13 +89,13 @@ test_that("download standards", {
               expect_true (grepl ("\\*\\*N\\/A\\*\\*$", tmp))
               writeLines (s2, filename)
               x <- capture.output (
-                  s6 <- rrr_stats_checklist_check (filename),
+                  s6 <- srr_stats_checklist_check (filename),
                   type = "message"
               )
               expect_identical (s6 [i], tmp)
 })
 
 test_that ("checklist_check", {
-               expect_error (rrr_stats_checklist_check (),
+               expect_error (srr_stats_checklist_check (),
                              "argument \"file\" is missing")
 })

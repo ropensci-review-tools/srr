@@ -1,5 +1,5 @@
 ---
-title: "Preparing Statistical Software with the rrr package"
+title: "Preparing Statistical Software with the srr package"
 author: 
   - "Mark Padgham"
 date: "`r Sys.Date()`"
@@ -15,11 +15,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-`rrr` stands for [**r**OpenSci](https://ropensci.org) **r**eview **r**oclets,
-and is an R package containing roclets for general use in helping those
-developing and reviewing packages submitted to rOpenSci. At present, the `rrr`
-package only contains roclets and associated functions to help those developing
-and reviewing packages submitted to rOpenSci's system for [Statistical Software
+`srr` stands for **S**oftware **R**eview **R**oclets, and is an R package
+containing roclets for general use in helping those developing and reviewing
+packages submitted to rOpenSci. At present, the `srr` package only contains
+roclets and associated functions to help those developing and reviewing
+packages submitted to rOpenSci's system for [Statistical Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 This vignette demonstrates how developers are intended to use this package to
 document the alignment of their software with rOpenSci's [standards for
@@ -35,22 +35,22 @@ equivalently
 The former is just a wrapper around the latter, to enable documentation to
 updated by a single call from within the [`devtools`
 package](https://devtools.r-lib.org). From here on, this stage of updating
-documentation and triggering the `rrr` roclets will be referred to as "running
+documentation and triggering the `srr` roclets will be referred to as "running
 [`roxygenise`](https://roxygen2.r-lib.org/reference/roxygenize.html)."
 
 
 
 ## 1. The package skeleton
 
-The [`rrr_stats_pkg_skeleton()`
-function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html)
+The [`srr_stats_pkg_skeleton()`
+function](https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html)
 included with this package differs from
 [other](https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html)
 [package](https://usethis.r-lib.org/reference/create_package.html)
 [skeleton](https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html) functions.
 Rather than providing a skeleton from which you can construct your own package,
-the [`rrr_stats_pkg_skeleton()`
-function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_pkg_skeleton.html)
+the [`srr_stats_pkg_skeleton()`
+function](https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html)
 generates a skeleton to help developers understand this package works. This
 skeleton of a package is intended to be modified to help you understand which
 kinds of modifications are allowed, and which generate errors. The package is
@@ -59,8 +59,8 @@ by default called `"demo"`, is constructed in R's
 and looks like this:
 
 ```{r dir-tree}
-library (rrr)
-d <- rrr_stats_pkg_skeleton ()
+library (srr)
+d <- srr_stats_pkg_skeleton ()
 fs::dir_tree (d)
 ```
 
@@ -101,81 +101,81 @@ package skeleton, and running
 [`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
 to see what happens.
 
-## 2. Enabling `rrr` roclets for a package
+## 2. Enabling `srr` roclets for a package
 
 The "roclets" can be enabled for a package by modifying the `DESCRIPTION` file
 so that the `Roxygen` line looks like this:
 
 ```{r roxygen, eval = FALSE}
-Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "rrr::rrr_stats_roclet"))
+Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
 ```
 
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package
 to process standards as documented within your actual code. Note that you do
-not need to add, import, or depend upon the `rrr` package anywhere else within
+not need to add, import, or depend upon the `srr` package anywhere else within
 the `DESCRIPTION` file. See the `DESCRIPTION` file of the package skeleton for
 an example.
 
 ## 3. `roxygen2` tags
 
-The `rrr` packages recognises and uses the following three tags, each of which
+The `srr` packages recognises and uses the following three tags, each of which
 may be inserted into [`roxygen2`](https://roxygen2.r-lib.org) documentation
 blocks anywhere in your code. The tags are:
 
-1. `@rrrstats` tags to indicate standards which have been addressed. These should
+1. `@srrstats` tags to indicate standards which have been addressed. These should
    be placed at the locations within your code where specific standards have
    been addressed, and should include a brief textual description of how the
    code at that location addresses the nominated standard.
-2. `@rrrstatsTODO` tags to indicate standards which have not yet been addressed.
-   The [`rrr_stats_roxygen()`
-   function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
+2. `@srrstatsTODO` tags to indicate standards which have not yet been addressed.
+   The [`srr_stats_roxygen()`
+   function](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
    described below will place all standards for your nominated categories in an
    initial file in the `/R` directory of your project. Each of these will have
-   a tag of `@rrrstatsTODO`. As you address each standard, you'll need to move it
+   a tag of `@srrstatsTODO`. As you address each standard, you'll need to move it
    from that initial location to that point in your code where that standard is
-   addressed, and change the tag from `@rrrstatsTODO` to `@rrrstats`. It may help to
+   addressed, and change the tag from `@srrstatsTODO` to `@srrstats`. It may help to
    break the initial, commonly very long, single list of standards into smaller
    groups, and to move each of these into the approximate location within your
    code where these are likely to be addressed. For example, all standards
    which pertain to tests can be moved into the `/tests` (or `/tests/testthat`)
    directory.
-3. `@rrrstatsNA` tags to indicate standards which you deem not applicable to your
+3. `@srrstatsNA` tags to indicate standards which you deem not applicable to your
    package. These need to be grouped together in a single block with a title of
    `NA_standards`. Such a block is both included in the package skeleton, and
-   also in the output of [`rrr_stats_roxygen()`
-   function](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html).
+   also in the output of [`srr_stats_roxygen()`
+   function](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html).
    The numbers of any non-applicable standards can then be moved to this block,
    with a note explaining why these standards have been deemed not to apply to
    your package.
 
 
-The output illustrated above shows how the `rrr` package groups these three
+The output illustrated above shows how the `srr` package groups these three
 tags together, first collecting the output of standards which have been
-addressed (via `@rrrstats` tags), then showing output of non-applicable standards
-(via `@rrrstatsNA` tags), and finally standards which are still to be addressed
-(via `@rrrstatsTODO` tags).
+addressed (via `@srrstats` tags), then showing output of non-applicable standards
+(via `@srrstatsNA` tags), and finally standards which are still to be addressed
+(via `@srrstatsTODO` tags).
 
-### 3.1 Format of `rrr` documentation
+### 3.1 Format of `srr` documentation
 
 The tags shown above from the skeleton package function `test.R` indicates the
 expected format of standards within [`roxygen2`](https://roxygen2.r-lib.org)
 documentation blocks. The package is designed to error on attempting to run
 [`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html) with any
 inappropriately formatted entries, and so should provide informative messages
-to help rectify any problems. `rrr` documentation must adhere to the following
+to help rectify any problems. `srr` documentation must adhere to the following
 formatting requirements:
 
 1. The tags must appear immediately after the
    [`roxygen2`](https://roxygen2.r-lib.org)-style comment symbols. This will
-   almost always mean `#' @rrrstats` (but see details below, under *Locations of
-   `rrrstats` documentation*).
+   almost always mean `#' @srrstats` (but see details below, under *Locations of
+   `srrstats` documentation*).
 2. The standards number(s) must be enclosed within curly braces, such as 
-   `#' @rrrstats {G1.0}`. Multiple standards may be associated with a single tag by
+   `#' @srrstats {G1.0}`. Multiple standards may be associated with a single tag by
    including them within the same single pair of curly braces, and separating
-   each by a comma, such as `#' @rrrstats {G1.0, G1.1}`.
+   each by a comma, such as `#' @srrstats {G1.0, G1.1}`.
 3. Explanatory text may be placed anywhere before or after curly braces
-   enclosing standards, such that `#' @rrrstats some text {G1.0}` is entirely
-   equivalent to `#' @rrrstats {G1.0} some text`.
+   enclosing standards, such that `#' @srrstats some text {G1.0}` is entirely
+   equivalent to `#' @srrstats {G1.0} some text`.
 4. Only the first pair of curly braces is parsed to determine standards
    numbers; any subsequent curly braces within one expression will be ignored.
    (Where an expression is everything that comes after one
@@ -183,28 +183,28 @@ formatting requirements:
    the next tag.) The following will accordingly only refer to G1.0, and not
    G1.1:
     ```{r}
-   #' @rrrstats {G1.0} as well as {G1.1}.
+   #' @srrstats {G1.0} as well as {G1.1}.
     ```
     The appropriate way to refer to multiple tags is to include them in the one set of curly braces, as shown above, or to use separate tags, like this:
     ```{r}
-    #' @rrrstats {G1.0} as well as
-    #' @rrrstats {G1.1}
+    #' @srrstats {G1.0} as well as
+    #' @srrstats {G1.1}
     ```
 5. Any standard may occur arbitrarily many times in any file(s) within a
    package. The only requirement is that any one standard should only be
-   associated with one single kind of tag; thus should only be `@rrrstats` (a
-   standard which has been addressed), *or* `@rrrstatsNA` (a standard which is not
-   applicable), *or* `@rrrstatsTODO` (a standard which has not yet been addressed).
+   associated with one single kind of tag; thus should only be `@srrstats` (a
+   standard which has been addressed), *or* `@srrstatsNA` (a standard which is not
+   applicable), *or* `@srrstatsTODO` (a standard which has not yet been addressed).
 
 In almost all cases, all tags for a package will be generated by the initial
 call to
-[`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html),
+[`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html),
 and should simply be moved to appropriate locations within a package's code
 without modifying the format.
 
-### 3.2 Locations of `rrrstats` documentation
+### 3.2 Locations of `srrstats` documentation
 
-`rrrstats` tags and accompanying text can be placed almost anywhere within a
+`@srrstats` tags and accompanying text can be placed almost anywhere within a
 package, especially in any file in the main `/R`, `/tests`, or `src/`
 directories. Within the `/R` directory, tags should be placed only in
 [`roxygen2`](https://roxygen2.r-lib.org) blocks. These tags, and all associated
@@ -220,7 +220,7 @@ documentation (`.Rd`) files. If that block is associated with a function, the
 following two lines will suffice:
 
 ```{r doc-ex-with-fn}
-#' @rrrstats G1.0 This standard belongs here
+#' @srrstats G1.0 This standard belongs here
 #' @noRd
 myfunction <- function (...) {
     # ...
@@ -229,12 +229,12 @@ myfunction <- function (...) {
 If that block is not associated with a function, the documentation can be
 followed by a `NULL`, like this:
 ```{r doc-ex-with-null, eval = FALSE}
-#' @rrrstats G1.0 This standard belongs here
+#' @srrstats G1.0 This standard belongs here
 #' @noRd
 NULL
 ```
 Unlike [`roxygen2`](https://roxygen2.r-lib.org), which only processes blocks
-from within the main `R/` directory, the `rrr` package process blocks from
+from within the main `R/` directory, the `srr` package process blocks from
 within other directories too. As these blocks will never be passed through to
 the main [`roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
 function, they need neither `#' @noRd` tags, nor `NULL` definitions where none
@@ -248,9 +248,9 @@ print (readLines (file.path (d, "tests", "testthat", "test-a.R")),
        width = 20)
 ```
 
-While `rrrstats` tags can also be placed in the `src/` directory, the package
+While `@srrstats` tags can also be placed in the `src/` directory, the package
 currently only parses [`doxygen`](https://github.com/doxygen/doxygen)-style
-blocks for code written in C or C++. (Note that `rrr` is currently further
+blocks for code written in C or C++. (Note that `srr` is currently further
 restricted to C++ code compiled with
 [`Rcpp`](https://cran.r-project.org/package=Rcpp), but will soon be adapted to
 work with other C++ interfaces such as [`cpp11`](https://cpp11.r-lib.org).)
@@ -271,34 +271,34 @@ print (readLines (file.path (d, "src", "cpptest.cpp")), width = 20)
 
 Many standards refer to general package documentation, particularly in a
 `README` document, or in package vignettes. All such documents are presumed to
-be written in `.Rmd` format, for which `@rrrstats` tags must be included within
+be written in `.Rmd` format, for which `@srrstats` tags must be included within
 distinct code chunks. Again, the skeleton package has an example as follows:
 ```{r readme-ex}
 readLines (file.path (d, "README.Rmd"))
 ```
 
-Those lines illustrate the expected form. `@rrrstats` tags should be within
-a single block contained within a dedicated code chunk. `@rrrstats` chunks within
+Those lines illustrate the expected form. `@srrstats` tags should be within
+a single block contained within a dedicated code chunk. `@srrstats` chunks within
 `.Rmd` files will generally use `echo = FALSE` to prevent them appearing in the
 rendered documents. The [`roxygen2`](https://roxygen2.r-lib.org) lines do not
 need to be followed by a `NULL` (or any other non-
 [`roxygen2`](https://roxygen2.r-lib.org) statement), although if additional
 R code is necessary for any reason, you may also need to add `eval = FALSE`.
 
-### 3.4 `@rrrstatsNA` tags for non-applicable standards
+### 3.4 `@srrstatsNA` tags for non-applicable standards
 
-While `@rrrstatsTODO` and `@rrrstats` tags may be placed anywhere within a package,
-`@rrrstatsNA` tags used to denote non-applicable standards must be placed within
+While `@srrstatsTODO` and `@srrstats` tags may be placed anywhere within a package,
+`@srrstatsNA` tags used to denote non-applicable standards must be placed within
 a dedicated [`roxygen2`](https://roxygen2.r-lib.org) block with a title of
 `NA_standards`. As described above, both the package skeleton and the file
 produced by calling
-[`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
+[`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
 include templates for this block. The following illustrates a minimal form:
 
 ```{r na-block, eval = FALSE}
 #' NA_standards
 #'
-#' @rrrstatsNA {S3.3} is not applicable
+#' @srrstatsNA {S3.3} is not applicable
 #' @noRd
 NULL
 ```
@@ -310,7 +310,7 @@ they might otherwise have been addressed. (For example, non-applicable
 standards referring to tests might all be grouped together in a single
 `NA_standards` block in the `tests/` directory.)
 
-## 4. The `rrr` workflow
+## 4. The `srr` workflow
 
 The first step for any developer intending to use this package on the way to
 a submission to rOpenSci's project for peer-reviewing statistical software is
@@ -324,17 +324,17 @@ following general steps:
 
 1. Automatically download and insert lists of general and category-specific
    standards in your package by running
-   [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
+   [`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
    (in the main package directory). This will by default generate a file in the
-   `R/` directory called `rrr-stats-standards.R`, although any alternative name
+   `R/` directory called `srr-stats-standards.R`, although any alternative name
    can also be passed to the function (or the file can be renamed after it has
    initially been created).
-2. Change your package's `DESCRIPTION` file to use the `rrr` roclets by adding
-   `roclets = "rrr::rrr_stats_roclet"`) to the `Roxygen` line, as demonstrated at
+2. Change your package's `DESCRIPTION` file to use the `srr` roclets by adding
+   `roclets = "srr::srr_stats_roclet"`) to the `Roxygen` line, as demonstrated at
    the outset, as well as in the package skeleton.
 3. Run [`roxygenise`](https://roxygen2.r-lib.org/reference/roxygenize.html) to
    confirm that the roclets work on your package. You should initially see only
-   a single list of `@rrrstatsTODO` standards.
+   a single list of `@srrstatsTODO` standards.
 4. We recommend as a first step cutting-and-pasting standards to approximate
    locations within your package's code where you anticipate these standards
    being addressed. Multiple copies of any one standard may exist in multiple
@@ -346,14 +346,14 @@ following general steps:
     - Ensuring your code conforms;
     - Moving each standard to the one or more location(s) where you think your
       code most directly addresses them; 
-    - Modifying the `@rrrstatsTODO` tag to `@rrrstats`
+    - Modifying the `@srrstatsTODO` tag to `@srrstats`
     - Changing the initial text describing the standard itself to a brief
       description of how your code addresses that standard.
 6. Standards which you deem not to be applicable to your package should be
    grouped together in a single [`roxygen2`](https://roxygen2.r-lib.org) block
    with the title `NA_standards` (as described above, and as generated by the
-   [`rrr_stats_roxygen()`](https://ropenscilabs.github.io/rrr/reference/rrr_stats_roxygen.html)
+   [`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
    function).
 7. Update your documentation as frequently as you like or need, and use the
    output of the roclets to inform and guide the process of converting all
-   `@rrrstatsTODO` tags into either `@rrrstats` or `@rrrstatsNA` tags.
+   `@srrstatsTODO` tags into either `@srrstats` or `@srrstatsNA` tags.

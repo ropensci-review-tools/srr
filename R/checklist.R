@@ -1,12 +1,12 @@
 
-#' rrr_stats_checklist_check
+#' srr_stats_checklist_check
 #'
 #' Correct any potential formatting issues in a completed standards checklist
 #'
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
 #' @export
-rrr_stats_checklist_check <- function (file) {
+srr_stats_checklist_check <- function (file) {
 
     if (!file.exists (file))
         stop ("File [", file, "] does not exist")

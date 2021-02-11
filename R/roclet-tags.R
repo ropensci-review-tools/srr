@@ -1,5 +1,5 @@
 
-#' Parse rrrstats tags
+#' Parse srrstats tags
 #'
 #' @param x Input
 #' @return Parsed tags
@@ -7,18 +7,18 @@
 #' @importFrom roxygen2 roxy_tag_parse
 #' @noRd
 #' @export
-roxy_tag_parse.roxy_tag_rrrstats <- function(x) { # nolint
+roxy_tag_parse.roxy_tag_srrstats <- function(x) { # nolint
     roxygen2::tag_markdown (x)
 }
 
 #' @importFrom roxygen2 roxy_tag_rd
 #' @noRd
 #' @export
-roxy_tag_rd.roxy_tag_rrrstats <- function(x, base_path, env) { # nolint
+roxy_tag_rd.roxy_tag_srrstats <- function(x, base_path, env) { # nolint
   NULL
 }
 
-#' Parse rrrstatsNA tags
+#' Parse srrstatsNA tags
 #'
 #' @param x Input
 #' @return Parsed tags
@@ -26,7 +26,7 @@ roxy_tag_rd.roxy_tag_rrrstats <- function(x, base_path, env) { # nolint
 #' @importFrom roxygen2 roxy_tag_parse
 #' @noRd
 #' @export
-roxy_tag_parse.roxy_tag_rrrstatsNA <- function(x) { # nolint
+roxy_tag_parse.roxy_tag_srrstatsNA <- function(x) { # nolint
     roxygen2::tag_markdown (x)
 }
 
@@ -34,11 +34,11 @@ roxy_tag_parse.roxy_tag_rrrstatsNA <- function(x) { # nolint
 #' @importFrom roxygen2 roxy_tag_rd
 #' @noRd
 #' @export
-roxy_tag_rd.roxy_tag_rrrstatsNA <- function(x, base_path, env) { # nolint
+roxy_tag_rd.roxy_tag_srrstatsNA <- function(x, base_path, env) { # nolint
   NULL
 }
 
-#' Parse rrrstatsTODO tags
+#' Parse srrstatsTODO tags
 #'
 #' @param x Input
 #' @return Parsed tags
@@ -46,18 +46,18 @@ roxy_tag_rd.roxy_tag_rrrstatsNA <- function(x, base_path, env) { # nolint
 #' @importFrom roxygen2 roxy_tag_parse
 #' @noRd
 #' @export
-roxy_tag_parse.roxy_tag_rrrstatsTODO <- function(x) { # nolint
+roxy_tag_parse.roxy_tag_srrstatsTODO <- function(x) { # nolint
     roxygen2::tag_markdown (x)
 }
 
 #' @importFrom roxygen2 roxy_tag_rd
 #' @noRd
 #' @export
-roxy_tag_rd.roxy_tag_rrrstatsTODO <- function(x, base_path, env) { # nolint
+roxy_tag_rd.roxy_tag_srrstatsTODO <- function(x, base_path, env) { # nolint
   NULL
 }
 
-#' Parse rrrstatsVerbose tags
+#' Parse srrstatsVerbose tags
 #'
 #' @param x Input
 #' @return Parsed tags
@@ -65,13 +65,13 @@ roxy_tag_rd.roxy_tag_rrrstatsTODO <- function(x, base_path, env) { # nolint
 #' @importFrom roxygen2 roxy_tag_parse
 #' @noRd
 #' @export
-roxy_tag_parse.roxy_tag_rrrstatsVerbose <- function(x) { # nolint
+roxy_tag_parse.roxy_tag_srrstatsVerbose <- function(x) { # nolint
     roxygen2::tag_markdown (x)
 }
 
 #' @importFrom roxygen2 roxy_tag_rd
 #' @noRd
 #' @export
-roxy_tag_rd.roxy_tag_rrrstatsVerbose <- function(x, base_path, env) { # nolint
+roxy_tag_rd.roxy_tag_srrstatsVerbose <- function(x, base_path, env) { # nolint
   NULL
 }
