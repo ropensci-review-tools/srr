@@ -357,3 +357,28 @@ following general steps:
 7. Update your documentation as frequently as you like or need, and use the
    output of the roclets to inform and guide the process of converting all
    `@srrstatsTODO` tags into either `@srrstats` or `@srrstatsNA` tags.
+
+Note that we do **not** recommend copying files from the package skeleton into
+your own package for you `ssr` documentation. The following lines demonstrate
+what happens if you insert actual standards into the package skeleton:
+
+```{r dl-stds-fakey, echo = TRUE, eval = FALSE}
+srr_stats_roxygen (category = "regression", # for example
+                   filename = file.path (d, "R", "srr-stats-standards.R"),
+                   overwrite = TRUE)
+```
+```{r dl-stds, echo = FALSE, eval = TRUE, collapse = TRUE}
+srr_stats_roxygen (category = "regression", # for example
+                   filename = file.path (d, "R", "srr-stats-standards.R"),
+                   overwrite = TRUE)
+```
+```{r mixed-tags-fakey, echo = TRUE, eval = FALSE}
+roxygen2::roxygenise (d)
+```
+```{r mixed-tags, echo = FALSE, eval = TRUE, error = TRUE, collapse = TRUE}
+roxygen2::roxygenise (d)
+```
+To ensure all standards are first inserted with `@srrstatsTODO` tags, and that
+there are no duplicates with other tags, please use only the
+[`srr_stats_roxygen()`](https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html)
+function.
