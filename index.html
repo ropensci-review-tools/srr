@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.147</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.150</span>
       </span>
     </div>
 
@@ -79,8 +79,12 @@
 <div id="ropensci-software-review-roclets-srr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#ropensci-software-review-roclets-srr" class="anchor"></a><a href="https://ropensci.org">rOpenSci</a> <strong>S</strong>oftware <strong>R</strong>eview <strong>R</strong>oclets (srr)</h1></div>
-<p>This package contains roclets for use with <a href="https://ropensci.org">rOpenSci</a>’s software review systems. At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a> (from here on referred to as the “SSR Book”).</p>
-<p>This package can be installed with,</p>
+<p>First, the answer to an important question: <strong><a href="https://github.com/r-lib/roxygen2/issues/1086">What is a “roclet”</a>?</strong></p>
+<ul>
+<li>A roclet is an object used by the <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> package to convert <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a>-style documentation lines into some desired form of output.</li>
+</ul>
+<p>The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> package parses all documentation lines from all files in the <code>R/</code> directory of a package which begin with <code>#'</code>. Special tags beginning with <code><a href="https://rdrr.io/r/base/slotOp.html">@</a></code>, such as <code>@param</code> or <code>@export</code>, may follow these symbols, and roclets define what is done with different kinds of tags. The <a href="https://roxygen2.r-lib.org"><code>roxygen2</code></a> package includes roclets to process a number of tags; the <code>srr</code> package implements custom roclets to process several additional tags for use with <a href="https://ropensci.org">rOpenSci</a>’s software review systems.</p>
+<p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html">main project book</a> (from here on referred to as the “SSR Book”). The <code>srr</code> package can be installed with,</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"ropenscilabs/srr"</span><span class="op">)</span></code></pre></div>
