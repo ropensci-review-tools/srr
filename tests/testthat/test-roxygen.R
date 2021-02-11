@@ -44,7 +44,9 @@ test_that ("roxygen standards", {
                                         "within an R package"))
                   chk <- file.rename (temp, desc)
               }
-              # writes all standards with "@srrstatsTODO" tags:
+              # writes all standards with "@srrstatsTODO" tags. Some of these
+              # standards already exist as `@srrstats` in the skeleton, in
+              # R/test.R, so initial attempt to `toxygenise` will trigger error:
               srr_stats_roxygen (category = "regression",
                                  filename = filename,
                                  overwrite = TRUE)
@@ -52,6 +54,8 @@ test_that ("roxygen standards", {
                             "Standards .* are listed with both .* tags")
 
               if (file.remove (file.path (d, "R", "test.R"))) {
+                  # After removing the file with duplicated standards with mixed
+                  # tags, things should once again work:
                   x2 <- capture.output (
                       roxygen2::roxygenise (d),
                       type = "message"
