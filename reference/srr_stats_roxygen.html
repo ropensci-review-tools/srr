@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • srr</title>
+<title>srr_stats_roxygen — srr_stats_roxygen • srr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,10 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="srr_stats_roxygen — srr_stats_roxygen" />
+<meta property="og:description" content="Obtain rOpenSci standards for statistical software, along with one or more
+category-specific standards, as a checklist, convert to project-specific
+roxygen2 format, and save in nominated file." />
 
 
 
@@ -60,7 +63,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -115,18 +118,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>srr_stats_roxygen</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropenscilabs/srr/blob/master/R/dl-standards.R'><code>R/dl-standards.R</code></a></small>
+    <div class="hidden name"><code>srr_stats_roxygen.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="srr-stats.html">Preparing Statistical Software with the srr package</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Obtain rOpenSci standards for statistical software, along with one or more
+category-specific standards, as a checklist, convert to project-specific
+<span class="pkg">roxygen2</span> format, and save in nominated file.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>srr_stats_roxygen</span><span class='op'>(</span>
+  category <span class='op'>=</span> <span class='cn'>NULL</span>,
+  filename <span class='op'>=</span> <span class='st'>"srr-stats-standards.R"</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>category</th>
+      <td><p>One of the names of files given in the directory contents of
+<a href='https://github.com/ropenscilabs/statistical-software-review-book/tree/master/standards'>https://github.com/ropenscilabs/statistical-software-review-book/tree/master/standards</a>,
+each of which is ultimately formatted into a sub-section of the standards.</p></td>
+    </tr>
+    <tr>
+      <th>filename</th>
+      <td><p>Name of 'R' source file in which to write
+<span class="pkg">roxygen2</span>-formatted lists of standards.</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>If <code>FALSE</code> (default) and <code>filename</code> already exists, a dialog
+will ask whether file should be overwritten.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Nothing</p>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
