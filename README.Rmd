@@ -10,17 +10,31 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 # [rOpenSci](https://ropensci.org) **S**oftware **R**eview **R**oclets (srr)
 
-This package contains roclets for use with [rOpenSci](https://ropensci.org)'s
-software review systems. At present, the package only contains roclets and
-associated functions to help those developing and reviewing packages submitted
-to rOpenSci's system for [Statistical Software
+First, the answer to an important question: **[What is a
+"roclet"](https://github.com/r-lib/roxygen2/issues/1086)?**
+
+- A roclet is an object used by the [`roxygen2`](https://roxygen2.r-lib.org)
+  package to convert [`roxygen2`](https://roxygen2.r-lib.org)-style
+  documentation lines into some desired form of output.
+
+The [`roxygen2`](https://roxygen2.r-lib.org) package parses all documentation
+lines from all files in the `R/` directory of a package which begin with `#'`.
+Special tags beginning with `@`, such as `@param` or `@export`, may follow
+these symbols, and roclets define what is done with different kinds of tags.
+The [`roxygen2`](https://roxygen2.r-lib.org) package includes roclets to
+process a number of tags; the `srr` package implements custom roclets to
+process several additional tags for use with [rOpenSci](https://ropensci.org)'s
+software review systems.
+
+At present, the package only contains roclets and associated functions to help
+those developing and reviewing packages submitted to rOpenSci's system for
+[Statistical Software
 Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
 The functions are mostly intended to ease alignment and assessment of software
 against the standards detailed in the [main project
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
-(from here on referred to as the "SSR Book").
-
-This package can be installed with,
+(from here on referred to as the "SSR Book"). The `srr` package can be
+installed with,
 
 ```{r install, eval = FALSE}
 # install.packages("remotes")
