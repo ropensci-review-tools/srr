@@ -359,7 +359,7 @@ following general steps:
    `@srrstatsTODO` tags into either `@srrstats` or `@srrstatsNA` tags.
 
 Note that we do **not** recommend copying files from the package skeleton into
-your own package for you `ssr` documentation. The following lines demonstrate
+your own package for you `srr` documentation. The following lines demonstrate
 what happens if you insert actual standards into the package skeleton:
 
 ```{r dl-stds-fakey, echo = TRUE, eval = FALSE}
