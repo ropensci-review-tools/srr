@@ -62,9 +62,15 @@ of the @srrstats tags within the code as identified by running those lines." />
 
 
 
+  
+
+  
+
   </head>
 
   <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -78,7 +84,7 @@ of the @srrstats tags within the code as identified by running those lines." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.152</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.154</span>
       </span>
     </div>
 
@@ -156,11 +162,11 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>srr_stats_pkg_skeleton</span> <span class='op'>(</span><span class='op'>)</span>
 <span class='fu'>roxygen2</span><span class='fu'>::</span><span class='fu'><a href='https://roxygen2.r-lib.org/reference/roxygenize.html'>roxygenise</a></span> <span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Loading demo</span></div><div class='output co'>#&gt; Exports from /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpf5N73O/demo/src/cpptest.cpp:
+</div><div class='output co'>#&gt; <span class='message'>Loading demo</span></div><div class='output co'>#&gt; Exports from /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpZVSkKq/demo/src/cpptest.cpp:
 #&gt;    int test()
 #&gt; 
-#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpf5N73O/demo/src/RcppExports.cpp updated.
-#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpf5N73O/demo/R/RcppExports.R updated.</div><div class='output co'>#&gt; <span class='message'>Re-compiling demo</span></div><div class='output co'>#&gt;   <span style='color: #9E9E9E;'>─  installing *source* package ‘demo’ ...</span><span>
+#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpZVSkKq/demo/src/RcppExports.cpp updated.
+#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpZVSkKq/demo/R/RcppExports.R updated.</div><div class='output co'>#&gt; <span class='message'>Re-compiling demo</span></div><div class='output co'>#&gt;   <span style='color: #9E9E9E;'>─  installing *source* package ‘demo’ ...</span><span>
 #&gt;      ** using staged installation
 #&gt;      ** libs
 #&gt;      clang++ -mmacosx-version-min=10.13 -std=gnu++11 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/runner/work/_temp/Library/Rcpp/include' -I/usr/local/include   -fPIC  -Wall -g -O2  -UNDEBUG -Wall -pedantic -g -O0 -fdiagnostics-color=always -c RcppExports.cpp -o RcppExports.o
@@ -178,7 +184,7 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
 #&gt;    </span><span style='color: #00BB00;font-weight: bold;'>                 ^
 #&gt; </span><span>     1 warning generated.
 #&gt;      clang++ -mmacosx-version-min=10.13 -std=gnu++11 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o demo.so RcppExports.o cpptest.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
-#&gt;      installing to /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpf5N73O/devtools_install_76d2c3dcd30/00LOCK-demo/00new/demo/libs
+#&gt;      installing to /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpZVSkKq/devtools_install_96957c64101/00LOCK-demo/00new/demo/libs
 #&gt;      ** checking absolute paths in shared objects and dynamic libraries
 #&gt;   </span><span style='color: #9E9E9E;'>─  DONE (demo)</span><span>
 #&gt; Writing NAMESPACE</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────</span><span> </span><span style='color: #00BB00;'>rOpenSci Statistical Software Standards</span><span> </span><span style='color: #00BB00;'>───────────────────</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstats standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]</span>
@@ -200,11 +206,11 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
 
       <footer>
       <div class="copyright">
-  <p>Developed by Mark Padgham.</p>
+  <p><p>Developed by Mark Padgham.</p></p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9000.</p></p>
 </div>
 
       </footer>
@@ -212,6 +218,8 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
 
   
 
+
+  
 
   </body>
 </html>
