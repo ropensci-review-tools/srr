@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.154</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.155</span>
       </span>
     </div>
 
@@ -94,6 +94,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/srr" class="external-link">srr</a></span><span class="op">)</span></code></pre></div>
 <p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. Both the roclet and all functions intended for use in this context are prefixed with <code>srr_stats_</code>. The remainder of this document is in two main sections. If you’re developing a statistics package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
+<p>Note that the <code>srr</code> package can be applied only within the working directory of a package. There are no <code>package</code> or <code>path</code> arguments to allow functions to be applied to packages anywhere other than in the current working directory.</p>
 <div id="for-package-developers" class="section level2">
 <h2 class="hasAnchor">
 <a href="#for-package-developers" class="anchor"></a>For Package Developers</h2>
