@@ -63,6 +63,11 @@ the [SSR
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
 with this `README` intended to provide supporting technical details.
 
+Note that the `srr` package can be applied only within the working
+directory of a package. There are no `package` or `path` arguments to
+allow functions to be applied to packages anywhere other than in the
+current working directory.
+
 ## For Package Developers
 
 People intending to develop packages for submission to our system for
