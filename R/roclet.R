@@ -146,6 +146,24 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
     return (msgs)
 }
 
+
+#' check_block_title
+#'
+#' Ensure that standards with either 'srrstats' or 'srrstatsTODO' are NOT in a
+#' block with a title of 'NA_standards'
+#'
+#' @noRd
+check_block_title <- function (block, tag) {
+
+    block_title <- roxygen2::block_get_tag_value (block, "title")
+    block_title <- ifelse (is.null (block_title), "", block_title)
+    if (grepl ("^NA\\_st", block_title))
+        stop (paste0 ("An NA_standards block should only contain ",
+                      "'@srrstatsNA' tags, and no ",
+                      tag, " tags."))
+
+}
+
 #' process_srrstats_tags
 #'
 #' @param fn_name Include name of calling function in message?
@@ -154,11 +172,7 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     func_name <- block$object$alias
 
-    block_title <- roxygen2::block_get_tag_value (block, "title")
-    block_title <- ifelse (is.null (block_title), "", block_title)
-    if (block_title == "NA_standards")
-        stop ("An NA_standards block should only contain '@srrstatsNA' tags,",
-              " and no @srrstats tags.")
+    check_block_title (block, "srrstats")
 
     standards <- roxygen2::block_get_tags (block, "srrstats")
     standards <- unlist (lapply (standards, function (i) i$val))
@@ -231,6 +245,8 @@ process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolin
 #' @param fn_name Just a dummy here to allow do.call
 #' @noRd
 process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
+
+    check_block_title (block, "srrstatsTODO")
 
     standards <- roxygen2::block_get_tags (block, "srrstatsTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
