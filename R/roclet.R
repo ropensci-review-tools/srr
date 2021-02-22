@@ -200,10 +200,10 @@ extract_standard_numbers <- function (standards) {
 
     # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
     # muck up standards ID, so have to be removed here:
-    g <- gregexpr ("\\\\strong\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
+    g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
     m <- lapply (regmatches (standards, g), function (i) {
                  res <- paste0 (i, collapse = "|")
-                 res <- gsub ("\\\\strong", "\\\\\\\\strong", res)
+                 res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
                  res <- gsub ("\\{", "\\\\{", res)
                  return (gsub ("\\}", "\\\\}", res))
                    })
