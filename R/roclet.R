@@ -198,8 +198,8 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 # capturing everything inside first "[...]":
 extract_standard_numbers <- function (standards) {
 
-    g <- regexpr ("\\{.*\\}", standards)
-    standards <- gsub ("\\{|\\}", "", regmatches (standards, g))
+    g <- regexpr ("\\{.*\\}\\s", standards)
+    standards <- gsub ("\\{|\\}\\s", "", regmatches (standards, g))
 
     gptn <- "[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?(\\s||\\n\\*)"
     snum <- lapply (standards, function (i) {
