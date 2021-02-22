@@ -82,7 +82,8 @@ which will produce output like the following:
 
 ```{r skeleton-output1-compile, eval = TRUE, echo = FALSE, message = FALSE, results = "hide"}
 # need to run once to compile /src so compile output does not appear on 2nd time
-roxygen2::roxygenise (d)
+#pkgbuild::compile_dll (d)
+roxygen2::roxygenise (d) # to avoid needing Suggests::pkgbuild
 ```
 ```{r skeleton-output-dummy, eval = FALSE, echo = TRUE, collapse = TRUE}
 roxygen2::roxygenise (d)
