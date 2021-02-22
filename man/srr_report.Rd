@@ -4,7 +4,17 @@
 \alias{srr_report}
 \title{srr_report}
 \usage{
-srr_report()
+srr_report(path = ".", view = TRUE)
+}
+\arguments{
+\item{path}{Path to package for which report is to be generated}
+
+\item{view}{If \code{TRUE} (default), a html-formatted version of the report is
+opened in default system browser.}
+}
+\value{
+(invisibly) Markdown-formatted lines used to generate the final html
+document.
 }
 \description{
 Generate report from \code{ssr} tags.
