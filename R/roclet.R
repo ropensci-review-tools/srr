@@ -22,18 +22,7 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     if (!get_verbose_flag (blocks))
         return (NULL)
 
-    rcpp <- vapply (blocks, function (block)
-                    basename (block$file) == "RcppExports.R",
-                    logical (1))
-    rcpp_blocks <- blocks [which (rcpp)]
-    blocks <- blocks [which (!rcpp)]
-    test_blocks <- get_test_blocks (base_path)
-    readme_blocks <- get_readme_blocks (base_path)
-
-    blocks <- list (R = blocks,
-                    src = rcpp_blocks,
-                    tests = test_blocks,
-                    readme = readme_blocks)
+    blocks <- collect_blocks (blocks, base_path)
 
     # ------ @srrstats tags:
     msgs <- collect_one_tag (base_path, blocks, tag = "srrstats")
@@ -71,6 +60,24 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     }
 
     return (NULL)
+}
+
+collect_blocks <- function (blocks, base_path) {
+
+    rcpp <- vapply (blocks, function (block)
+                    basename (block$file) == "RcppExports.R",
+                    logical (1))
+    rcpp_blocks <- blocks [which (rcpp)]
+    blocks <- blocks [which (!rcpp)]
+    test_blocks <- get_test_blocks (base_path)
+    readme_blocks <- get_readme_blocks (base_path)
+
+    blocks <- list (R = blocks,
+                    src = rcpp_blocks,
+                    tests = test_blocks,
+                    readme = readme_blocks)
+
+    return (blocks)
 }
 
 get_verbose_flag <- function (blocks) {

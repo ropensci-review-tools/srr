@@ -1,6 +1,6 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.0.160
+Version: 0.0.0.161
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
