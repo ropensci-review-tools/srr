@@ -146,7 +146,7 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
     for (block in blocks$R) {
         msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
     }
-    msgs <- c (msgs, get_other_tags (blocks$tests, tag = tag, dir = "tests"))
+    msgs <- c (msgs, get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat"))
     msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
     msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
 
