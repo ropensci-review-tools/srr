@@ -198,6 +198,19 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 # capturing everything inside first "[...]":
 extract_standard_numbers <- function (standards) {
 
+    # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
+    # muck up standards ID, so have to be removed here:
+    g <- gregexpr ("\\\\strong\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
+    m <- lapply (regmatches (standards, g), function (i) {
+                 res <- paste0 (i, collapse = "|")
+                 res <- gsub ("\\\\strong", "\\\\\\\\strong", res)
+                 res <- gsub ("\\{", "\\\\{", res)
+                 return (gsub ("\\}", "\\\\}", res))
+                   })
+    for (i in seq_along (m)) {
+        standards [i] <- gsub (m [[i]], "", standards [i])
+    }
+
     g <- regexpr ("\\{.*\\}\\s", standards)
     standards <- gsub ("\\{|\\}\\s", "", regmatches (standards, g))
 
