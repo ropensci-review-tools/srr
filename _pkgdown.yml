@@ -1,0 +1,12 @@
+url: https://ropenscilabs.github.io/srr
+
+reference:
+- title: Helper functions
+  contents:
+  - has_concept("helper")
+- title: Roclet functions
+  contents:
+  - has_concept("roxygen")
+- title: Report generation
+  contents:
+  - has_concept("report")
