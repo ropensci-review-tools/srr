@@ -41,7 +41,7 @@ srr_report <- function (path = ".", view = TRUE) {
 
     u <- paste0 ("file://", out)
     if (view)
-        browseURL (u)
+        utils::browseURL (u)
 
     invisible (md_lines)
 }
