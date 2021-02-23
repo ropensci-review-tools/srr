@@ -63,7 +63,7 @@ jobs:
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y xclip
+          sudo apt-get install -y xclip xsel
           while read -r cmd
           do
             eval sudo $cmd
@@ -78,6 +78,7 @@ jobs:
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          CLIPR_ALLOW: true
         run: |
           options(crayon.enabled = TRUE)
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
