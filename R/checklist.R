@@ -5,6 +5,7 @@
 #'
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
+#' @family helper
 #' @export
 srr_stats_checklist_check <- function (file) {
 

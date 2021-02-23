@@ -26,3 +26,10 @@ of the \verb{@srrstats} tags within the code as identified by running those line
 d <- srr_stats_pkg_skeleton ()
 roxygen2::roxygenise (d)
 }
+\seealso{
+Other helper: 
+\code{\link{srr_stats_categories}()},
+\code{\link{srr_stats_checklist_check}()},
+\code{\link{srr_stats_checklist}()}
+}
+\concept{helper}

@@ -133,6 +133,7 @@ category_titles_urls <- function (category) {
 #' checklist. A suffix of `.md` will be automatically appended.
 #' @return A character vector containing a markdown-style checklist of general
 #' standards along with standards for any additional categories.
+#' @family helper
 #'
 #' @export
 srr_stats_checklist <- function (category = NULL, filename = NULL) {
@@ -161,6 +162,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
 #' will ask whether file should be overwritten.
 #' @return Nothing
+#' @family roxygen
 #' @export
 srr_stats_roxygen <- function (category = NULL,
                                     filename = "srr-stats-standards.R",
@@ -273,6 +275,7 @@ get_standards_checklists <- function (category = NULL) {
 #' @return A `data.frame` with 3 columns of "category" (the categories to be
 #' submitted to \link{srr_stats_checklist}), "title" (the full title), and
 #' "url".
+#' @family helper
 #'
 #' @export
 srr_stats_categories <- function () {

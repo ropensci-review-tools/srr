@@ -8,6 +8,7 @@
 #' opened in default system browser.
 #' @return (invisibly) Markdown-formatted lines used to generate the final html
 #' document.
+#' @family report
 #' @export
 srr_report <- function (path = ".", view = TRUE) {
 

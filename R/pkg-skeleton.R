@@ -187,6 +187,7 @@ write_test_files <- function (d, pkg_name) {
 #' @param pkg_name The name of the package. The final location of this package
 #' will be in `file.path(base_dir, pkg_name)`.
 #' @return The path to the directory holding the newly created package
+#' @family helper
 #' @examples
 #' d <- srr_stats_pkg_skeleton ()
 #' roxygen2::roxygenise (d)

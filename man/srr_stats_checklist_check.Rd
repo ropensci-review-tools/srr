@@ -13,3 +13,10 @@ markdown document in \code{.md} format, not \code{.Rmd} or anything else.}
 \description{
 Correct any potential formatting issues in a completed standards checklist
 }
+\seealso{
+Other helper: 
+\code{\link{srr_stats_categories}()},
+\code{\link{srr_stats_checklist}()},
+\code{\link{srr_stats_pkg_skeleton}()}
+}
+\concept{helper}

@@ -8,6 +8,7 @@
 #' documentation.
 #'
 #' @importFrom roxygen2 roclet
+#' @family roxygen
 #'
 #' @export
 srr_stats_roclet <- function () {

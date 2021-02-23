@@ -29,3 +29,8 @@ Obtain rOpenSci standards for statistical software, along with one or more
 category-specific standards, as a checklist, convert to project-specific
 \pkg{roxygen2} format, and save in nominated file.
 }
+\seealso{
+Other roxygen: 
+\code{\link{srr_stats_roclet}()}
+}
+\concept{roxygen}

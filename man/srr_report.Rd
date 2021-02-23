@@ -19,3 +19,4 @@ document.
 \description{
 Generate report from \code{ssr} tags.
 }
+\concept{report}

@@ -14,3 +14,8 @@ Note that this function should never need to be called directly. It only
 exists to enable "@srrstats" tags to be parsed from \pkg{roxygen2}
 documentation.
 }
+\seealso{
+Other roxygen: 
+\code{\link{srr_stats_roxygen}()}
+}
+\concept{roxygen}
