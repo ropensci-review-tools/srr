@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.155</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.166</span>
       </span>
     </div>
 
@@ -131,9 +131,26 @@
     <p>Generate report from <code>ssr</code> tags.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>srr_report</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>srr_report</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"."</span>, view <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>path</th>
+      <td><p>Path to package for which report is to be generated</p></td>
+    </tr>
+    <tr>
+      <th>view</th>
+      <td><p>If <code>TRUE</code> (default), a html-formatted version of the report is
+opened in default system browser.</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>(invisibly) Markdown-formatted lines used to generate the final html
+document.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

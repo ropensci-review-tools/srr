@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/index.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr-package.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_report.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_categories.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_checklist.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_checklist_check.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_roclet.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html</loc>
+  </url>
+  <url>
+    <loc>https://ropenscilabs.github.io/srr/articles/srr-stats.html</loc>
+  </url>
+</urlset>

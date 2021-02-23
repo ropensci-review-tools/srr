@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.155</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.166</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1 data-toc-skip>Preparing Statistical Software with the srr package</h1>
                         <h4 data-toc-skip class="author">Mark Padgham</h4>
             
-            <h4 data-toc-skip class="date">2021-02-20</h4>
+            <h4 data-toc-skip class="date">2021-02-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropenscilabs/srr/blob/master/vignettes/srr-stats.Rmd" class="external-link"><code>vignettes/srr-stats.Rmd</code></a></small>
       <div class="hidden name"><code>srr-stats.Rmd</code></div>
@@ -92,12 +92,12 @@
 <div id="the-package-skeleton" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-package-skeleton" class="anchor"></a>1. The package skeleton</h2>
-<p>The <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html" class="external-link"><code>srr_stats_pkg_skeleton()</code> function</a> included with this package differs from <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html" class="external-link">other</a> <a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">package</a> <a href="https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html" class="external-link">skeleton</a> functions. Rather than providing a skeleton from which you can construct your own package, the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html" class="external-link"><code>srr_stats_pkg_skeleton()</code> function</a> generates a skeleton to help developers understand this package works. This skeleton of a package is intended to be modified to help you understand which kinds of modifications are allowed, and which generate errors. The package is by default called <code>"demo"</code>, is constructed in R’s <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/tempfile.html" class="external-link"><code>tempdir()</code></a>, and looks like this:</p>
+<p>The <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html"><code>srr_stats_pkg_skeleton()</code> function</a> included with this package differs from <a href="https://stat.ethz.ch/R-manual/R-patched/library/utils/html/package.skeleton.html" class="external-link">other</a> <a href="https://usethis.r-lib.org/reference/create_package.html" class="external-link">package</a> <a href="https://rdrr.io/cran/Rcpp/man/Rcpp.package.skeleton.html" class="external-link">skeleton</a> functions. Rather than providing a skeleton from which you can construct your own package, the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html"><code>srr_stats_pkg_skeleton()</code> function</a> generates a skeleton to help developers understand this package works. This skeleton of a package is intended to be modified to help you understand which kinds of modifications are allowed, and which generate errors. The package is by default called <code>"demo"</code>, is constructed in R’s <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/tempfile.html" class="external-link"><code>tempdir()</code></a>, and looks like this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropenscilabs/srr" class="external-link">srr</a></span><span class="op">)</span>
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/srr_stats_pkg_skeleton.html">srr_stats_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
-<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpnPIx8y/demo
+<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp38sNre/demo
 ## ├── DESCRIPTION
 ## ├── NAMESPACE
 ## ├── R
@@ -137,8 +137,8 @@
 ## ──────────────────── rOpenSci Statistical Software Standards ───────────────────
 ## 
 ## ── @srrstats standards:
-##   * [G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]
-##   * [T2.2] on line#2 of file [tests/test-a.R]
+##   * [G1.1, G1.2, G1.3] in function 'test_fn()' on line#11 of file [R/test.R]
+##   * [T2.2] on line#2 of file [tests/testthat/test-a.R]
 ##   * [G3.3] in function 'test()' on line#6 of file [src/cpptest.cpp]
 ##   * [A1.4] on line#17 of file [./README.Rmd]
 ## 
@@ -169,9 +169,9 @@
 <li>
 <code>@srrstats</code> tags to indicate standards which have been addressed. These should be placed at the locations within your code where specific standards have been addressed, and should include a brief textual description of how the code at that location addresses the nominated standard.</li>
 <li>
-<code>@srrstatsTODO</code> tags to indicate standards which have not yet been addressed. The <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code> function</a> described below will place all standards for your nominated categories in an initial file in the <code>/R</code> directory of your project. Each of these will have a tag of <code>@srrstatsTODO</code>. As you address each standard, you’ll need to move it from that initial location to that point in your code where that standard is addressed, and change the tag from <code>@srrstatsTODO</code> to <code>@srrstats</code>. It may help to break the initial, commonly very long, single list of standards into smaller groups, and to move each of these into the approximate location within your code where these are likely to be addressed. For example, all standards which pertain to tests can be moved into the <code>/tests</code> (or <code>/tests/testthat</code>) directory.</li>
+<code>@srrstatsTODO</code> tags to indicate standards which have not yet been addressed. The <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code> function</a> described below will place all standards for your nominated categories in an initial file in the <code>/R</code> directory of your project. Each of these will have a tag of <code>@srrstatsTODO</code>. As you address each standard, you’ll need to move it from that initial location to that point in your code where that standard is addressed, and change the tag from <code>@srrstatsTODO</code> to <code>@srrstats</code>. It may help to break the initial, commonly very long, single list of standards into smaller groups, and to move each of these into the approximate location within your code where these are likely to be addressed. For example, all standards which pertain to tests can be moved into the <code>/tests</code> (or <code>/tests/testthat</code>) directory.</li>
 <li>
-<code>@srrstatsNA</code> tags to indicate standards which you deem not applicable to your package. These need to be grouped together in a single block with a title of <code>NA_standards</code>. Such a block is both included in the package skeleton, and also in the output of <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code> function</a>. The numbers of any non-applicable standards can then be moved to this block, with a note explaining why these standards have been deemed not to apply to your package.</li>
+<code>@srrstatsNA</code> tags to indicate standards which you deem not applicable to your package. These need to be grouped together in a single block with a title of <code>NA_standards</code>. Such a block is both included in the package skeleton, and also in the output of <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code> function</a>. The numbers of any non-applicable standards can then be moved to this block, with a note explaining why these standards have been deemed not to apply to your package.</li>
 </ol>
 <p>The output illustrated above shows how the <code>srr</code> package groups these three tags together, first collecting the output of standards which have been addressed (via <code>@srrstats</code> tags), then showing output of non-applicable standards (via <code>@srrstatsNA</code> tags), and finally standards which are still to be addressed (via <code>@srrstatsTODO</code> tags).</p>
 <div id="format-of-srr-documentation" class="section level3">
@@ -193,7 +193,7 @@
 </li>
 <li><p>Any standard may occur arbitrarily many times in any file(s) within a package. The only requirement is that any one standard should only be associated with one single kind of tag; thus should only be <code>@srrstats</code> (a standard which has been addressed), <em>or</em> <code>@srrstatsNA</code> (a standard which is not applicable), <em>or</em> <code>@srrstatsTODO</code> (a standard which has not yet been addressed).</p></li>
 </ol>
-<p>In almost all cases, all tags for a package will be generated by the initial call to <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code></a>, and should simply be moved to appropriate locations within a package’s code without modifying the format.</p>
+<p>In almost all cases, all tags for a package will be generated by the initial call to <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a>, and should simply be moved to appropriate locations within a package’s code without modifying the format.</p>
 </div>
 <div id="locations-of-srrstats-documentation" class="section level3">
 <h3 class="hasAnchor">
@@ -263,7 +263,7 @@
 <div id="srrstatsna-tags-for-non-applicable-standards" class="section level3">
 <h3 class="hasAnchor">
 <a href="#srrstatsna-tags-for-non-applicable-standards" class="anchor"></a>3.4 <code>@srrstatsNA</code> tags for non-applicable standards</h3>
-<p>While <code>@srrstatsTODO</code> and <code>@srrstats</code> tags may be placed anywhere within a package, <code>@srrstatsNA</code> tags used to denote non-applicable standards must be placed within a dedicated <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> block with a title of <code>NA_standards</code>. As described above, both the package skeleton and the file produced by calling <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code></a> include templates for this block. The following illustrates a minimal form:</p>
+<p>While <code>@srrstatsTODO</code> and <code>@srrstats</code> tags may be placed anywhere within a package, <code>@srrstatsNA</code> tags used to denote non-applicable standards must be placed within a dedicated <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> block with a title of <code>NA_standards</code>. As described above, both the package skeleton and the file produced by calling <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a> include templates for this block. The following illustrates a minimal form:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' NA_standards</span>
 <span class="co">#'</span>
@@ -278,7 +278,7 @@
 <a href="#the-srr-workflow" class="anchor"></a>4. The <code>srr</code> workflow</h2>
 <p>The first step for any developer intending to use this package on the way to a submission to rOpenSci’s project for peer-reviewing statistical software is to generate the package skeleton described above, and to try any and all conceivable ways to modify locations, formats, and other properties of the <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> tags defined in this package, in order to understand how these tags are used to generate the summary results when running <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygenise</code></a>. Following that initial familiarisation, a typical workflow will involve the following general steps:</p>
 <ol style="list-style-type: decimal">
-<li>Automatically download and insert lists of general and category-specific standards in your package by running <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code></a> (in the main package directory). This will by default generate a file in the <code>R/</code> directory called <code>srr-stats-standards.R</code>, although any alternative name can also be passed to the function (or the file can be renamed after it has initially been created).</li>
+<li>Automatically download and insert lists of general and category-specific standards in your package by running <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a> (in the main package directory). This will by default generate a file in the <code>R/</code> directory called <code>srr-stats-standards.R</code>, although any alternative name can also be passed to the function (or the file can be renamed after it has initially been created).</li>
 <li>Change your package’s <code>DESCRIPTION</code> file to use the <code>srr</code> roclets by adding <code>roclets = "srr::srr_stats_roclet"</code>) to the <code>Roxygen</code> line, as demonstrated at the outset, as well as in the package skeleton.</li>
 <li>Run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygenise</code></a> to confirm that the roclets work on your package. You should initially see only a single list of <code>@srrstatsTODO</code> standards.</li>
 <li>We recommend as a first step cutting-and-pasting standards to approximate locations within your package’s code where you anticipate these standards being addressed. Multiple copies of any one standard may exist in multiple locations, so you may also repeat standards which you anticipate will be addressed in multiple locations. This should reduce a potentially very long initial list of standards down to several distinct groups of hopefully more manageable size.</li>
@@ -291,7 +291,7 @@
 <li>Changing the initial text describing the standard itself to a brief description of how your code addresses that standard.</li>
 </ul>
 </li>
-<li>Standards which you deem not to be applicable to your package should be grouped together in a single <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> block with the title <code>NA_standards</code> (as described above, and as generated by the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code></a> function).</li>
+<li>Standards which you deem not to be applicable to your package should be grouped together in a single <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> block with the title <code>NA_standards</code> (as described above, and as generated by the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a> function).</li>
 <li>Update your documentation as frequently as you like or need, and use the output of the roclets to inform and guide the process of converting all <code>@srrstatsTODO</code> tags into either <code>@srrstats</code> or <code>@srrstatsNA</code> tags.</li>
 </ol>
 <p>Note that we do <strong>not</strong> recommend copying files from the package skeleton into your own package for you <code>srr</code> documentation. The following lines demonstrate what happens if you insert actual standards into the package skeleton:</p>
@@ -306,9 +306,9 @@
 <code class="sourceCode R"><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
 <pre><code>## Loading demo
 ## Writing NAMESPACE
-## Error: Standards [G1.1, G1.2, G1.3, G2.0, G2.1] are listed with both @srrstats and @srrstatsTODO tags.
+## Error: Standards [G1.1, G1.2, G1.3] are listed with both @srrstats and @srrstatsTODO tags.
 ## Please rectify to ensure these standards are only associated with one tag.</code></pre>
-<p>To ensure all standards are first inserted with <code>@srrstatsTODO</code> tags, and that there are no duplicates with other tags, please use only the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html" class="external-link"><code>srr_stats_roxygen()</code></a> function.</p>
+<p>To ensure all standards are first inserted with <code>@srrstatsTODO</code> tags, and that there are no duplicates with other tags, please use only the <a href="https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a> function.</p>
 </div>
   </div>
 
