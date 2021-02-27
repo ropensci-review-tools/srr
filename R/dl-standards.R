@@ -147,7 +147,8 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
         writeLines (text = s, con = filename)
     }
 
-    invisible (clipr::write_clip (s))
+    if (!Sys.getenv ("NOCLIPR") == "TRUE") # used to turn off clipr in tests
+        invisible (clipr::write_clip (s))
 }
 
 #' srr_stats_roxygen
