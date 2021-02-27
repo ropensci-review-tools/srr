@@ -9,6 +9,14 @@
 #' @export
 srr_stats_checklist_check <- function (file) {
 
+    x <- checklist_check_intern (file)
+
+    cli::cli_alert_info ("Checklist copied to clipboard")
+    invisible (clipr::write_clip (x))
+}
+
+checklist_check_intern <- function (file) {
+
     if (!file.exists (file))
         stop ("File [", file, "] does not exist")
 
@@ -30,8 +38,7 @@ srr_stats_checklist_check <- function (file) {
         cli::cli_alert_success ("No formatting issues found in file")
     }
 
-    cli::cli_alert_info ("Checklist copied to clipboard")
-    invisible (clipr::write_clip (x))
+    return (x)
 }
 
 #' fix imbalanced one-versus-two asterices or underscores
