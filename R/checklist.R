@@ -13,7 +13,9 @@ srr_stats_checklist_check <- function (file) {
 
     cli::cli_alert_info ("Checklist copied to clipboard")
     if (!Sys.getenv ("NOCLIPR") == "TRUE") # used to turn off clipr in tests
-        invisible (clipr::write_clip (x))
+        clipr::write_clip (x)
+
+    invisible (x)
 }
 
 checklist_check_intern <- function (file) {

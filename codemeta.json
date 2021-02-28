@@ -8,7 +8,7 @@
   "description": "Companion package to 'rOpenSci' statistical\n    software review project.",
   "name": "srr: 'rOpenSci' Review Roclets",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.0.177",
+  "version": "0.0.0.179",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
