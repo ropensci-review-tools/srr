@@ -214,5 +214,7 @@ to help you understand how the roclets work. Simply play around with the
 [`roxygensise()`](https://roxygen2.r-lib.org/reference/roxygenize.html)
 each time to see the effect. Individual standards may be moved to, and
 addressed in, any location including the directories `R/`, `src/`, or
-`tests/`. The `srr_stats` roclet associated with this package is able to
-parse the various `@srrstats` tags in all of these locations.
+`tests/`, and well as in `.Rmd` documentation files such as `README.Rmd`
+or package vignettes. The `srr_stats` roclet associated with this
+package is able to parse the various `@srrstats` tags in all of these
+locations.
