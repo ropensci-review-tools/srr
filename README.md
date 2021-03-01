@@ -2,7 +2,7 @@
 
 [![R build
 status](https://github.com/ropenscilabs/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropenscilabs/srr/actions)
-[![codecov](https://codecov.io/gh/ropenscilabs/srr/branch/master/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/srr)
+[![codecov](https://codecov.io/gh/ropenscilabs/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropenscilabs/srr)
 [![Project Status:
 Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
@@ -18,6 +18,26 @@ First, the answer to an important question: **[What is a
     [`roxygen2`](https://roxygen2.r-lib.org) package to convert
     [`roxygen2`](https://roxygen2.r-lib.org)-style documentation lines
     into some desired form of output.
+
+## Why then?
+
+This package currently serves to aid developers and reviewers of
+statistical software in aligning their software against our extensive
+[lists of
+standards](https://ropenscilabs.github.io/statistical-software-review-book/standards.html).
+In acknowledgement of [Colin
+Gillespie](https://github.com/csgillespie)’s sentiments expressed in his
+keynote speech at the [European R Users Meeting
+2020](https://2020.erum.io/program/keynotes-invited-speakers/):
+
+> Standards are good<br> Standards should be strict<br> No-one reads
+> standards
+
+the `srr` package aims to integrate the task of aligning software with
+standards within the practice of coding itself, and to make standards
+adherence as painless as possible.
+
+## How?
 
 The [`roxygen2`](https://roxygen2.r-lib.org) package parses all
 documentation lines from all files in the `R/` directory of a package
