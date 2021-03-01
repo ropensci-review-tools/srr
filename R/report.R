@@ -6,11 +6,14 @@
 #' @param path Path to package for which report is to be generated
 #' @param view If `TRUE` (default), a html-formatted version of the report is
 #' opened in default system browser.
+#' @param branch By default a report will be generated from the default branch
+#' as set on the GitHub repository; this parameter can be used to specify any
+#' alternative branch.
 #' @return (invisibly) Markdown-formatted lines used to generate the final html
 #' document.
 #' @family report
 #' @export
-srr_report <- function (path = ".", view = TRUE) {
+srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     requireNamespace ("rmarkdown")
 
@@ -19,11 +22,14 @@ srr_report <- function (path = ".", view = TRUE) {
 
     remote <- get_git_remote (path)
 
+    if (branch == "")
+        branch <- get_default_branch (remote)
+
     m <- get_all_msgs (path)
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     md_lines <- lapply (tags, function (tag) {
-                            res <- one_tag_to_markdown (m, remote, tag)
+                            res <- one_tag_to_markdown (m, remote, tag, branch)
                             if (length (res) > 0)
                                 res <- c (paste0 ("## ", tag),
                                           "",
@@ -94,14 +100,14 @@ get_all_msgs <- function (path = ".") {
 #' lines
 #' @param m List of all messages, divided into the 3 categories of tags
 #' @noRd
-one_tag_to_markdown <- function (m, remote, tag) {
+one_tag_to_markdown <- function (m, remote, tag, branch) {
 
     i <- match (tag, c ("srrstats", "srrstatsNA", "srrstatsTODO"))
     tag <- c ("msgs", "msgs_na", "msgs_todo") [i]
     m <- m [[tag]]
 
     m <- vapply (m, function (i)
-                 one_msg_to_markdown (i, remote),
+                 one_msg_to_markdown (i, remote, branch),
                  character (1))
 
     return (m)
@@ -113,7 +119,7 @@ one_tag_to_markdown <- function (m, remote, tag) {
 #' line
 #' @param m One message
 #' @noRd
-one_msg_to_markdown <- function (m, remote) {
+one_msg_to_markdown <- function (m, remote, branch) {
 
     g <- gregexpr ("[A-Z]+[0-9]+(\\.[0-9]+)?", m)
     stds <- regmatches (m, g) [[1]]
@@ -137,7 +143,7 @@ one_msg_to_markdown <- function (m, remote) {
 
     if (!is.null (remote)) {
 
-        remote_file <- paste0 (remote, "/blob/main/", file_name)
+        remote_file <- paste0 (remote, "/blob/", branch, "/", file_name)
         if (!is.na (line_num))
             remote_file <- paste0 (remote_file, "#L", line_num)
     }
@@ -159,4 +165,65 @@ one_msg_to_markdown <- function (m, remote) {
         msg <- paste0 (msg, "(", remote_file, ")")
 
     return (msg)
+}
+
+
+# ---- fns to get default gh branch
+
+get_gh_token <- function (token = "") {
+
+    e <- Sys.getenv ()
+    if (token != "") {
+
+        toks <- e [grep (token, names (e))]
+
+    } else {
+
+        toks <- e [grep ("GITHUB", names (e))]
+        if (length (toks) > 1)
+            toks <- toks [grep ("QL", names (toks))]
+    }
+
+    if (length (unique (toks)) > 1)
+        stop (paste0 ("No unambiguous token found; please use ",
+                      "Sys.setenv() to set a github graphQL tokan ",
+                      "named 'GITHUB', 'GITHUBQL', or similar"))
+    return (unique (toks))
+}
+
+default_branch_qry <- function (gh_cli, org, repo) {
+
+    q <- paste0 ("{
+            repository(owner:\"", org, "\", name:\"", repo, "\") {
+                       defaultBranchRef {
+                           name
+                       }
+                    }
+            }")
+
+    qry <- ghql::Query$new()
+    qry$query ("default_branch", q)
+
+    return (qry)
+}
+
+get_default_branch <- function (remote) {
+
+    or <- strsplit (remote, "/") [[1]]
+    org <- utils::tail (or, 2) [1]
+    repo <- utils::tail (or, 1)
+
+    token <- get_gh_token ()
+
+    gh_cli <- ghql::GraphqlClient$new (
+        url = "https://api.github.com/graphql",
+        headers = list (Authorization = paste0 ("Bearer ", token))
+    )
+
+    qry <- default_branch_qry (gh_cli, org = org, repo = repo)
+    res <- gh_cli$exec(qry$queries$default_branch)
+    x <- jsonlite::fromJSON (res)
+    branch <- x$data$repository$defaultBranchRef$name
+
+    return (branch)
 }

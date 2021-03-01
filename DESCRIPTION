@@ -1,6 +1,6 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.1.002
+Version: 0.0.1.003
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -15,8 +15,10 @@ BugReports: https://github.com/ropenscilabs/srr/issues
 Imports:
     cli,
     clipr,
+    ghql,
     here,
     httr,
+    jsonlite,
     Rcpp,
     roxygen2
 Suggests: 

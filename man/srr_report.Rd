@@ -4,10 +4,14 @@
 \alias{srr_report}
 \title{srr_report}
 \usage{
-srr_report(path = ".", view = TRUE)
+srr_report(path = ".", branch = "", view = TRUE)
 }
 \arguments{
 \item{path}{Path to package for which report is to be generated}
+
+\item{branch}{By default a report will be generated from the default branch
+as set on the GitHub repository; this parameter can be used to specify any
+alternative branch.}
 
 \item{view}{If \code{TRUE} (default), a html-formatted version of the report is
 opened in default system browser.}

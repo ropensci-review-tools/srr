@@ -8,7 +8,7 @@ srr_stats_checklist(category = NULL, filename = NULL)
 }
 \arguments{
 \item{category}{One of the names of files given in the directory contents of
-\url{https://github.com/ropenscilabs/statistical-software-review-book/tree/master/standards},
+\url{https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards},
 each of which is ultimately formatted into a sub-section of the standards.}
 
 \item{filename}{Optional name of local file to save markdown-formatted
