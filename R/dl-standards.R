@@ -13,10 +13,10 @@ base_url <- function (raw = FALSE) {
 }
 
 #' @return List of all current categories as obtained from directory contents of
-#' https://github.com/ropenscilabs/statistical-software-review-book/tree/master/standards # nolint
+#' https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards # nolint
 #' @noRd
 list_categories <- function () {
-    u <- paste0 (base_url (), "git/trees/master?recursive=1")
+    u <- paste0 (base_url (), "git/trees/main?recursive=1")
     x <- httr::GET (u)
     x <- httr::content (x)
     index <- which (vapply (x$tree, function (i)
@@ -33,7 +33,7 @@ list_categories <- function () {
 #' @noRd
 dl_standards <- function (category = "general") {
     u <- paste0 (base_url (raw = TRUE),
-                 "master/standards/", category, ".Rmd")
+                 "main/standards/", category, ".Rmd")
     tmp <- tempfile (fileext = ".Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
     cli::cli_alert_success ("Downloaded {category} standards")
@@ -127,7 +127,7 @@ category_titles_urls <- function (category) {
 #' local clipboard ready to paste.
 #'
 #' @param category One of the names of files given in the directory contents of
-#' \url{https://github.com/ropenscilabs/statistical-software-review-book/tree/master/standards},
+#' \url{https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards},
 #' each of which is ultimately formatted into a sub-section of the standards.
 #' @param filename Optional name of local file to save markdown-formatted
 #' checklist. A suffix of `.md` will be automatically appended.

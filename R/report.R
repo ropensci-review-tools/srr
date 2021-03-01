@@ -137,7 +137,7 @@ one_msg_to_markdown <- function (m, remote) {
 
     if (!is.null (remote)) {
 
-        remote_file <- paste0 (remote, "/blob/master/", file_name)
+        remote_file <- paste0 (remote, "/blob/main/", file_name)
         if (!is.na (line_num))
             remote_file <- paste0 (remote_file, "#L", line_num)
     }
