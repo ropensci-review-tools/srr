@@ -22,7 +22,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     remote <- get_git_remote (path)
 
-    if (branch == "")
+    if (!is.null (remote) & branch == "")
         branch <- get_default_branch (remote)
 
     m <- get_all_msgs (path)
