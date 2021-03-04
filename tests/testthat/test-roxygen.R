@@ -47,13 +47,14 @@ test_that ("roxygen standards", {
               # writes all standards with "@srrstatsTODO" tags. Some of these
               # standards already exist as `@srrstats` in the skeleton, in
               # R/test.R, so initial attempt to `toxygenise` will trigger error:
-              srr_stats_roxygen (category = "regression",
+              srr_stats_roxygen (category = "unsupervised",
                                  filename = filename,
                                  overwrite = TRUE)
               expect_error (roxygen2::roxygenise (d),
                             "Standards .* are listed with both .* tags")
 
-              if (file.remove (file.path (d, "R", "test.R"))) {
+              if (file.remove (file.path (d, "R", "test.R")) &
+                  file.remove (file.path (d, "README.Rmd"))) {
                   # After removing the file with duplicated standards with mixed
                   # tags, things should once again work:
                   x2 <- capture.output (
@@ -67,7 +68,7 @@ test_that ("roxygen standards", {
                   index2 <- (grep ("@srrstatsTODO", x2) + 1):(length (x2) - 1)
                   todo_new <- x2 [index2]
                   expect_length (todo_old, 3L)
-                  expect_length (todo_new, 3L)
+                  expect_length (todo_new, 2L)
 
                   # get only those from the srr-stats-standards.R file:
                   todo_old <- grep ("srr-stats-standards\\.R",
@@ -80,7 +81,7 @@ test_that ("roxygen standards", {
                   standards_old <- gregexpr (ptn, todo_old) [[1]]
                   standards_new <- gregexpr (ptn, todo_new) [[1]]
                   expect_length (standards_old, 1)
-                  expect_true (length (standards_new) > 100)
+                  expect_true (length (standards_new) > 50)
               }
 })
 
