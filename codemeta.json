@@ -8,13 +8,13 @@
   "description": "Companion package to 'rOpenSci' statistical\n    software review project.",
   "name": "srr: 'rOpenSci' Review Roclets",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.1.010",
+  "version": "0.0.1.11",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.0.3 (2020-10-10)",
+  "runtimePlatform": "R version 4.0.4 (2021-02-15)",
   "author": [
     {
       "@type": "Person",
@@ -187,7 +187,7 @@
   ],
   "codeRepository": "https://github.com/ropenscilabs/srr",
   "readme": "https://github.com/ropenscilabs/srr/blob/main/README.md",
-  "fileSize": "4799.144KB",
+  "fileSize": "2578.601KB",
   "issueTracker": "https://github.com/ropenscilabs/srr/issues",
   "contIntegration": "https://codecov.io/gh/ropenscilabs/srr",
   "developmentStatus": "https://www.repostatus.org/#concept",
