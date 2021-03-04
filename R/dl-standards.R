@@ -31,12 +31,14 @@ list_categories <- function () {
 #' @return Character vector of contents of the `.Rmd` file for nominated
 #' standards
 #' @noRd
-dl_standards <- function (category = "general") {
+dl_standards <- function (category = "general", quiet = FALSE) {
     u <- paste0 (base_url (raw = TRUE),
                  "main/standards/", category, ".Rmd")
     tmp <- tempfile (fileext = ".Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
-    cli::cli_alert_success ("Downloaded {category} standards")
+
+    if (!quiet)
+        cli::cli_alert_success ("Downloaded {category} standards")
 
     readLines (tmp)
 }
