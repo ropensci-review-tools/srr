@@ -55,7 +55,7 @@ write_r_fn <- function (d, pkg_name) {
                 "#'",
                 "#' @srrstats {G1.1, G1.2, G1.3} with some text",
                 "#' @srrstats Text can appear before standards {G2.0, G2.1}",
-                "#' @srrstatsTODO {S1.1} standards which are still to be",
+                "#' @srrstatsTODO {RE1.1} standards which are still to be",
                 "#' addressed are tagged 'srrstatsTODO'",
                 "#'",
                 "#' @export",
@@ -81,14 +81,14 @@ write_r_fn <- function (d, pkg_name) {
 
     rfile <- c ("#' NA_standards",
                 "#'",
-                "#' @srrstatsNA {S3.3} is not applicable",
+                "#' @srrstatsNA {RE3.3} is not applicable",
                 "#' @noRd",
                 "NULL",
                 "",
                 "#' srrstats_standards",
                 "#'",
                 "#' @srrstatsVerbose TRUE",
-                "#' @srrstatsTODO Here is {S4.4} as TODO, noting that text can",
+                "#' @srrstatsTODO Here is {RE4.4} as TODO, noting that text can",
                 "#' precede the standard number, as long as standards are",
                 "#' given within the first set of square brackets.",
                 "#' @noRd",
@@ -133,8 +133,8 @@ write_readme <- function (d, pkg_name) {
                 "#'",
                 "#' (Add some text if you like)",
                 "#'",
-                "#' @srrstats {A1.4} Here is a reference to a standard",
-                "#' @srrstatsTODO {A1.5} And here is a reference to a standard yet to be addressed",
+                "#' @srrstats {G1.4} Here is a reference to a standard",
+                "#' @srrstatsTODO {G1.5} And here is a reference to a standard yet to be addressed",
                 "```",
                 "",
                 "Note the chunk contains only [`roxygen2`](https://roxygen2.r-lib.org) lines,",
@@ -166,7 +166,7 @@ write_test_files <- function (d, pkg_name) {
         dir.create (dt, recursive = TRUE)
     writeLines (tfile, con = file.path (d, "tests", "testthat.R"))
 
-    tfile <- c ("#' @srrstats {T2.2} is addressed here",
+    tfile <- c ("#' @srrstats {RE2.2} is addressed here",
                 "test_that(\"dummy test\", {",
                 "    expect_true (TRUE)",
                 "})")
