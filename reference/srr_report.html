@@ -80,7 +80,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.166</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.009</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
     <p>Generate report from <code>ssr</code> tags.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>srr_report</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"."</span>, view <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>srr_report</span><span class='op'>(</span>path <span class='op'>=</span> <span class='st'>"."</span>, branch <span class='op'>=</span> <span class='st'>""</span>, view <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,6 +139,12 @@
     <tr>
       <th>path</th>
       <td><p>Path to package for which report is to be generated</p></td>
+    </tr>
+    <tr>
+      <th>branch</th>
+      <td><p>By default a report will be generated from the default branch
+as set on the GitHub repository; this parameter can be used to specify any
+alternative branch.</p></td>
     </tr>
     <tr>
       <th>view</th>
