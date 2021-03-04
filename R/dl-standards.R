@@ -282,8 +282,9 @@ get_standards_checklists <- function (category = NULL) {
 #'
 #' @export
 srr_stats_categories <- function () {
-    cats <- list_categories ()
-    cat_full <- unlist (lapply (cats, function (i)
+
+    cats <- std_prefixes ()
+    cat_full <- unlist (lapply (cats$category, function (i)
                                 category_titles_urls (i)))
 
     cat_full <- c ("General",
@@ -294,10 +295,29 @@ srr_stats_categories <- function () {
                    cat_full)
 
     index <- seq (length (cat_full) / 2) * 2
-    data.frame (category = cats,
+    data.frame (category = cats$category,
+                std_prefix = cats$prefix,
                 title = cat_full [index - 1],
                 url = cat_full [index],
                 stringsAsFactors = FALSE)
+}
+
+std_prefixes <- function () {
+
+    cats <- list_categories ()
+    prefixes <- rep (NA_character_, length (cats))
+    prefixes [cats == "bayesian"] <- "BS"
+    prefixes [cats == "eda"] <- "EA"
+    prefixes [cats == "general"] <- "G"
+    prefixes [cats == "ml"] <- "ML"
+    prefixes [cats == "regression"] <- "RE"
+    prefixes [cats == "spatial"] <- "SP"
+    prefixes [cats == "time-series"] <- "TS"
+    prefixes [cats == "unsupervised"] <- "UL"
+
+    return (data.frame (category = cats,
+                        prefix = prefixes,
+                        stringsAsFactors = FALSE))
 }
 
 #' @param s One set of standards with no spaces between sections or lines.
