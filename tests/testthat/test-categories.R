@@ -4,9 +4,9 @@ test_that("available categories", {
                   x <- srr_stats_categories ()
                   )
               expect_s3_class (x, "data.frame")
-              expect_equal (ncol (x), 3)
+              expect_equal (ncol (x), 4)
               expect_identical (names (x),
-                                c ("category", "title", "url"))
+                                c ("category", "std_prefix", "title", "url"))
               expect_true (nrow (x) >= 8)
               expect_true (all (c ("bayesian", "eda", "general", "ml",
                                    "regression", "spatial", "time-series",
