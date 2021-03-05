@@ -17,6 +17,7 @@ descriptions.
 }
 \seealso{
 Other helper: 
+\code{\link{srr_release}()},
 \code{\link{srr_stats_checklist_check}()},
 \code{\link{srr_stats_checklist}()},
 \code{\link{srr_stats_pkg_skeleton}()}

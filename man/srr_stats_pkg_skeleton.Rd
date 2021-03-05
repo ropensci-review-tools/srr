@@ -28,6 +28,7 @@ roxygen2::roxygenise (d)
 }
 \seealso{
 Other helper: 
+\code{\link{srr_release}()},
 \code{\link{srr_stats_categories}()},
 \code{\link{srr_stats_checklist_check}()},
 \code{\link{srr_stats_checklist}()}

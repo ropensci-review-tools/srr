@@ -4,6 +4,7 @@
 #' '@srrstats' or '@srrstatsNA'
 #' @param path Path to local repository to check
 #' @return (Invisibly) List of any standards missing from code
+#' @family helper
 #' @export
 srr_release <- function (path) {
 

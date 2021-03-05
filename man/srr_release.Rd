@@ -16,3 +16,11 @@ srr_release(path)
 Check that all standards are present in code, and listed either as
 '@srrstats' or '@srrstatsNA'
 }
+\seealso{
+Other helper: 
+\code{\link{srr_stats_categories}()},
+\code{\link{srr_stats_checklist_check}()},
+\code{\link{srr_stats_checklist}()},
+\code{\link{srr_stats_pkg_skeleton}()}
+}
+\concept{helper}
