@@ -24,7 +24,8 @@ of the \verb{@srrstats} tags within the code as identified by running those line
 }
 \examples{
 d <- srr_stats_pkg_skeleton ()
-roxygen2::roxygenise (d)
+# (capture.output of initial compliation messages)
+x <- capture.output (roxygen2::roxygenise (d), type = "output")
 }
 \seealso{
 Other helper: 
