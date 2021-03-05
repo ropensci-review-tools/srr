@@ -2,7 +2,7 @@
 % Please edit documentation in R/dl-standards.R
 \name{srr_stats_checklist}
 \alias{srr_stats_checklist}
-\title{srr_stats_checklist}
+\title{Download checklists of statistical software standards}
 \usage{
 srr_stats_checklist(category = NULL, filename = NULL)
 }

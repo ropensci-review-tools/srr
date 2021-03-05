@@ -175,7 +175,7 @@ write_test_files <- function (d, pkg_name) {
 }
 
 
-#' srr_stats_pkg_skeleton
+#' Make skeleton package to test roclet system
 #'
 #' Make a dummy package skeleton including 'srr' \pkg{roxygen2} tags which can
 #' be used to try out the functionality of this package. Running the example

@@ -1,6 +1,4 @@
 
-#' srr_report
-#'
 #' Generate report from `ssr` tags.
 #'
 #' @param path Path to package for which report is to be generated
@@ -115,8 +113,8 @@ one_tag_to_markdown <- function (m, remote, tag, branch) {
 
 #' one_msg_to_markdown
 #'
-#' Convert single-entry character vector of one message into one markdown-formatted
-#' line
+#' Convert single-entry character vector of one message into one
+#' markdown-formatted line
 #' @param m One message
 #' @noRd
 one_msg_to_markdown <- function (m, remote, branch) {

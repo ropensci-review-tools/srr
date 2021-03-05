@@ -2,7 +2,7 @@
 % Please edit documentation in R/checklist.R
 \name{srr_stats_checklist_check}
 \alias{srr_stats_checklist_check}
-\title{srr_stats_checklist_check}
+\title{Check a completed standards checklist}
 \usage{
 srr_stats_checklist_check(file)
 }

@@ -1,4 +1,4 @@
-#' srr_release
+#' Perform pre-release checks
 #'
 #' Check that all standards are present in code, and listed either as
 #' '@srrstats' or '@srrstatsNA'

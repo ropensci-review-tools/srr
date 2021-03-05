@@ -2,7 +2,7 @@
 % Please edit documentation in R/dl-standards.R
 \name{srr_stats_roxygen}
 \alias{srr_stats_roxygen}
-\title{srr_stats_roxygen}
+\title{Insert standards into code in \pkg{roxygen2} format}
 \usage{
 srr_stats_roxygen(
   category = NULL,

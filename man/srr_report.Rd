@@ -2,7 +2,7 @@
 % Please edit documentation in R/report.R
 \name{srr_report}
 \alias{srr_report}
-\title{srr_report}
+\title{Generate report from \code{ssr} tags.}
 \usage{
 srr_report(path = ".", branch = "", view = TRUE)
 }

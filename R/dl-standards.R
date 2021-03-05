@@ -123,7 +123,7 @@ category_titles_urls <- function (category) {
     return (ret)
 }
 
-#' srr_stats_checklist
+#' Download checklists of statistical software standards
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, and store the result in the
@@ -156,7 +156,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
     invisible (s)
 }
 
-#' srr_stats_roxygen
+#' Insert standards into code in \pkg{roxygen2} format
 #'
 #' Obtain rOpenSci standards for statistical software, along with one or more
 #' category-specific standards, as a checklist, convert to project-specific
@@ -273,7 +273,7 @@ get_standards_checklists <- function (category = NULL) {
     return (s)
 }
 
-#' srr_stats_categories
+#' Get details of current statistical software categories
 #'
 #' List all currently available categories and associated URLs to full category
 #' descriptions.

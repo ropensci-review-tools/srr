@@ -2,7 +2,7 @@
 % Please edit documentation in R/dl-standards.R
 \name{srr_stats_categories}
 \alias{srr_stats_categories}
-\title{srr_stats_categories}
+\title{Get details of current statistical software categories}
 \usage{
 srr_stats_categories()
 }

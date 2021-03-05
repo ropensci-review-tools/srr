@@ -1,5 +1,5 @@
 
-#' srr_stats_checklist_check
+#' Check a completed standards checklist
 #'
 #' Correct any potential formatting issues in a completed standards checklist
 #'

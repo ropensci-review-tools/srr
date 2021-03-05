@@ -2,7 +2,7 @@
 % Please edit documentation in R/release.R
 \name{srr_release}
 \alias{srr_release}
-\title{srr_release}
+\title{Perform pre-release checks}
 \usage{
 srr_release(path)
 }

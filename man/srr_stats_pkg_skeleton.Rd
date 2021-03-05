@@ -2,7 +2,7 @@
 % Please edit documentation in R/pkg-skeleton.R
 \name{srr_stats_pkg_skeleton}
 \alias{srr_stats_pkg_skeleton}
-\title{srr_stats_pkg_skeleton}
+\title{Make skeleton package to test roclet system}
 \usage{
 srr_stats_pkg_skeleton(base_dir = tempdir(), pkg_name = "demo")
 }
