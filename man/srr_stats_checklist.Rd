@@ -28,6 +28,6 @@ Other helper:
 \code{\link{srr_stats_categories}()},
 \code{\link{srr_stats_checklist_check}()},
 \code{\link{srr_stats_pkg_skeleton}()},
-\code{\link{srr_stats_pre_release}()}
+\code{\link{srr_stats_pre_submit}()}
 }
 \concept{helper}

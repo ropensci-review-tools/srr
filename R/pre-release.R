@@ -1,4 +1,4 @@
-#' Perform pre-release checks
+#' Perform pre-submission checks
 #'
 #' Check that all standards are present in code, and listed either as
 #' '@srrstats' or '@srrstatsNA'
@@ -10,8 +10,8 @@
 #' d <- srr_stats_pkg_skeleton ()
 #' # The skeleton has 'TODO' standards, and also has only a few from the full
 #' # list expected for the categories specified there.
-#' srr_stats_pre_release (d)
-srr_stats_pre_release <- function (path) {
+#' srr_stats_pre_submit (d)
+srr_stats_pre_submit <- function (path) {
 
     stds_in_code <- get_stds_from_code (path)
     all_stds_in_code <- unique (unlist (stds_in_code))
