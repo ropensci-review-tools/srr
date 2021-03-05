@@ -11,6 +11,11 @@
 #' document.
 #' @family report
 #' @export
+#' @examples
+#' \dontrun{
+#' path <- srr_stats_pkg_skeleton ()
+#' srr_report (path)
+#' }
 srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     requireNamespace ("rmarkdown")
