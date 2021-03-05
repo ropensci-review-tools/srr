@@ -84,7 +84,7 @@ of the @srrstats tags within the code as identified by running those lines." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.015</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.020</span>
       </span>
     </div>
 
@@ -167,41 +167,15 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
 <code><a href='srr_stats_pre_release.html'>srr_stats_pre_release</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>srr_stats_pkg_skeleton</span> <span class='op'>(</span><span class='op'>)</span>
-<span class='fu'>roxygen2</span><span class='fu'>::</span><span class='fu'><a href='https://roxygen2.r-lib.org/reference/roxygenize.html'>roxygenise</a></span> <span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> Loading </span><span style='color: #0000BB;'>demo</span><span></span></div><div class='output co'>#&gt; Exports from /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpril5Dr/demo/src/cpptest.cpp:
-#&gt;    int test()
-#&gt; 
-#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpril5Dr/demo/src/RcppExports.cpp updated.
-#&gt; /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpril5Dr/demo/R/RcppExports.R updated.</div><div class='output co'>#&gt; <span class='message'>Re-compiling demo</span></div><div class='output co'>#&gt;   </span><span style='color: #9E9E9E;'>─  installing *source* package ‘demo’ ...</span><span>
-#&gt;      ** using staged installation
-#&gt;      ** libs
-#&gt;      clang++ -mmacosx-version-min=10.13 -std=gnu++11 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/runner/work/_temp/Library/Rcpp/include' -I/usr/local/include   -fPIC  -Wall -g -O2  -UNDEBUG -Wall -pedantic -g -O0 -fdiagnostics-color=always -c RcppExports.cpp -o RcppExports.o
-#&gt;      In file included from RcppExports.cpp:4:
-#&gt;    In file included from /Users/runner/work/_temp/Library/Rcpp/include/Rcpp.h:57:
-#&gt;    </span><span style='font-weight: bold;'>/Users/runner/work/_temp/Library/Rcpp/include/Rcpp/DataFrame.h:136:18: </span><span style='color: #BB00BB;font-weight: bold;'>warning: </span><span style='font-weight: bold;'>unused variable 'data' [-Wunused-variable]</span><span>
-#&gt;                SEXP data = Parent::get__();
-#&gt;    </span><span style='color: #00BB00;font-weight: bold;'>                 ^
-#&gt; </span><span>     1 warning generated.
-#&gt;      clang++ -mmacosx-version-min=10.13 -std=gnu++11 -I"/Library/Frameworks/R.framework/Resources/include" -DNDEBUG  -I'/Users/runner/work/_temp/Library/Rcpp/include' -I/usr/local/include   -fPIC  -Wall -g -O2  -UNDEBUG -Wall -pedantic -g -O0 -fdiagnostics-color=always -c cpptest.cpp -o cpptest.o
-#&gt;      In file included from cpptest.cpp:1:
-#&gt;    In file included from /Users/runner/work/_temp/Library/Rcpp/include/Rcpp.h:57:
-#&gt;    </span><span style='font-weight: bold;'>/Users/runner/work/_temp/Library/Rcpp/include/Rcpp/DataFrame.h:136:18: </span><span style='color: #BB00BB;font-weight: bold;'>warning: </span><span style='font-weight: bold;'>unused variable 'data' [-Wunused-variable]</span><span>
-#&gt;                SEXP data = Parent::get__();
-#&gt;    </span><span style='color: #00BB00;font-weight: bold;'>                 ^
-#&gt; </span><span>     1 warning generated.
-#&gt;      clang++ -mmacosx-version-min=10.13 -std=gnu++11 -dynamiclib -Wl,-headerpad_max_install_names -undefined dynamic_lookup -single_module -multiply_defined suppress -L/Library/Frameworks/R.framework/Resources/lib -L/usr/local/lib -o demo.so RcppExports.o cpptest.o -F/Library/Frameworks/R.framework/.. -framework R -Wl,-framework -Wl,CoreFoundation
-#&gt;      installing to /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpril5Dr/devtools_install_6997d9b95fa/00LOCK-demo/00new/demo/libs
-#&gt;      ** checking absolute paths in shared objects and dynamic libraries
-#&gt;   </span><span style='color: #9E9E9E;'>─  DONE (demo)</span><span>
-#&gt; Writing NAMESPACE</div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────</span><span> </span><span style='color: #00BB00;'>rOpenSci Statistical Software Standards</span><span> </span><span style='color: #00BB00;'>───────────────────</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstats standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [G1.1, G1.2, G1.3] in function 'test_fn()' on line#11 of file [R/test.R]</span>
+    <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>srr_stats_pkg_skeleton</span> <span class='op'>(</span>pkg_name <span class='op'>=</span> <span class='st'>"mystatspkg"</span><span class='op'>)</span>
+<span class='co'># (capture.output of initial compliation messages)</span>
+<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/capture.output.html'>capture.output</a></span> <span class='op'>(</span><span class='fu'>roxygen2</span><span class='fu'>::</span><span class='fu'><a href='https://roxygen2.r-lib.org/reference/roxygenize.html'>roxygenise</a></span> <span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>"output"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> Loading </span><span style='color: #0000BB;'>mystatspkg</span><span></span></div><div class='output co'>#&gt; <span class='message'>Re-compiling mystatspkg</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────</span><span> </span><span style='color: #00BB00;'>rOpenSci Statistical Software Standards</span><span> </span><span style='color: #00BB00;'>───────────────────</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstats standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [G1.1, G1.2, G1.3] in function 'test_fn()' on line#11 of file [R/test.R]</span>
 #&gt; <span class='message'>  * [RE2.2] on line#2 of file [tests/testthat/test-a.R]</span>
 #&gt; <span class='message'>  * [G3.3] in function 'test()' on line#6 of file [src/cpptest.cpp]</span>
 #&gt; <span class='message'>  * [G1.4] on line#17 of file [./README.Rmd]</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstatsNA standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [RE3.3] on line#5 of file [R/srr-stats-standards.R]</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstatsTODO standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [RE4.4] on line#14 of file [R/srr-stats-standards.R]</span>
 #&gt; <span class='message'>  * [RE1.1] on line#11 of file [R/test.R]</span>
-#&gt; <span class='message'>  * [G1.5] on line#17 of file [./README.Rmd]</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────────────────────────────────────────────────────────────────</span><span></span></div><div class='output co'>#&gt; Writing demo-package.Rd
-#&gt; Writing test_fn.Rd
-#&gt; Writing NAMESPACE</div></span></pre>
+#&gt; <span class='message'>  * [G1.5] on line#17 of file [./README.Rmd]</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────────────────────────────────────────────────────────────────</span><span></span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
