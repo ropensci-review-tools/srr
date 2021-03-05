@@ -11,7 +11,7 @@ test_that("release", {
               file.remove (file.path (d, "README.Rmd"))
 
               x <- capture.output (
-                                   srr_stats_pre_release (d),
+                                   srr_stats_pre_submit (d),
                                    type = "message"
                                    )
               expect_true (length (x) > 100) # > 100 standards are missing
