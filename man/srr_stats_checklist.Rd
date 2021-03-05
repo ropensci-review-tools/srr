@@ -25,9 +25,9 @@ local clipboard ready to paste.
 }
 \seealso{
 Other helper: 
-\code{\link{srr_release}()},
 \code{\link{srr_stats_categories}()},
 \code{\link{srr_stats_checklist_check}()},
-\code{\link{srr_stats_pkg_skeleton}()}
+\code{\link{srr_stats_pkg_skeleton}()},
+\code{\link{srr_stats_pre_release}()}
 }
 \concept{helper}

@@ -6,7 +6,7 @@
 #' @return (Invisibly) List of any standards missing from code
 #' @family helper
 #' @export
-srr_release <- function (path) {
+srr_stats_pre_release <- function (path) {
 
     stds_in_code <- get_stds_from_code (path)
     all_stds_in_code <- unique (unlist (stds_in_code))
