@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • srr</title>
+<title>Perform pre-release checks — srr_stats_pre_release • srr</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Perform pre-release checks — srr_stats_pre_release" />
+<meta property="og:description" content="Check that all standards are present in code, and listed either as
+'@srrstats' or '@srrstatsNA'" />
 
 
 
@@ -66,7 +68,7 @@
   <body data-spy="scroll" data-target="#toc">
     
 
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -121,18 +123,43 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Perform pre-release checks</h1>
+    <small class="dont-index">Source: <a href='https://github.com/ropenscilabs/srr/blob/master/R/release.R'><code>R/release.R</code></a></small>
+    <div class="hidden name"><code>srr_stats_pre_release.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="srr-stats.html">Preparing Statistical Software with the srr package</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Check that all standards are present in code, and listed either as
+'@srrstats' or '@srrstatsNA'</p>
     </div>
+
+    <pre class="usage"><span class='fu'>srr_stats_pre_release</span><span class='op'>(</span><span class='va'>path</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>path</th>
+      <td><p>Path to local repository to check</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>(Invisibly) List of any standards missing from code</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other helper: 
+<code><a href='srr_stats_categories.html'>srr_stats_categories</a>()</code>,
+<code><a href='srr_stats_checklist_check.html'>srr_stats_checklist_check</a>()</code>,
+<code><a href='srr_stats_checklist.html'>srr_stats_checklist</a>()</code>,
+<code><a href='srr_stats_pkg_skeleton.html'>srr_stats_pkg_skeleton</a>()</code></p></div>
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
