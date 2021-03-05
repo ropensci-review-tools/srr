@@ -23,7 +23,7 @@ of those roclets looks like. Feel free to examine the effect of modifying any
 of the \verb{@srrstats} tags within the code as identified by running those lines.
 }
 \examples{
-d <- srr_stats_pkg_skeleton ()
+d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 # (capture.output of initial compliation messages)
 x <- capture.output (roxygen2::roxygenise (d), type = "output")
 }

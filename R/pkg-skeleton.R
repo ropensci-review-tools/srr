@@ -189,7 +189,7 @@ write_test_files <- function (d, pkg_name) {
 #' @return The path to the directory holding the newly created package
 #' @family helper
 #' @examples
-#' d <- srr_stats_pkg_skeleton ()
+#' d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 #' # (capture.output of initial compliation messages)
 #' x <- capture.output (roxygen2::roxygenise (d), type = "output")
 #' @export
