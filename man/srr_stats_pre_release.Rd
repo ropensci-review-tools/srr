@@ -16,6 +16,10 @@ srr_stats_pre_release(path)
 Check that all standards are present in code, and listed either as
 '@srrstats' or '@srrstatsNA'
 }
+\examples{
+d <- srr_stats_pkg_skeleton ()
+srr_stats_pre_release (d)
+}
 \seealso{
 Other helper: 
 \code{\link{srr_stats_categories}()},

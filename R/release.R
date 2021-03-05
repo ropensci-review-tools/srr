@@ -6,6 +6,9 @@
 #' @return (Invisibly) List of any standards missing from code
 #' @family helper
 #' @export
+#' @examples
+#' d <- srr_stats_pkg_skeleton ()
+#' srr_stats_pre_release (d)
 srr_stats_pre_release <- function (path) {
 
     stds_in_code <- get_stds_from_code (path)
