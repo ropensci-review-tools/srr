@@ -33,7 +33,8 @@ srr_stats_pre_submit <- function (path) {
         for (i in index)
             cli::cli_li (all_stds [i])
         cli::cli_end ()
-    }
+    } else if (length (stds_in_code$stds_todo) == 0)
+        cli::cli_alert_success ("This package is ready to submit!")
 
     invisible (all_stds [index])
 }
