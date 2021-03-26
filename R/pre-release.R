@@ -94,7 +94,7 @@ get_categories <- function (stds) {
 
 get_standard_nums <- function (category) {
 
-    s <- dl_standards (category, quiet = TRUE)
+    s <- dl_standards(category, quiet = TRUE)
     s <- format_standards (s)
 
     # Then extract standard numbers only

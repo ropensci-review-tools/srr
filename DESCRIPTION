@@ -1,14 +1,14 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.1.024
+Version: 0.0.1.025
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
            role = c("aut", "cre"),
            email = "mark@ropensci.org",
            comment = c(ORCID = "0000-0003-2172-5265"))
-Description: Companion package to 'rOpenSci' statistical
-    software review project.
+Description: Companion package to 'rOpenSci' statistical software review
+    project.
 License: MIT + file LICENSE
 URL: https://github.com/ropenscilabs/srr
 BugReports: https://github.com/ropenscilabs/srr/issues

@@ -28,6 +28,7 @@ list_categories <- function () {
 
 #' @param category One of the names of files in above link (for
 #' `list_categories`)
+#' @param quiet Be quiet or not
 #' @return Character vector of contents of the `.Rmd` file for nominated
 #' standards
 #' @noRd
