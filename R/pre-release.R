@@ -16,23 +16,24 @@ srr_stats_pre_submit <- function (path) {
     stds_in_code <- get_stds_from_code (path)
     all_stds_in_code <- unique (unlist (stds_in_code))
 
-    if (length (stds_in_code$stds_todo) > 0)
-        cli::cli_alert_warning (paste0 ("This package still has TODO ",
-                                        "standards and can not be released"))
-
     categories <- get_categories (unique (do.call (c, stds_in_code)))
 
     all_stds <- unlist (lapply (categories$category, get_standard_nums))
 
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
     if (length (index) > 0) {
-        msg <- "The following standards are missing from your code:"
+        msg <- paste0 ("Package can not be submitted because the",
+                       "following standards are missing from your code:")
         cli::cli_alert_warning (msg)
         cli::cli_ol ()
         for (i in index)
             cli::cli_li (all_stds [i])
         cli::cli_end ()
     }
+
+    if (length (stds_in_code$stds_todo) > 0)
+        cli::cli_alert_warning (paste0 ("This package still has TODO ",
+                                        "standards and can not be submitted"))
 
     invisible (all_stds [index])
 }
