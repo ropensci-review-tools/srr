@@ -47,6 +47,11 @@ srr_stats_pre_submit <- function (path) {
 
 get_stds_from_code <- function (path) {
 
+    if (!dir.exists (file.path (path, "R"))) {
+        warning ("Directory [", path, "] does not appear to be an R package")
+        return (NULL)
+    }
+
     flist <- list.files (file.path (path, "R"), full.names = TRUE)
     blocks <- lapply (flist, function (i) roxygen2::parse_file (i))
     names (blocks) <- flist
