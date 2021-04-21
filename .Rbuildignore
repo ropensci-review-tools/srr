@@ -10,3 +10,4 @@
 ^codemeta\.json$
 ^\.pre-commit-config\.yaml$
 ^LICENSE\.md$
+.ropensci-staff
