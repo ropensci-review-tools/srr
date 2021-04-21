@@ -107,7 +107,7 @@ get_readme_blocks <- function (base_path) {
 
     blocks <- NULL
 
-    f <- file.path (base_path, "README.Rmd")
+    f <- normalizePath (file.path (base_path, "README.Rmd"))
     if (file.exists (f)) {
         fout <- tempfile ()
         rcpp_parse_rmd (f, fout)
