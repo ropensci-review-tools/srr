@@ -14,6 +14,12 @@
 srr_stats_pre_submit <- function (path) {
 
     stds_in_code <- get_stds_from_code (path)
+    no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
+    if (no_stds) {
+        cli::cli_alert_warning ("This package has no 'srr' standards")
+        return (invisible ())
+    }
+
     all_stds_in_code <- unique (unlist (stds_in_code))
 
     if (length (stds_in_code$stds_todo) > 0)
