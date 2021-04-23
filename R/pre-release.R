@@ -3,6 +3,7 @@
 #' Check that all standards are present in code, and listed either as
 #' '@srrstats' or '@srrstatsNA'
 #' @param path Path to local repository to check
+#' @param quiet If 'FALSE', display information on status of package on screen.
 #' @return (Invisibly) List of any standards missing from code
 #' @family helper
 #' @export
@@ -11,20 +12,28 @@
 #' # The skeleton has 'TODO' standards, and also has only a few from the full
 #' # list expected for the categories specified there.
 #' srr_stats_pre_submit (d)
-srr_stats_pre_submit <- function (path) {
+srr_stats_pre_submit <- function (path, quiet = FALSE) {
+
+    msg <- ""
 
     stds_in_code <- get_stds_from_code (path)
     no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
     if (no_stds) {
-        cli::cli_alert_warning ("This package has no 'srr' standards")
+        msg <- "This package has no 'srr' standards"
+        if (!quiet)
+            cli::cli_alert_warning (msg)
         return (invisible ())
     }
 
-    all_stds_in_code <- unique (unlist (stds_in_code))
+    #all_stds_in_code <- unique (unlist (stds_in_code))
 
-    if (length (stds_in_code$stds_todo) > 0)
-        cli::cli_alert_warning (paste0 ("This package still has TODO ",
-                                        "standards and can not be submitted"))
+    if (length (stds_in_code$stds_todo) > 0) {
+
+        msg <- paste0 ("This package still has TODO ",
+                       "standards and can not be submitted")
+        if (!quiet)
+            cli::cli_alert_warning (msg)
+    }
 
     categories <- get_categories (unique (do.call (c, stds_in_code)))
 
@@ -32,17 +41,28 @@ srr_stats_pre_submit <- function (path) {
 
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
     if (length (index) > 0) {
-        msg <- paste0 ("Package can not be submitted because the ",
-                       "following standards are missing from your code:")
-        cli::cli_alert_warning (msg)
-        cli::cli_ol ()
-        for (i in index)
-            cli::cli_li (all_stds [i])
-        cli::cli_end ()
-    } else if (length (stds_in_code$stds_todo) == 0)
-        cli::cli_alert_success ("This package is ready to submit!")
+        msg1 <- paste0 ("Package can not be submitted because the ",
+                        "following standards are missing from your code:")
 
-    invisible (all_stds [index])
+        if (!quiet) {
+            cli::cli_alert_warning (msg1)
+            cli::cli_ol ()
+            for (i in index)
+                cli::cli_li (all_stds [i])
+            cli::cli_end ()
+        }
+        msg <- c (msg,
+                  msg1,
+                  "",
+                  all_stds [index],
+                  "")
+    } else if (length (stds_in_code$stds_todo) == 0) {
+        msg <- "This package is ready to submit!"
+        if (!quiet)
+            cli::cli_alert_success (msg)
+    }
+
+    invisible (msg)
 }
 
 get_stds_from_code <- function (path) {

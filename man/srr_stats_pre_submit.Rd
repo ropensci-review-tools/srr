@@ -4,10 +4,12 @@
 \alias{srr_stats_pre_submit}
 \title{Perform pre-submission checks}
 \usage{
-srr_stats_pre_submit(path)
+srr_stats_pre_submit(path, quiet = FALSE)
 }
 \arguments{
 \item{path}{Path to local repository to check}
+
+\item{quiet}{If 'FALSE', display information on status of package on screen.}
 }
 \value{
 (Invisibly) List of any standards missing from code
