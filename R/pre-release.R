@@ -73,9 +73,11 @@ get_stds_from_code <- function (path) {
     }
 
     flist <- list.files (file.path (path, "R"), full.names = TRUE)
-    blocks <- lapply (flist, function (i)
-                      tryCatch (roxygen2::parse_file (i),
-                                error = function (e) list ()))
+    suppressWarnings ({
+        blocks <- lapply (flist, function (i)
+                          tryCatch (roxygen2::parse_file (i),
+                                    error = function (e) list ()))
+    })
     names (blocks) <- flist
     blocks <- do.call (c, blocks)
     blocks <- collect_blocks (blocks, path)
