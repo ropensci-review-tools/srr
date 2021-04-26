@@ -16,12 +16,20 @@ srr_stats_pre_submit <- function (path, quiet = FALSE) {
 
     msg <- ""
 
-    stds_in_code <- get_stds_from_code (path)
-    no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
-    if (no_stds) {
-        msg <- "This package has no 'srr' standards"
+    stds_in_code <- tryCatch (get_stds_from_code (path),
+                              error = function (e) e)
+    if (methods::is (stds_in_code, "error")) {
+        msg <- stds_in_code$message
         if (!quiet)
             cli::cli_alert_warning (msg)
+        return (msg)
+    }
+
+    no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
+    if (no_stds) {
+        msg_none <- "This package has no 'srr' standards"
+        if (!quiet)
+            cli::cli_alert_warning (msg_none)
         return (invisible ())
     }
 
@@ -30,7 +38,7 @@ srr_stats_pre_submit <- function (path, quiet = FALSE) {
     if (length (stds_in_code$stds_todo) > 0) {
 
         msg <- paste0 ("This package still has TODO ",
-                       "standards and can not be submitted")
+                        "standards and can not be submitted")
         if (!quiet)
             cli::cli_alert_warning (msg)
     }
