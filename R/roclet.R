@@ -167,8 +167,8 @@ check_block_title <- function (block, tag) {
     block_title <- ifelse (is.null (block_title), "", block_title)
     if (grepl ("^NA\\_st", block_title))
         stop (paste0 ("An NA_standards block should only contain ",
-                      "'@srrstatsNA' tags, and no ",
-                      tag, " tags."))
+                      "'@srrstatsNA' tags, and no '@",
+                      tag, "' tags."))
 
 }
 
