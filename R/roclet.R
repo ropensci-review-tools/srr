@@ -107,8 +107,9 @@ get_readme_blocks <- function (base_path) {
 
     blocks <- NULL
 
-    f <- normalizePath (file.path (base_path, "README.Rmd"))
+    f <- file.path (base_path, "README.Rmd")
     if (file.exists (f)) {
+        f <- normalizePath (f)
         fout <- tempfile ()
         rcpp_parse_rmd (f, fout)
         blocks <- roxygen2::parse_file (fout, env = NULL)
@@ -147,7 +148,8 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
     for (block in blocks$R) {
         msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
     }
-    msgs <- c (msgs, get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat"))
+    msgs <- c (msgs, get_other_tags (blocks$tests, tag = tag,
+                                     dir = "tests/testthat"))
     msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
     msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
 
