@@ -4,7 +4,7 @@
 \alias{srr_stats_pre_submit}
 \title{Perform pre-submission checks}
 \usage{
-srr_stats_pre_submit(path, quiet = FALSE)
+srr_stats_pre_submit(path = ".", quiet = FALSE)
 }
 \arguments{
 \item{path}{Path to local repository to check}

@@ -12,7 +12,7 @@
 #' # The skeleton has 'TODO' standards, and also has only a few from the full
 #' # list expected for the categories specified there.
 #' srr_stats_pre_submit (d)
-srr_stats_pre_submit <- function (path, quiet = FALSE) {
+srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
     msg <- ""
 
