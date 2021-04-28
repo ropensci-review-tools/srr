@@ -63,21 +63,37 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 # issues.
 get_git_remote <- function (path = ".") {
 
-    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE))))
-        return (NULL)
+    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
 
-    wd <- setwd (path)
-    r <- system2 ("git", args = "remote -v", stdout = TRUE)
-    setwd (wd)
+        desc <- file.path (path, "DESCRIPTION")
+        if (!file.exists (desc))
+            return (NULL)
 
-    r <- grep ("fetch\\)$", r, value = TRUE)
-    if (length (r) != 1) {
-        warning ("There appears to be more than one git remote; ",
-                 "the first will be chosen")
-        r <- r [1]
+        d <- data.frame (read.dcf (desc))
+        if (!"URL" %in% names (d))
+            return (NULL)
+
+        r <- strsplit (d$URL, "\\s+") [[1]]
+        r <- grep ("^https", r, value = TRUE)
+        if (length (r) > 1)
+            r <- grep ("git", r, value = TRUE)
+        if (length (r) > 1)
+            r <- r [which (!grepl ("\\.io", r))]
+    } else {
+
+        wd <- setwd (path)
+        r <- system2 ("git", args = "remote -v", stdout = TRUE)
+        setwd (wd)
+
+        r <- grep ("fetch\\)$", r, value = TRUE)
+        if (length (r) != 1) {
+            warning ("There appears to be more than one git remote; ",
+                     "the first will be chosen")
+            r <- r [1]
+        }
+
+        r <- gsub (".*\\t|\\s.*$", "", r)
     }
-
-    r <- gsub (".*\\t|\\s.*$", "", r)
 
     return (r)
 }
