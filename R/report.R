@@ -3,7 +3,8 @@
 #'
 #' @param path Path to package for which report is to be generated
 #' @param view If `TRUE` (default), a html-formatted version of the report is
-#' opened in default system browser.
+#' opened in default system browser. If `FALSE`, the return object includes the
+#' name of a `html`-rendered version of the report in an attribute named 'file'.
 #' @param branch By default a report will be generated from the default branch
 #' as set on the GitHub repository; this parameter can be used to specify any
 #' alternative branch.
@@ -51,6 +52,8 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     u <- paste0 ("file://", out)
     if (view)
         utils::browseURL (u)
+    else
+        attr (md_lines, "file") <- out
 
     invisible (md_lines)
 }

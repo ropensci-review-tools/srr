@@ -14,7 +14,8 @@ as set on the GitHub repository; this parameter can be used to specify any
 alternative branch.}
 
 \item{view}{If \code{TRUE} (default), a html-formatted version of the report is
-opened in default system browser.}
+opened in default system browser. If \code{FALSE}, the return object includes the
+name of a \code{html}-rendered version of the report in an attribute named 'file'.}
 }
 \value{
 (invisibly) Markdown-formatted lines used to generate the final html
