@@ -195,7 +195,7 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     block_line <- block$line
 
     msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
-    if (fn_name)
+    if (fn_name & !is.null (func_name))
         msg <- paste0 (msg, " in function '", func_name, "()'")
     msg <- paste0 (msg, " on line#", block_line,
                    " of file [",
