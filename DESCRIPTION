@@ -1,6 +1,6 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.1.042
+Version: 0.0.1.043
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -19,6 +19,7 @@ Imports:
     here,
     httr,
     jsonlite,
+    methods,
     Rcpp,
     roxygen2
 Suggests: 
