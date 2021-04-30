@@ -221,8 +221,8 @@ extract_standard_numbers <- function (standards) {
         standards [i] <- gsub (m [[i]], "", standards [i])
     }
 
-    g <- regexpr ("\\{.*\\}\\s", standards)
-    standards <- gsub ("\\{|\\}\\s", "", regmatches (standards, g))
+    g <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
+    standards <- gsub ("\\{|\\}", "", regmatches (standards, g))
 
     gptn <- "[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?(\\s||\\n\\*)"
     snum <- lapply (standards, function (i) {
