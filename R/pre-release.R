@@ -123,6 +123,9 @@ parse_std_refs <- function (msgs) {
 
 get_categories <- function (stds) {
 
+    if (is.null (stds))
+        return (NULL)
+
     categories <- unique (vapply (strsplit (stds, "[0-9]"),
                                   function (i) i [[1]],
                                   character (1)))
