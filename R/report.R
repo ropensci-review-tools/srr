@@ -29,11 +29,16 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     if (!is.null (remote) & branch == "")
         branch <- get_default_branch (remote)
 
-    m <- get_all_msgs (path)
+    msgs <- get_all_msgs (path)
+    std_txt <- get_stds_txt (msgs)
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     md_lines <- lapply (tags, function (tag) {
-                            res <- one_tag_to_markdown (m, remote, tag, branch)
+                            res <- one_tag_to_markdown (msgs,
+                                                        remote,
+                                                        tag,
+                                                        branch,
+                                                        std_txt)
                             if (length (res) > 0)
                                 res <- c (paste0 ("## ", tag),
                                           "",
@@ -42,10 +47,11 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                             return (res)
                         })
 
-    md_lines <- do.call (c, md_lines)
+    md_lines <- unlist (md_lines)
 
     f <- tempfile (fileext = ".Rmd")
-    writeLines (md_lines, con = f)
+    # need explicit line break to html render
+    writeLines (paste0 (md_lines, "\n"), con = f)
     out <- paste0 (tools::file_path_sans_ext (f), ".html")
     rmarkdown::render (input = f, output_file = out)
 
@@ -116,23 +122,48 @@ get_all_msgs <- function (path = ".") {
           msgs_todo = msgs_todo)
 }
 
+#' Get text of actual standards contained in lists of standards messages
+#'
+#' @param msgs Result of 'get_all_msgs()' function
+#' @noRd
+get_stds_txt <- function (msgs) {
+
+    # This ignores TODO messages
+    s_msgs <- parse_std_refs (msgs$msgs)
+    s_na <- parse_std_refs (msgs$msgs_na)
+    cats_msg <- get_categories (s_msgs)
+    cats_na <- get_categories (s_na)
+    cats <- unique (c (cats_msg$category, cats_na$category))
+    s <- get_standards_checklists (cats)
+    ptn <- "^\\-\\s\\[\\s\\]\\s\\*\\*"
+    s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
+    g <- regexpr ("\\*\\*", s)
+    std_nums <- substring (s, 1, g - 1)
+    std_txt <- gsub ("^\\*|\\*$", "",
+                     substring (s, g + 3, nchar (s)))
+    
+    data.frame (std = std_nums,
+                text = std_txt)
+}
+
 #' one_tag_to_markdown
 #'
 #' Convert all messages for one defined tag into multiple markdown-formatted
 #' lines
 #' @param m List of all messages, divided into the 3 categories of tags
+#' @param std_txt Result of 'get_stds_txt' function
 #' @noRd
-one_tag_to_markdown <- function (m, remote, tag, branch) {
+one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
 
     i <- match (tag, c ("srrstats", "srrstatsNA", "srrstatsTODO"))
     tag <- c ("msgs", "msgs_na", "msgs_todo") [i]
     m <- m [[tag]]
 
     m <- vapply (m, function (i)
-                 one_msg_to_markdown (i, remote, branch),
+                 one_msg_to_markdown (i, remote, branch, std_txt),
                  character (1))
 
-    return (m)
+    return (strsplit (m, "\n"))
 }
 
 #' one_msg_to_markdown
@@ -141,7 +172,7 @@ one_tag_to_markdown <- function (m, remote, tag, branch) {
 #' markdown-formatted line
 #' @param m One message
 #' @noRd
-one_msg_to_markdown <- function (m, remote, branch) {
+one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
     g <- gregexpr ("[A-Z]+[0-9]+(\\.[0-9]+)?", m)
     stds <- regmatches (m, g) [[1]]
@@ -170,7 +201,9 @@ one_msg_to_markdown <- function (m, remote, branch) {
             remote_file <- paste0 (remote_file, "#L", line_num)
     }
 
-    stds <- paste0 (paste0 ("**", stds, "**"), collapse = ", ")
+    index <- match (stds, std_txt$std)
+    stds <- paste0 ("- ", std_txt$std [index],
+                    " ", std_txt$text [index])
 
     br_open <- br_close <- ""
     if (!is.null (remote)) {
@@ -178,15 +211,19 @@ one_msg_to_markdown <- function (m, remote, branch) {
         br_close <- "]"
     }
 
-    msg <- paste0 ("- ", stds, " in ", br_open)
+    msg <- paste0 ("Standards in ")
     if (!is.na (fn)) {
-        msg <- paste0 (msg, fn, " of file ")
+        msg <- paste0 (msg, "function '", fn, "'")
     }
-    msg <- paste0 (msg, file_name, br_close)
+    if (!is.na (line_num)) {
+        msg <- paste0 (msg, " on line#", line_num)
+    }
+    msg <- paste0 (msg, " of file ", br_open, file_name, br_close)
     if (!is.null (remote))
         msg <- paste0 (msg, "(", remote_file, ")")
+    msg <- paste0 (msg, ":")
 
-    return (msg)
+    return (paste0 (c (msg, stds), collapse = "\n"))
 }
 
 
