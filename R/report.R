@@ -155,7 +155,7 @@ get_stds_txt <- function (msgs) {
     cats_todo <- get_categories (s_todo)
     cats <- unique (c (cats_msg$category, cats_na$category))
     s <- get_standards_checklists (cats)
-    ptn <- "^\\-\\s\\[\\s\\]\\s\\*\\*"
+    ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
     g <- regexpr ("\\*\\*", s)
     std_nums <- substring (s, 1, g - 1)
@@ -194,7 +194,8 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
 #' @noRd
 one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
-    g <- gregexpr ("[A-Z]+[0-9]+(\\.[0-9]+)?", m)
+    g <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", m)
+
     stds <- regmatches (m, g) [[1]]
     stds_g <- sort (stds [grep ("^G", stds)])
     stds_other <- sort (stds [!stds %in% stds_g])
@@ -221,6 +222,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
             remote_file <- paste0 (remote_file, "#L", line_num)
     }
 
+    stds <- stds [which (stds %in% std_txt$std)]
     index <- match (stds, std_txt$std)
     stds <- paste0 ("- ", std_txt$std [index],
                     " ", std_txt$text [index])
