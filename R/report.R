@@ -49,6 +49,25 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     md_lines <- unlist (md_lines)
 
+    pkg <- utils::tail (strsplit (remote, "/") [[1]], 1)
+    if (is.null (remote)) {
+        md_title <- paste0 ("# srr report for ", pkg)
+    } else {
+        md_title <- paste0 ("# srr report for [",
+                            pkg,
+                           "](",
+                           remote,
+                           ")")
+    }
+
+    md_lines <- c (md_title,
+                   "",
+                   paste0 ("[Click here for full text of all standards](",
+                           "https://ropenscilabs.github.io/",
+                           "statistical-software-review-book/standards.html)"),
+                   "",
+                   md_lines)
+
     f <- tempfile (fileext = ".Rmd")
     # need explicit line break to html render
     writeLines (paste0 (md_lines, "\n"), con = f)
@@ -128,11 +147,12 @@ get_all_msgs <- function (path = ".") {
 #' @noRd
 get_stds_txt <- function (msgs) {
 
-    # This ignores TODO messages
     s_msgs <- parse_std_refs (msgs$msgs)
     s_na <- parse_std_refs (msgs$msgs_na)
+    s_todo <- parse_std_refs (msgs$msgs_todo)
     cats_msg <- get_categories (s_msgs)
     cats_na <- get_categories (s_na)
+    cats_todo <- get_categories (s_todo)
     cats <- unique (c (cats_msg$category, cats_na$category))
     s <- get_standards_checklists (cats)
     ptn <- "^\\-\\s\\[\\s\\]\\s\\*\\*"
