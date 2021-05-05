@@ -65,7 +65,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
                   all_stds [index],
                   "")
     } else if (length (stds_in_code$stds_todo) == 0) {
-        msg <- "This package is ready to submit!"
+        msg <- "All applicable standards have been documented in this package"
         if (!quiet)
             cli::cli_alert_success (msg)
     }
