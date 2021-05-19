@@ -26,8 +26,11 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     remote <- get_git_remote (path)
 
-    if (!is.null (remote) & branch == "")
-        branch <- get_default_branch (remote)
+    if (!is.null (remote) & branch == "") {
+        org <- utils::tail (strsplit (remote, "/") [[1]], 2) [1]
+        repo <- utils::tail (strsplit (remote, "/") [[1]], 1)
+        branch <- get_default_branch (org, repo)
+    }
 
     msgs <- get_all_msgs (path)
     std_txt <- get_stds_txt (msgs)
