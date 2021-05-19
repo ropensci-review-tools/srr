@@ -69,8 +69,8 @@ get_default_branch <- function (org, repo) {
     )
 
     qry <- default_branch_qry (gh_cli, org = org, repo = repo)
-    x <- gh_cli$exec(qry$queries$default_branch) %>%
-        jsonlite::fromJSON ()
+    x <- gh_cli$exec(qry$queries$default_branch)
+    x <- jsonlite::fromJSON (x)
     branch <- x$data$repository$defaultBranchRef$name
 
     return (branch)
