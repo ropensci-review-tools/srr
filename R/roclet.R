@@ -221,18 +221,15 @@ extract_standard_numbers <- function (standards) {
         standards [i] <- gsub (m [[i]], "", standards [i])
     }
 
-    g <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
-    standards <- gsub ("\\{|\\}", "", regmatches (standards, g))
+    # These use regexpr and not gregexpr to only match first '{...}' while
+    # ignoring all subsequent ones
+    g_open <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", standards)
+    g_close <- regexpr ("[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
+    g_close <- g_close + attr (g_close, "match.length") - 1
+    standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
+    standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
 
-    gptn <- "[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?(\\s||\\n\\*)"
-    snum <- lapply (standards, function (i) {
-                     res <- gregexpr (gptn, i) [[1]]
-                     std_start <- as.integer (res)
-                     std_end <- std_start + attr (res, "match.length") - 1
-                     substring (i, std_start, std_end)  })
-    snum <- gsub ("\\s+", "", unlist (snum))
-
-    return (snum)
+    return (standards)
 }
 
 #' process_srrstats_NA_tags
