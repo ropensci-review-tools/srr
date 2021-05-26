@@ -1,6 +1,6 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.1.058
+Version: 0.0.1.059
 Authors@R: 
     person(given = "Mark",
            family = "Padgham",
@@ -25,6 +25,7 @@ Imports:
 Suggests: 
     fs,
     knitr,
+    pkgbuild,
     rmarkdown,
     testthat (>= 3.0.0)
 LinkingTo:
