@@ -35,6 +35,7 @@ get_gh_token <- function (token_name = "") {
         if (length (unique (toks)) > 1) {
             toks <- toks [grep ("TOKEN|PAT", names (toks))]
         }
+        # GitHub runners have "GITHUB_PATH" and "GITHUB_EVENT_PATH"
         if (length (unique (toks)) > 1) {
             toks <- toks [grep ("TOKEN$|PAT$", names (toks))]
         }
