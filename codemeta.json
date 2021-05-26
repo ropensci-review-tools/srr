@@ -8,7 +8,7 @@
   "description": "Companion package to 'rOpenSci' statistical software review\n    project.",
   "name": "srr: 'rOpenSci' Review Roclets",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.1.070",
+  "version": "0.0.1.071",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -126,6 +126,18 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "gert",
+      "name": "gert",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=gert"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "ghql",
       "name": "ghql",
       "provider": {
@@ -204,7 +216,7 @@
   ],
   "codeRepository": "https://github.com/ropenscilabs/srr",
   "readme": "https://github.com/ropenscilabs/srr/blob/main/README.md",
-  "fileSize": "2552.868KB",
+  "fileSize": "2555.164KB",
   "issueTracker": "https://github.com/ropenscilabs/srr/issues",
   "contIntegration": "https://codecov.io/gh/ropenscilabs/srr",
   "developmentStatus": "https://www.repostatus.org/#concept",

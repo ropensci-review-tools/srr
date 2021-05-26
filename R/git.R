@@ -1,0 +1,59 @@
+
+repo_is_git <- function (path) {
+
+    g <- tryCatch (gert::git_find (path),
+                   error = function (e) e)
+
+    return (!methods::is (g, "libgit2_error"))
+}
+
+get_git_remote <- function (path = ".") {
+
+    r <- NULL
+
+    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
+
+        desc <- file.path (path, "DESCRIPTION")
+        if (!file.exists (desc))
+            return (NULL)
+
+        d <- data.frame (read.dcf (desc))
+        if (!"URL" %in% names (d))
+            return (NULL)
+
+        r <- strsplit (d$URL, "\\s+") [[1]]
+        r <- grep ("^https", r, value = TRUE)
+        if (length (r) > 1)
+            r <- grep ("git", r, value = TRUE)
+        if (length (r) > 1)
+            r <- r [which (!grepl ("\\.io", r))]
+
+    } else if (repo_is_git (path)) {
+
+        r <- gert::git_remote_list (path)$url
+        if (length (r) != 1) {
+            warning ("There appears to be more than one git remote; ",
+                     "the first will be chosen")
+            r <- r [1]
+        }
+
+        r <- gsub (".*\\t|\\s.*$", "", r)
+    }
+
+    return (r)
+}
+
+get_git_branch <- function (path, branch = "") {
+
+    if (!repo_is_git (path))
+        return (NULL)
+
+    g <- gert::git_info (path)
+    if (branch == "") {
+        branch <- g$shorthand
+    } else if (branch != g$shorthand) {
+        gert::git_branch_checkout (branch = branch, repo = path)
+    }
+
+    return (branch)
+}

@@ -5,8 +5,8 @@
 #' @param view If `TRUE` (default), a html-formatted version of the report is
 #' opened in default system browser. If `FALSE`, the return object includes the
 #' name of a `html`-rendered version of the report in an attribute named 'file'.
-#' @param branch By default a report will be generated from the default branch
-#' as set on the GitHub repository; this parameter can be used to specify any
+#' @param branch By default a report will be generated from the current branch
+#' as set on the local git repository; this parameter can be used to specify any
 #' alternative branch.
 #' @return (invisibly) Markdown-formatted lines used to generate the final html
 #' document.
@@ -25,12 +25,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         path <- here::here ()
 
     remote <- get_git_remote (path)
-
-    if (!is.null (remote) & branch == "") {
-        org <- utils::tail (strsplit (remote, "/") [[1]], 2) [1]
-        repo <- utils::tail (strsplit (remote, "/") [[1]], 1)
-        branch <- get_default_branch (org, repo)
-    }
+    branch <- get_git_branch (path, branch)
 
     msgs <- get_all_msgs (path)
     std_txt <- get_stds_txt (msgs)
@@ -87,46 +82,6 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         attr (md_lines, "file") <- out
 
     invisible (md_lines)
-}
-
-# use dependency-free system command rather than gert to get remote,
-# returning NULL is not obviously in git repo, and leaving to error on any other
-# issues.
-get_git_remote <- function (path = ".") {
-
-    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
-
-        desc <- file.path (path, "DESCRIPTION")
-        if (!file.exists (desc))
-            return (NULL)
-
-        d <- data.frame (read.dcf (desc))
-        if (!"URL" %in% names (d))
-            return (NULL)
-
-        r <- strsplit (d$URL, "\\s+") [[1]]
-        r <- grep ("^https", r, value = TRUE)
-        if (length (r) > 1)
-            r <- grep ("git", r, value = TRUE)
-        if (length (r) > 1)
-            r <- r [which (!grepl ("\\.io", r))]
-    } else {
-
-        wd <- setwd (path)
-        r <- system2 ("git", args = "remote -v", stdout = TRUE)
-        setwd (wd)
-
-        r <- grep ("fetch\\)$", r, value = TRUE)
-        if (length (r) != 1) {
-            warning ("There appears to be more than one git remote; ",
-                     "the first will be chosen")
-            r <- r [1]
-        }
-
-        r <- gsub (".*\\t|\\s.*$", "", r)
-    }
-
-    return (r)
 }
 
 get_all_msgs <- function (path = ".") {
