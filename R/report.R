@@ -260,10 +260,23 @@ add_missing_stds <- function (md_lines, std_txt) {
                        "",
                        "## Missing Standards",
                        "",
-                       "The following standards are missing:",
-                       "",
-                       paste0 (missing_stds, collapse = ", "),
-                       "")
+                       "The following standards are missing:")
+
+        cats <- get_categories (missing_stds)
+        for (i in seq (nrow (cats))) {
+
+            stds_i <- grep (paste0 ("^", cats$std_prefix [i]),
+                            missing_stds,
+                            value = TRUE)
+
+            md_lines <- c (md_lines,
+                           "",
+                           paste0 (tools::toTitleCase (cats$category [i]),
+                                   " standards:"),
+                           "",
+                           paste0 (stds_i, collapse = ", "),
+                           "")
+        }
     }
 
     return (md_lines)
