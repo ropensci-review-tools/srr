@@ -99,11 +99,15 @@ format_standards <- function (s) {
 }
 
 category_titles_urls <- function (category) {
+
     ret <- list ()
     u_base <- paste0 ("https://ropenscilabs.github.io/",
                      "statistical-software-review-book/",
                      "standards.html#")
 
+    if (category == "general")
+        ret <- list (title = "General",
+                     url = paste0 (u_base, "general-standards"))
     if (category == "bayesian")
         ret <- list (title = "Bayesian",
                      url = paste0 (u_base, "bayesian-and-monte-carlo-software"))
@@ -298,13 +302,6 @@ srr_stats_categories <- function () {
     cats <- std_prefixes ()
     cat_full <- unlist (lapply (cats$category, function (i)
                                 category_titles_urls (i)))
-
-    cat_full <- c ("General",
-                   paste0 ("https://ropenscilabs.github.io/",
-                           "statistical-software-review-book/",
-                           "standards.html#",
-                           "general-standards-for-statistical-software"),
-                   cat_full)
 
     index <- seq (length (cat_full) / 2) * 2
     data.frame (category = cats$category,
