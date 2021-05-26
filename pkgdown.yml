@@ -3,7 +3,7 @@ pkgdown: 1.6.1.9001
 pkgdown_sha: 3b870d0efcfcf92a42aa881d58c3462cdbb110a8
 articles:
   srr-stats: srr-stats.html
-last_built: 2021-05-26T10:48Z
+last_built: 2021-05-26T11:11Z
 urls:
   reference: https://ropenscilabs.github.io/srr/reference
   article: https://ropenscilabs.github.io/srr/articles
