@@ -49,7 +49,6 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                                           "")
                             return (res)
                         })
-
     md_lines <- unlist (md_lines)
 
     desc <- data.frame (read.dcf (file.path (path, "DESCRIPTION")))
@@ -72,6 +71,27 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                            "statistical-software-review-book/standards.html)"),
                    "",
                    md_lines)
+
+    # Find any missing standards, first by getting all non-missing standards
+    # from md_lines, then matching will std_txt which has all applicable stds
+    md_stds <- grep ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+                     unlist (md_lines),
+                     value = TRUE)
+    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+", md_stds)
+    md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
+    missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
+    if (length (missing_stds) > 0) {
+
+        md_lines <- c (md_lines,
+                       "",
+                       "## Missing Standards",
+                       "",
+                       "The following standards are missing:",
+                       "",
+                       paste0 (missing_stds, collapse = ", "),
+                       "")
+    }
+
 
     f <- tempfile (fileext = ".Rmd")
     # need explicit line break to html render
@@ -154,10 +174,10 @@ get_stds_txt <- function (msgs) {
 
     s_msgs <- parse_std_refs (msgs$msgs)
     s_na <- parse_std_refs (msgs$msgs_na)
-    s_todo <- parse_std_refs (msgs$msgs_todo)
+    #s_todo <- parse_std_refs (msgs$msgs_todo)
     cats_msg <- get_categories (s_msgs)
     cats_na <- get_categories (s_na)
-    cats_todo <- get_categories (s_todo)
+    #cats_todo <- get_categories (s_todo)
     cats <- unique (c (cats_msg$category, cats_na$category))
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
@@ -166,7 +186,7 @@ get_stds_txt <- function (msgs) {
     std_nums <- substring (s, 1, g - 1)
     std_txt <- gsub ("^\\*|\\*$", "",
                      substring (s, g + 3, nchar (s)))
-    
+
     data.frame (std = std_nums,
                 text = std_txt)
 }
