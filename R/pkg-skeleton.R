@@ -103,7 +103,7 @@ write_src_fn <- function (d) {
                 "//' src_fn",
                 "//'",
                 "//' A test C++ function",
-                "//' @srrstats {G3.3} in src directory",
+                "//' @srrstats {G2.3} in src directory",
                 "//' @noRd",
                 "// [[Rcpp::export]]",
                 "int test () {",
