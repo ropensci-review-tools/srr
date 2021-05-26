@@ -83,10 +83,6 @@ with this `README` intended to provide supporting technical details.
 Note that the `srr` package can be applied only within the working directory of
 a package. There are no `package` or `path` arguments to allow functions to be
 applied to packages anywhere other than in the current working directory.
-Use of the package also requires a GitHub authorization token to be stored in
-the local environment with a name of either `GITHUB_TOKEN` or `GITHUB_PAT`. See
-[`usethis::create_github_token()`](https://usethis.r-lib.org/reference/github-token.html)
-for details.
 
 ## For Package Developers
 
