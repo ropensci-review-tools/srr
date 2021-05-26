@@ -35,6 +35,9 @@ get_gh_token <- function (token_name = "") {
         if (length (unique (toks)) > 1) {
             toks <- toks [grep ("TOKEN|PAT", names (toks))]
         }
+        if (length (unique (toks)) > 1) {
+            toks <- toks [grep ("TOKEN$|PAT$", names (toks))]
+        }
     }
 
     if (length (unique (toks)) > 1) {
