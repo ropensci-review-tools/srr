@@ -55,8 +55,21 @@ test_that ("roxygen standards", {
 
               if (file.remove (file.path (d, "R", "test.R")) &
                   file.remove (file.path (d, "README.Rmd"))) {
-                  # After removing the file with duplicated standards with mixed
-                  # tags, things should once again work:
+                  # There is then one standard (G2.3) in src/cpptest.cpp plus TODO,
+                  # so:
+                  expect_error (roxygen2::roxygenise (d),
+                                "Standards .* are listed with both .* tags")
+                  f <- file.path (d, "src", "cpptest.cpp")
+                  cpptest <- gsub ("srrstats", "srrstatsTODO", readLines (f))
+                  writeLines (cpptest, con = f)
+                  # After fixing that and removing the file with duplicated
+                  # standards with mixed tags, things should once again work:
+                  x2 <- capture.output (
+                      roxygen2::roxygenise (d),
+                      type = "message"
+                      )
+                  # That deletes former test_fn, so re-run to remove that
+                  # message from output
                   x2 <- capture.output (
                       roxygen2::roxygenise (d),
                       type = "message"
