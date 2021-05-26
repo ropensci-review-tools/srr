@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.027</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.059</span>
       </span>
     </div>
 
@@ -80,14 +80,14 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 <div id="ropensci-software-review-roclets-srr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#ropensci-software-review-roclets-srr" class="anchor"></a><a href="https://ropensci.org" class="external-link">rOpenSci</a> <strong>S</strong>oftware <strong>R</strong>eview <strong>R</strong>oclets (srr)</h1></div>
+<a href="#ropensci-software-review-roclets-srr" class="anchor" aria-hidden="true"></a><a href="https://ropensci.org" class="external-link">rOpenSci</a> <strong>S</strong>oftware <strong>R</strong>eview <strong>R</strong>oclets (srr)</h1></div>
 <p>First, the answer to an important question: <strong><a href="https://github.com/r-lib/roxygen2/issues/1086" class="external-link">What is a “roclet”</a>?</strong></p>
 <ul>
 <li>A roclet is an object used by the <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package to convert <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a>-style documentation lines into some desired form of output.</li>
 </ul>
 <div id="why-then" class="section level2">
 <h2 class="hasAnchor">
-<a href="#why-then" class="anchor"></a>Why then?</h2>
+<a href="#why-then" class="anchor" aria-hidden="true"></a>Why then?</h2>
 <p>This package currently serves to aid developers and reviewers of statistical software in aligning their software against our extensive <a href="https://ropenscilabs.github.io/statistical-software-review-book/standards.html" class="external-link">lists of standards</a>. In acknowledgement of <a href="https://github.com/csgillespie" class="external-link">Colin Gillespie</a>’s sentiments expressed in his keynote speech at the <a href="https://2020.erum.io/program/keynotes-invited-speakers/" class="external-link">European R Users Meeting 2020</a>:</p>
 <blockquote>
 <p>Standards are good<br> Standards should be strict<br> No-one reads standards</p>
@@ -96,8 +96,8 @@
 </div>
 <div id="how" class="section level2">
 <h2 class="hasAnchor">
-<a href="#how" class="anchor"></a>How?</h2>
-<p>The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package parses all documentation lines from all files in the <code>R/</code> directory of a package which begin with <code>#'</code>. Special tags beginning with <code><a href="https://rdrr.io/r/base/slotOp.html" class="external-link">@</a></code>, such as <code>@param</code> or <code>@export</code>, may follow these symbols, and roclets define what is done with different kinds of tags. The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package includes roclets to process a number of tags; the <code>srr</code> package implements custom roclets to process several additional tags for use with <a href="https://ropensci.org" class="external-link">rOpenSci</a>’s software review systems.</p>
+<a href="#how" class="anchor" aria-hidden="true"></a>How?</h2>
+<p>The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package parses all documentation lines from all files in the <code>R/</code> directory of a package which begin with <code>#'</code>. Special tags beginning with <code>@</code>, such as <code>@param</code> or <code>@export</code>, may follow these symbols, and roclets define what is done with different kinds of tags. The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package includes roclets to process a number of tags; the <code>srr</code> package implements custom roclets to process several additional tags for use with <a href="https://ropensci.org" class="external-link">rOpenSci</a>’s software review systems.</p>
 <p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a> (from here on referred to as the “SSR Book”). The <code>srr</code> package can be installed with,</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
@@ -110,7 +110,7 @@
 </div>
 <div id="for-package-developers" class="section level2">
 <h2 class="hasAnchor">
-<a href="#for-package-developers" class="anchor"></a>For Package Developers</h2>
+<a href="#for-package-developers" class="anchor" aria-hidden="true"></a>For Package Developers</h2>
 <p>People intending to develop packages for submission to our system for peer reviewing statistical software will need to follow the following general steps. Note that, while the <code>srr</code> package has a few functions which developers may call directly to aid their submission process, most functionality of this package is implemented via custom <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code> “roclets”</a>. The third of the following steps describes how to link your package with <code>srr</code> in order to use these roclets.</p>
 <ol style="list-style-type: decimal">
 <li><p>Ensure that your package successfully passes all <a href="https://github.com/ropenscilabs/autotest" class="external-link"><code>autotest</code></a> tests, potentially including setting <code>test = FALSE</code> flags to switch off any tests you consider not to be applicable to your package. For details, please see the <a href="https://ropenscilabs.github.io/autotest/" class="external-link">package documentation for <code>autotest</code></a>.</p></li>

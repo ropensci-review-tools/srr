@@ -62,8 +62,6 @@ of the @srrstats tags within the code as identified by running those lines." />
 
 
 
-<!-- dependencies from examples -->
-
 
   
 
@@ -87,7 +85,7 @@ of the @srrstats tags within the code as identified by running those lines." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.027</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.059</span>
       </span>
     </div>
 
@@ -142,7 +140,7 @@ of those roclets looks like. Feel free to examine the effect of modifying any
 of the <code>@srrstats</code> tags within the code as identified by running those lines.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>srr_stats_pkg_skeleton</span><span class='op'>(</span>base_dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, pkg_name <span class='op'>=</span> <span class='st'>"demo"</span><span class='op'>)</span></pre>
+    <div class="ref-usage sourceCode"><pre class='sourceCode r'><code><span class='fu'>srr_stats_pkg_skeleton</span><span class='op'>(</span>base_dir <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>, pkg_name <span class='op'>=</span> <span class='st'>"demo"</span><span class='op'>)</span></code></pre></div>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,7 +152,7 @@ of the <code>@srrstats</code> tags within the code as identified by running thos
     <tr>
       <th>pkg_name</th>
       <td><p>The name of the package. The final location of this package
-will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_dir, pkg_name)</a></code>.</p></td>
+will be in <code>file.path(base_dir, pkg_name)</code>.</p></td>
     </tr>
     </table>
 
@@ -170,15 +168,28 @@ will be in <code><a href='https://rdrr.io/r/base/file.path.html'>file.path(base_
 <code><a href='srr_stats_pre_submit.html'>srr_stats_pre_submit</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>srr_stats_pkg_skeleton</span> <span class='op'>(</span>pkg_name <span class='op'>=</span> <span class='st'>"mystatspkg"</span><span class='op'>)</span>
-<span class='co'># (capture.output of initial compliation messages)</span>
-<span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/capture.output.html'>capture.output</a></span> <span class='op'>(</span><span class='fu'>roxygen2</span><span class='fu'>::</span><span class='fu'><a href='https://roxygen2.r-lib.org/reference/roxygenize.html'>roxygenise</a></span> <span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>"output"</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BBBB;'>ℹ</span><span> Loading </span><span style='color: #0000BB;'>mystatspkg</span><span></span></div><div class='output co'>#&gt; <span class='message'>Re-compiling mystatspkg</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────</span><span> </span><span style='color: #00BB00;'>rOpenSci Statistical Software Standards</span><span> </span><span style='color: #00BB00;'>───────────────────</span><span></span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstats standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [G1.1, G1.2, G1.3] in function 'test_fn()' on line#11 of file [R/test.R]</span>
-#&gt; <span class='message'>  * [RE2.2] on line#2 of file [tests/testthat/test-a.R]</span>
-#&gt; <span class='message'>  * [G3.3] in function 'test()' on line#6 of file [src/cpptest.cpp]</span>
-#&gt; <span class='message'>  * [G1.4] on line#17 of file [./README.Rmd]</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstatsNA standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [RE3.3] on line#5 of file [R/srr-stats-standards.R]</span></div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>── @srrstatsTODO standards: </span></div><div class='output co'>#&gt; <span class='message'>  * [RE4.4] on line#14 of file [R/srr-stats-standards.R]</span>
-#&gt; <span class='message'>  * [RE1.1] on line#11 of file [R/test.R]</span>
-#&gt; <span class='message'>  * [G1.5] on line#17 of file [./README.Rmd]</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>────────────────────────────────────────────────────────────────────────────────</span><span></span></div></span></pre>
+    <div class="ref-examples sourceCode"><pre class='sourceCode r'><code><span class='r-in'><span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'>srr_stats_pkg_skeleton</span> <span class='op'>(</span>pkg_name <span class='op'>=</span> <span class='st'>"mystatspkg"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='co'># (capture.output of initial compliation messages)</span></span>
+<span class='r-in'><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/capture.output.html'>capture.output</a></span> <span class='op'>(</span><span class='fu'>roxygen2</span><span class='fu'>::</span><span class='fu'><a href='https://roxygen2.r-lib.org/reference/roxygenize.html'>roxygenise</a></span> <span class='op'>(</span><span class='va'>d</span><span class='op'>)</span>, type <span class='op'>=</span> <span class='st'>"output"</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>mystatspkg</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Re-compiling mystatspkg</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>────────────────────</span> <span style='color: #00BB00;'>rOpenSci Statistical Software Standards</span> <span style='color: #00BB00;'>───────────────────</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> ── @srrstats standards: </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [RE2.2] on line#2 of file [tests/testthat/test-a.R]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [G3.3] in function 'test()' on line#6 of file [src/cpptest.cpp]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [G1.4] on line#17 of file [./README.Rmd]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> ── @srrstatsNA standards: </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [RE3.3] on line#5 of file [R/srr-stats-standards.R]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> ── @srrstatsTODO standards: </span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [RE4.4] on line#14 of file [R/srr-stats-standards.R]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [RE1.1] on line#11 of file [R/test.R]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>   * [G1.5] on line#17 of file [./README.Rmd]</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>────────────────────────────────────────────────────────────────────────────────</span></span>
+</code></pre></div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
