@@ -15,22 +15,23 @@ base_url <- function (raw = FALSE) {
 
 #' @return List of all current categories as obtained from directory contents of
 #' https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards # nolint
+#' @note This can be done via base_url(), "/git/trees/main?recursive=1", but
+#' that requires an authorized request to the V3 API, while direct download of
+#' files can be done without that, so is safer here.
 #' @noRd
 list_categories <- function () {
 
-    u <- paste0 (base_url (), "git/trees/main?recursive=1")
+    #u <- paste0 (base_url (), "git/trees/main?recursive=1")
+    u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
+    tmp <- tempfile (fileext = ".Rmd")
+    ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
-    tok <- get_gh_token ()
-    bearer <- paste0 ("Bearer ", tok)
-
-    x <- httr::GET (u, httr::add_headers (Authorization = bearer))
-    x <- httr::content (x)
-
-    index <- which (vapply (x$tree, function (i)
-                            grepl ("^standards\\/", i$path),
-                            logical (1)))
-    s <- vapply (x$tree [index], function (i) i$path, character (1))
-    gsub ("^standards\\/|\\.Rmd$", "", s)
+    x <- readLines (tmp)
+    cats <- grep ("\\`\\`\\`\\{r\\s", x, value = TRUE)
+    cats <- vapply (strsplit (cats, "\\s=\\s"), function (i)
+                    strsplit (i [2], ",") [[1]] [1],
+                    character (1))
+    gsub ("\"standards\\/|\\.Rmd.*", "", cats)
 }
 
 #' @param category One of the names of files in above link (for
@@ -184,8 +185,8 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @family roxygen
 #' @export
 srr_stats_roxygen <- function (category = NULL,
-                                    filename = "srr-stats-standards.R",
-                                    overwrite = FALSE) {
+                               filename = "srr-stats-standards.R",
+                               overwrite = FALSE) {
 
     loc <- here::here ()
     if (dirname (filename) != ".") {
