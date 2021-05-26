@@ -72,26 +72,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                    "",
                    md_lines)
 
-    # Find any missing standards, first by getting all non-missing standards
-    # from md_lines, then matching will std_txt which has all applicable stds
-    md_stds <- grep ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
-                     unlist (md_lines),
-                     value = TRUE)
-    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+", md_stds)
-    md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
-    missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
-    if (length (missing_stds) > 0) {
-
-        md_lines <- c (md_lines,
-                       "",
-                       "## Missing Standards",
-                       "",
-                       "The following standards are missing:",
-                       "",
-                       paste0 (missing_stds, collapse = ", "),
-                       "")
-    }
-
+    md_lines <- add_missing_stds (md_lines, std_txt)
 
     f <- tempfile (fileext = ".Rmd")
     # need explicit line break to html render
@@ -271,4 +252,36 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     msg <- paste0 (msg, ":")
 
     return (paste0 (c (msg, stds), collapse = "\n"))
+}
+
+#' Find any missing standards, first by getting all non-missing standards
+#' from md_lines, then matching will std_txt which has all applicable stds
+#'
+#' @param md_lines Markdown-formatted list of standards addressed in package
+#' @param std_txt A `data.frame` of all applicable standards, with columns of
+#' `std` and `text`.
+#' @return The `md_lines` input potentially modified through additional details
+#' of missing standards
+#' @noRd
+add_missing_stds <- function (md_lines, std_txt) {
+
+    md_stds <- grep ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+                     md_lines,
+                     value = TRUE)
+    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+", md_stds)
+    md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
+    missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
+    if (length (missing_stds) > 0) {
+
+        md_lines <- c (md_lines,
+                       "",
+                       "## Missing Standards",
+                       "",
+                       "The following standards are missing:",
+                       "",
+                       paste0 (missing_stds, collapse = ", "),
+                       "")
+    }
+
+    return (md_lines)
 }
