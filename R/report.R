@@ -37,11 +37,31 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                                                         tag,
                                                         branch,
                                                         std_txt)
-                            if (length (res) > 0)
-                                res <- c (paste0 ("## ", tag),
+                            if (length (res) > 0) {
+
+                                dirs <- attr (res, "dirs")
+                                dirs [dirs == "."] <- "root"
+
+                                md <- res
+                                res <- NULL
+                                for (d in unique (dirs)) {
+
+                                    res <- c (res,
+                                              "",
+                                              paste0 ("### ", d, " directory"),
+                                              "",
+                                              unlist (md [which (dirs == d)]))
+                                }
+
+                                res <- c (paste0 ("## Standards with `",
+                                                  tag,
+                                                  "` tag"),
                                           "",
                                           res,
+                                          "",
+                                          "---",
                                           "")
+                            }
                             return (res)
                         })
     md_lines <- unlist (md_lines)
@@ -140,11 +160,19 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
     tag <- c ("msgs", "msgs_na", "msgs_todo") [i]
     m <- m [[tag]]
 
+    files <- gsub ("^.*of file\\s\\[|\\]$", "", unlist (m))
+    dirs <- vapply (strsplit (files, .Platform$file.sep),
+                    function (i) i [1],
+                    character (1))
+
     m <- vapply (m, function (i)
                  one_msg_to_markdown (i, remote, branch, std_txt),
                  character (1))
 
-    return (strsplit (m, "\n"))
+    ret <- strsplit (m, "\n")
+    attr (ret, "dirs") <- dirs
+
+    return (ret)
 }
 
 #' one_msg_to_markdown
