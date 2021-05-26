@@ -5,6 +5,7 @@
 #' otherwise standard github.com URL.
 #' @noRd
 base_url <- function (raw = FALSE) {
+
     if (raw)
         ret <- "https://raw.githubusercontent.com/"
     else
@@ -16,9 +17,15 @@ base_url <- function (raw = FALSE) {
 #' https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards # nolint
 #' @noRd
 list_categories <- function () {
+
     u <- paste0 (base_url (), "git/trees/main?recursive=1")
-    x <- httr::GET (u)
+
+    tok <- get_gh_token ()
+    bearer <- paste0 ("Bearer ", tok)
+
+    x <- httr::GET (u, httr::add_headers (Authorization = bearer))
     x <- httr::content (x)
+
     index <- which (vapply (x$tree, function (i)
                             grepl ("^standards\\/", i$path),
                             logical (1)))
@@ -33,6 +40,7 @@ list_categories <- function () {
 #' standards
 #' @noRd
 dl_standards <- function (category = "general", quiet = FALSE) {
+
     u <- paste0 (base_url (raw = TRUE),
                  "main/standards/", category, ".Rmd")
     tmp <- tempfile (fileext = ".Rmd")
