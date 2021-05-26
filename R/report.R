@@ -52,7 +52,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     md_lines <- unlist (md_lines)
 
-    pkg <- utils::tail (strsplit (remote, "/") [[1]], 1)
+    desc <- data.frame (read.dcf (file.path (path, "DESCRIPTION")))
+    pkg <- desc$Package
+
     if (is.null (remote)) {
         md_title <- paste0 ("# srr report for ", pkg)
     } else {
