@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ropenscilabs.github.io/srr/404.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/404.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/LICENSE-text.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/LICENSE.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/articles/index.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/articles/srr-stats.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/articles/srr-stats.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/authors.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/authors.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/index.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/index.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/index.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr-package.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr-package.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_report.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_report.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_categories.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_categories.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_checklist.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_checklist.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_checklist_check.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_checklist_check.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_pkg_skeleton.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_pkg_skeleton.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_pre_submit.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_pre_submit.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_roclet.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_roclet.html</loc>
   </url>
   <url>
-    <loc>https://ropenscilabs.github.io/srr/reference/srr_stats_roxygen.html</loc>
+    <loc>https://ropensci-review-tools.github.io/srr/reference/srr_stats_roxygen.html</loc>
   </url>
 </urlset>
