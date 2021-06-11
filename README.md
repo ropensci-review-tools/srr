@@ -56,12 +56,32 @@ Review](https://ropenscilabs.github.io/statistical-software-review-book/index.ht
 The functions are mostly intended to ease alignment and assessment of
 software against the standards detailed in the [main project
 book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
-(from here on referred to as the “SSR Book”). The `srr` package can be
-installed with,
+(from here on referred to as the “SSR Book”).
+
+## Installation
+
+The easiest way to install this package is via the associated
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/ui#builds).
+As shown there, simply enable the universe with
 
 ``` r
-# install.packages("remotes")
-remotes::install_github("ropensci-review-tools/srr")
+options(repos = c(
+    ropenscireviewtools = "https://ropensci-review-tools.r-universe.dev",
+    CRAN = "https://cloud.r-project.org"))
+```
+
+And then install the usual way with,
+
+``` r
+install.packages("srr")
+```
+
+Alternatively, the package can be installed by running one of the
+following lines:
+
+``` r
+remotes::install_github ("ropensci-review-tools/srr")
+pak::pkg_install ("ropensci-review-tools/srr")
 ```
 
 and loaded for use with,
@@ -69,6 +89,8 @@ and loaded for use with,
 ``` r
 library (srr)
 ```
+
+## Overview
 
 Both this `README`, and the main package vignette, describe the
 functionality of the package in the specific context of the statistical
