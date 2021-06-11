@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.079</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.080</span>
       </span>
     </div>
 
@@ -98,13 +98,30 @@
 <h2 class="hasAnchor">
 <a href="#how" class="anchor" aria-hidden="true"></a>How?</h2>
 <p>The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package parses all documentation lines from all files in the <code>R/</code> directory of a package which begin with <code>#'</code>. Special tags beginning with <code>@</code>, such as <code>@param</code> or <code>@export</code>, may follow these symbols, and roclets define what is done with different kinds of tags. The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package includes roclets to process a number of tags; the <code>srr</code> package implements custom roclets to process several additional tags for use with <a href="https://ropensci.org" class="external-link">rOpenSci</a>’s software review systems.</p>
-<p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a> (from here on referred to as the “SSR Book”). The <code>srr</code> package can be installed with,</p>
+<p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a> (from here on referred to as the “SSR Book”).</p>
+</div>
+<div id="installation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h2>
+<p>The easiest way to install this package is via the associated <a href="https://ropensci-review-tools.r-universe.dev/ui#builds" class="external-link"><code>r-universe</code></a>. As shown there, simply enable the universe with</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ropensci-review-tools/srr"</span><span class="op">)</span></code></pre></div>
-<p>and loaded for use with,</p>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
+    ropenscireviewtools <span class="op">=</span> <span class="st">"https://ropensci-review-tools.r-universe.dev"</span>,
+    CRAN <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>And then install the usual way with,</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"srr"</span><span class="op">)</span></code></pre></div>
+<p>Alternatively, the package can be installed by running one of the following lines:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span> <span class="op">(</span><span class="st">"ropensci-review-tools/srr"</span><span class="op">)</span>
+<span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span> <span class="op">(</span><span class="st">"ropensci-review-tools/srr"</span><span class="op">)</span></code></pre></div>
+<p>and loaded for use with,</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span> <span class="op">(</span><span class="va"><a href="https://github.com/ropensci-review-tools/srr" class="external-link">srr</a></span><span class="op">)</span></code></pre></div>
+</div>
+<div id="overview" class="section level2">
+<h2 class="hasAnchor">
+<a href="#overview" class="anchor" aria-hidden="true"></a>Overview</h2>
 <p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. Both the roclet and all functions intended for use in this context are prefixed with <code>srr_stats_</code>. The remainder of this document is in two main sections. If you’re developing a statistics package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
 <p>Note that the <code>srr</code> package can be applied only within the working directory of a package. There are no <code>package</code> or <code>path</code> arguments to allow functions to be applied to packages anywhere other than in the current working directory.</p>
 </div>
@@ -116,32 +133,32 @@
 <li><p>Ensure that your package successfully passes all <a href="https://github.com/ropensci-review-tools/autotest" class="external-link"><code>autotest</code></a> tests, potentially including setting <code>test = FALSE</code> flags to switch off any tests you consider not to be applicable to your package. For details, please see the <a href="https://ropensci-review-tools.github.io/autotest/" class="external-link">package documentation for <code>autotest</code></a>.</p></li>
 <li>
 <p>Decide which of our in-scope categories of statistical software best describe your package. The function <a href="https://ropensci-review-tools.github.io/srr/reference/srr_stats_categories.html"><code>srr_stats_categories()</code></a> provides a list of currently developed categories for which standards have been developed, along with links to the online standards for each category:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/srr_stats_categories.html">srr_stats_categories</a></span> <span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">title</span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co">## [1] "General"                                                        </span></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="co">## [2] "Bayesian"                                                       </span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="co">## [3] "EDA"                                                            </span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="co">## [4] "Machine Learning"                                               </span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="co">## [5] "Regression and Supervised Learning"                             </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co">## [6] "Spatial"                                                        </span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co">## [7] "Time Series"                                                    </span></span>
-<span id="cb4-8"><a href="#cb4-8"></a><span class="co">## [8] "Dimensionality Reduction, Clustering, and Unsupervised Learning"</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## [1] "General"                                                        </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## [2] "Bayesian"                                                       </span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## [3] "EDA"                                                            </span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## [4] "Machine Learning"                                               </span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## [5] "Regression and Supervised Learning"                             </span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="co">## [6] "Spatial"                                                        </span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co">## [7] "Time Series"                                                    </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="co">## [8] "Dimensionality Reduction, Clustering, and Unsupervised Learning"</span></span></code></pre></div>
 <p>That function also returns links to the full descriptions of each category in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a>. Any software within one or more of these categories may be considered for review.</p>
 </li>
 <li>
 <p>Enable your package to use the <code>srr_stats</code> roclets by modifying the package’s <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Roxygen</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>markdown <span class="op">=</span> <span class="cn">TRUE</span>, roclets <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span> <span class="op">(</span><span class="st">"namespace"</span>, <span class="st">"rd"</span>, <span class="st">"srr::srr_stats_roclet"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>That will load the <a href="https://roxygen2.r-lib.org" class="external-link">“roclet”</a> used by this package to process the documentation of statistical standards within your actual code. Note that you do not need to add, import, or depend upon the <code>srr</code> package anywhere else within the <code>DESCRIPTION</code> file or your actual package.</p>
 </li>
 <li>
 <p>Load the <code>srr</code> package and generate lists of standards within your package’s <code>/R</code> folder by running, <a href="https://ropensci-review-tools.github.io/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen(category = c("&lt;my-category-1&gt;", "&lt;my-category-2&gt;"))</code></a>. This will by default create a new file called by default <code>R/srr_stats_standards.R</code>, the first few lines of which will look like this:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co">## [1] "#' srr_stats"                                                                 </span></span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">## [2] "#'"                                                                           </span></span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="co">## [3] "#' All of the following standards initially have `@srrstatsTODO` tags."       </span></span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="co">## [4] "#' These may be moved at any time to any other locations in your code."       </span></span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="co">## [5] "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,"</span></span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="co">## [6] "#' or `@srrstatsNA`, ensuring that references to every one of the following"</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co">## [1] "#' srr_stats"                                                                 </span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="co">## [2] "#'"                                                                           </span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="co">## [3] "#' All of the following standards initially have `@srrstatsTODO` tags."       </span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co">## [4] "#' These may be moved at any time to any other locations in your code."       </span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co">## [5] "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,"</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co">## [6] "#' or `@srrstatsNA`, ensuring that references to every one of the following"</span></span></code></pre></div>
 <p>The file will contain a list of all standards from your nominated categories. This file may be renamed, and the individual items moved to other locations in other files, but all nominated standards should remain in <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> blocks somewhere in your source code.</p>
 <p>The <code>@srrstatsVerbose</code> line defines a variable which may be used to suppress output from the <code>srrstats</code> roclet when updating package documentation (by setting to <code>FALSE</code>). After that comes the list of standards, each of which is prefixed by a <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> tag, <code>@srrstatsTODO</code>. A package can only be submitted once all of these <code>TODO</code> items have been addressed via one of the options described in the following two items.</p>
 </li>
@@ -150,7 +167,7 @@
 <li><p>Each time you run <a href="https://devtools.r-lib.org/reference/document.html" class="external-link"><code>devtools::document()</code></a> or the equivalent <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygen2::roxygenise()</code></a>, the roclet will scan your package’s documentation for the state of standards, and will generate a summary of the result on your screen.</p></li>
 </ol>
 <p>To help developers understand how to use these roclets, this package includes a function, <a href="https://ropensci-review-tools.github.io/srr/reference/srr_stats_pkg_skeleton.html"><code>srr_stats_pkg_skeleton()</code></a>, which will generate a skeleton of a package with several <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> tags inserted throughout the code. This function returns the directory where the skeleton package has been created, so running the following two lines will illustrate the roclets in action:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/srr_stats_pkg_skeleton.html">srr_stats_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
 <p>Note that the skeleton package also includes C++ code in a <code>src/</code> directory, so will be compiled the first time your run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygensise()</code></a>. Running a second time will generate cleaner output from the <code>srr_stats</code> roclets only. The tags included in <a href="https://roxygen2.r-lib.org/" class="external-link"><code>roxygen2</code></a> blocks in this skeleton package may be modified, moved, copied, and changed in any way you like to help you understand how the roclets work. Simply play around with the <a href="https://roxygen2.r-lib.org/" class="external-link"><code>roxygen2</code></a> lines and run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygensise()</code></a> each time to see the effect. Individual standards may be moved to, and addressed in, any location including the directories <code>R/</code>, <code>src/</code>, or <code>tests/</code>, and well as in <code>.Rmd</code> documentation files such as <code>README.Rmd</code> or package vignettes. The <code>srr_stats</code> roclet associated with this package is able to parse the various <code>@srrstats</code> tags in all of these locations.</p>
