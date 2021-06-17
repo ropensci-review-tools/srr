@@ -251,7 +251,7 @@ srr_stats_roxygen <- function (category = NULL,
     # nolint end
 
     writeLines (x, con = filename)
-    cli::cli_alert_info (paste0 ("Roxygen2-formatted stanards written to [",
+    cli::cli_alert_info (paste0 ("Roxygen2-formatted standards written to [",
                                  basename (filename), "]"))
 }
 
