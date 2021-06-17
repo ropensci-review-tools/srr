@@ -112,10 +112,19 @@ get_readme_blocks <- function (base_path) {
         f <- normalizePath (f)
         fout <- tempfile ()
         rcpp_parse_rmd (f, fout)
-        blocks <- roxygen2::parse_file (fout, env = NULL)
-        blocks <- lapply (blocks, function (i) {
-                              i$file <- f
-                              return (i)    })
+        blocks <- tryCatch (roxygen2::parse_file (fout, env = NULL),
+                            error = function (e) e)
+
+        if (methods::is (blocks, "error")) {
+
+            blocks <- NULL
+
+        } else {
+
+            blocks <- lapply (blocks, function (i) {
+                                  i$file <- f
+                                  return (i)    })
+        }
     }
 
     return (blocks)
