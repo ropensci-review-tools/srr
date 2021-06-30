@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.085</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.086</span>
       </span>
     </div>
 
@@ -78,7 +78,7 @@
       <h1 data-toc-skip>Preparing Statistical Software with the srr package</h1>
                         <h4 data-toc-skip class="author">Mark Padgham</h4>
             
-            <h4 data-toc-skip class="date">2021-06-24</h4>
+            <h4 data-toc-skip class="date">2021-06-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ropensci-review-tools/srr/blob/master/vignettes/srr-stats.Rmd" class="external-link"><code>vignettes/srr-stats.Rmd</code></a></small>
       <div class="hidden name"><code>srr-stats.Rmd</code></div>
@@ -97,7 +97,7 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span> <span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/srr/">srr</a></span><span class="op">)</span>
 <span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/srr_stats_pkg_skeleton.html">srr_stats_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="http://fs.r-lib.org/reference/dir_tree.html" class="external-link">dir_tree</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
-<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmp0Tn4I0/demo
+<pre><code>## /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpOY3YJY/demo
 ## ├── DESCRIPTION
 ## ├── NAMESPACE
 ## ├── R
@@ -308,20 +308,8 @@
 <code class="sourceCode R"><span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
 <pre><code>## ℹ Loading demo
 ## Writing NAMESPACE
-## ──────────────────── rOpenSci Statistical Software Standards ───────────────────
-## 
-## ── @srrstats standards:
-##   * [G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]
-##   * [RE2.2] on line#2 of file [tests/testthat/test-a.R]
-##   * [G2.3] in function 'test()' on line#6 of file [src/cpptest.cpp]
-##   * [G1.4] on line#17 of file [./README.Rmd]
-## 
-## ── @srrstatsTODO standards:
-##   * [] on line#14 of file [R/srr-stats-standards.R]
-##   * [RE1.1] on line#11 of file [R/test.R]
-##   * [G1.5] on line#17 of file [./README.Rmd]
-## ────────────────────────────────────────────────────────────────────────────────
-## Writing NAMESPACE</code></pre>
+## Error: Standards [G1.1, G1.2, G1.3, G2.0, G2.1, RE2.2, G2.3, G1.4] are listed with both @srrstats and @srrstatsTODO tags.
+## Please rectify to ensure these standards are only associated with one tag.</code></pre>
 <p>To ensure all standards are first inserted with <code>@srrstatsTODO</code> tags, and that there are no duplicates with other tags, please use only the <a href="https://docs.ropensci.org/srr/reference/srr_stats_roxygen.html"><code>srr_stats_roxygen()</code></a> function.</p>
 </div>
   </div>
