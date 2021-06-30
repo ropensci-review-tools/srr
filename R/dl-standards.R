@@ -59,7 +59,7 @@ dl_standards <- function (category = "general", quiet = FALSE) {
 #' @noRd
 format_standards <- function (s) {
 
-    index1 <- grep ("\\s?-\\s\\*\\*[A-Z]", s)
+    index1 <- grep ("\\s?-\\s\\[\\*\\*[A-Z]", s)
     index_sp <- grep ("^\\s*$", s)
     index2 <- vapply (seq_along (index1), function (i) {
                       ret <- index_sp [which (index_sp > index1 [i]) [1]]
@@ -84,8 +84,11 @@ format_standards <- function (s) {
     s <- vapply (seq_along (index1), function (i)
                  paste0 (s [index1 [i]:index2 [i]], collapse = " "),
                  character (1))
+    # rm hyperlink of standards
+    r <- regexpr ("\\]\\{#[A-Z]+[0-9]+\\_[0-9]+([a-z]?)\\}", s)
+    regmatches (s, r) <- ""
     # convert dot points to checklist items:
-    s <- gsub ("\\s*\\-\\s+\\*\\*", "- \\[ \\] **", s)
+    s <- gsub ("\\s*\\-\\s+\\[\\*\\*", "- \\[ \\] **", s)
 
     # indent sub-standards
     index <- grep ("\\-\\s?\\[\\s\\]\\s\\*\\*[A-Z]+[0-9]\\.[0-9]+[a-z]\\*\\*", s) # nolint
