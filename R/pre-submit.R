@@ -50,7 +50,9 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
     if (length (index) > 0) {
         msg1 <- paste0 ("Package can not be submitted because the ",
-                        "following standards are missing from your code:")
+                        "following standards [Version ",
+                        attr (categories, "stds_version"),
+                        "] are missing from your code:")
 
         if (!quiet) {
             cli::cli_alert_warning (msg1)
