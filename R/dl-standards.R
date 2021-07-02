@@ -44,8 +44,11 @@ dl_standards <- function (category = "general", quiet = FALSE) {
 
     u <- paste0 (base_url (raw = TRUE),
                  "main/standards/", category, ".Rmd")
-    tmp <- tempfile (fileext = ".Rmd")
-    ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
+
+    tmp <- file.path (tempdir (),
+                      paste0 ("srr-standards-", category, ".Rmd"))
+    if (!file.exists (tmp))
+        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
     if (!quiet)
         cli::cli_alert_success ("Downloaded {category} standards")
