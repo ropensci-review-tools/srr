@@ -53,6 +53,24 @@ dl_standards <- function (category = "general", quiet = FALSE) {
     readLines (tmp)
 }
 
+stds_version <- function () {
+
+    u <- paste0 (base_url (raw = TRUE),
+                 "main/standards.Rmd")
+
+    tmp <- file.path (tempdir (), "srr-standards-main.Rmd")
+    if (!file.exists (tmp))
+        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
+
+    x <- readLines (tmp)
+
+    ptn <- "\\#\\s+Standards\\:\\s+Version\\s+"
+
+    x <- gsub (ptn, "", grep (ptn, x, value = TRUE))
+
+    return (strsplit (x, "\\s+") [[1]] [1])
+}
+
 #' @param s Full text describing and including a set of standards downloaded
 #' with `dl_standards`
 #' @return The standards only extracted from `s`, formatted as checklist items.
