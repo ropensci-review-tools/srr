@@ -50,7 +50,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
     if (length (index) > 0) {
         msg1 <- paste0 ("Package can not be submitted because the ",
-                        "following standards [Version ",
+                        "following standards [v",
                         attr (categories, "stds_version"),
                         "] are missing from your code:")
 
@@ -68,7 +68,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
                   "")
     } else if (length (stds_in_code$stds_todo) == 0) {
 
-        msg <- paste0 ("All applicable standards [Version ",
+        msg <- paste0 ("All applicable standards [v",
                        attr (categories, "stds_version"),
                        "] have been documented in this package")
 
