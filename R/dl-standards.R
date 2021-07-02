@@ -338,7 +338,7 @@ srr_stats_categories <- function () {
                        url = cat_full [index],
                        stringsAsFactors = FALSE)
 
-    attr (res, "Stds_version") <- version
+    attr (res, "stds_version") <- version
 
     return (res)
 }
