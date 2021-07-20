@@ -3,7 +3,7 @@ pkgdown: 1.6.1.9001
 pkgdown_sha: ce9781a15c7ea07df9fb17a11295ba4abec0b54b
 articles:
   srr-stats: srr-stats.html
-last_built: 2021-07-20T10:30Z
+last_built: 2021-07-20T13:24Z
 urls:
   reference: https://docs.ropensci.org/srr/reference
   article: https://docs.ropensci.org/srr/articles
