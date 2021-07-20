@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.094</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.095</span>
       </span>
     </div>
 
@@ -171,6 +171,12 @@
 <code class="sourceCode R"><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/srr_stats_pkg_skeleton.html">srr_stats_pkg_skeleton</a></span> <span class="op">(</span><span class="op">)</span>
 <span class="fu">roxygen2</span><span class="fu">::</span><span class="fu"><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygenise</a></span> <span class="op">(</span><span class="va">d</span><span class="op">)</span></code></pre></div>
 <p>Note that the skeleton package also includes C++ code in a <code>src/</code> directory, so will be compiled the first time your run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygensise()</code></a>. Running a second time will generate cleaner output from the <code>srr_stats</code> roclets only. The tags included in <a href="https://roxygen2.r-lib.org/" class="external-link"><code>roxygen2</code></a> blocks in this skeleton package may be modified, moved, copied, and changed in any way you like to help you understand how the roclets work. Simply play around with the <a href="https://roxygen2.r-lib.org/" class="external-link"><code>roxygen2</code></a> lines and run <a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link"><code>roxygensise()</code></a> each time to see the effect. Individual standards may be moved to, and addressed in, any location including the directories <code>R/</code>, <code>src/</code>, or <code>tests/</code>, and well as in <code>.Rmd</code> documentation files such as <code>README.Rmd</code> or package vignettes. The <code>srr_stats</code> roclet associated with this package is able to parse the various <code>@srrstats</code> tags in all of these locations.</p>
+<div id="places-where-standards-can-not-be-inserted" class="section level3">
+<h3 class="hasAnchor">
+<a href="#places-where-standards-can-not-be-inserted" class="anchor" aria-hidden="true"></a>Places where standards can NOT be inserted</h3>
+<p>While the <code>srr</code> package enables standards compliance to be documented through inserting <code>@srrstats</code> tags in as many locations as possible, in order to ensure compliance is documented as close as possible to the point within the code where each standard is addressed, it is not possible to insert <code>roxygen2</code> tags in every type of file. In general, standards may be inserted in any <code>.R</code> or <code>.Rmd</code> file, and most types of files in <code>src</code> or <code>inst/include</code> directories, as long as they are used with a package able to convert documentation to a corresponding R file (such as <a href="http://www.rcpp.org/" class="external-link"><code>Rcpp</code></a>’s generation of <code>RcppExports.R</code> files which include the C++ documentation).</p>
+<p>Tags may generally not be placed in any other kinds of files, including <code>.md</code> files such as <code>CONTRIBUTING.md</code>, or other files without extensions such as <code>DESCRIPTION</code>, <code>NAMESPACE</code>, or <code>NEWS</code>. Standards which are best addressed in such files must be placed in some other generic location (such as <code>R/srr-standards.R</code>), with a cross-reference to the file in which they are actually addressed.</p>
+</div>
 </div>
 </div>
 
