@@ -15,6 +15,6 @@ test_that("release", {
                                    type = "message"
                                    )
               expect_true (length (x) > 100) # > 100 standards are missing
-              msg <- "the following standards are missing from your code"
+              msg <- "the following standards (.*) are missing from your code"
               expect_true (any (grepl (msg, x, ignore.case = TRUE)))
 })
