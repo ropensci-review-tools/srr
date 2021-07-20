@@ -260,3 +260,23 @@ addressed in, any location including the directories `R/`, `src/`, or
 or package vignettes. The `srr_stats` roclet associated with this
 package is able to parse the various `@srrstats` tags in all of these
 locations.
+
+### Places where standards can NOT be inserted
+
+While the `srr` package enables standards compliance to be documented
+through inserting `@srrstats` tags in as many locations as possible, in
+order to ensure compliance is documented as close as possible to the
+point within the code where each standard is addressed, it is not
+possible to insert `roxygen2` tags in every type of file. In general,
+standards may be inserted in any `.R` or `.Rmd` file, and most types of
+files in `src` or `inst/include` directories, as long as they are used
+with a package able to convert documentation to a corresponding R file
+(such as [`Rcpp`](http://www.rcpp.org/)’s generation of `RcppExports.R`
+files which include the C++ documentation).
+
+Tags may generally not be placed in any other kinds of files, including
+`.md` files such as `CONTRIBUTING.md`, or other files without extensions
+such as `DESCRIPTION`, `NAMESPACE`, or `NEWS`. Standards which are best
+addressed in such files must be placed in some other generic location
+(such as `R/srr-standards.R`), with a cross-reference to the file in
+which they are actually addressed.
