@@ -1,3 +1,13 @@
+---
+title: "srr"
+output:
+  md_document:
+    variant: gfm
+
+  rmarkdown::html_vignette:
+    self_contained: no
+---
+
 <!-- badges: start -->
 [![R build status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
 [![codecov](https://codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci-review-tools/srr)
