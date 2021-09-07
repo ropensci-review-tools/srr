@@ -60,7 +60,7 @@ and looks like this:
 
 ```{r dir-tree}
 library (srr)
-d <- srr_stats_pkg_skeleton ("package")
+d <- srr_stats_pkg_skeleton (pkg_name = "package")
 fs::dir_tree (d)
 ```
 
