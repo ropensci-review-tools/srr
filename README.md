@@ -280,3 +280,9 @@ such as `DESCRIPTION`, `NAMESPACE`, or `NEWS`. Standards which are best
 addressed in such files must be placed in some other generic location
 (such as `R/srr-standards.R`), with a cross-reference to the file in
 which they are actually addressed.
+
+# Code of Conduct
+
+Please note that this package is released with a [Contributor Code of
+Conduct](https://ropensci.org/code-of-conduct/). By contributing to this
+project, you agree to abide by its terms.
