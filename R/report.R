@@ -111,6 +111,11 @@ get_all_msgs <- function (path = ".") {
                                         pattern = "\\.(r|R|q|s|S)$"))
 
     blocks <- lapply (flist, function (i) try(roxygen2::parse_file (i)))
+    failing <- flist[sapply(blocks, inherits, "try-error")]
+    if (length (failing) > 0L) {
+      stop ("parsing problem in: ", paste (failing, collapse = ", "))
+    }
+
     names (blocks) <- flist
     blocks <- do.call (c, blocks)
 
