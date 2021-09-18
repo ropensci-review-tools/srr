@@ -110,7 +110,14 @@ get_all_msgs <- function (path = ".") {
                                         full.names = TRUE,
                                         pattern = "\\.(r|R|q|s|S)$"))
 
-    blocks <- lapply (flist, function (i) try(roxygen2::parse_file (i)))
+    pkg_name <- paste0 ("package:", pkg_name_from_desc (path))
+    if (!pkg_name %in% search ())
+        pkgload::load_all (path)
+    pkg_env <- as.environment (pkg_name)
+
+    blocks <- lapply (flist, function (i)
+                      try (roxygen2::parse_file (i, env = pkg_env)))
+
     failing <- flist[sapply(blocks, inherits, "try-error")]
     if (length (failing) > 0L) {
       stop ("parsing problem in: ", paste (failing, collapse = ", "))
