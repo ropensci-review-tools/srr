@@ -106,8 +106,16 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
 get_all_msgs <- function (path = ".") {
 
-    flist <- list.files (file.path (path, "R"), full.names = TRUE)
-    blocks <- lapply (flist, function (i) roxygen2::parse_file (i))
+    flist <- normalizePath (list.files (file.path (path, "R"),
+                                        full.names = TRUE,
+                                        pattern = "\\.(r|R|q|s|S)$"))
+
+    blocks <- lapply (flist, function (i) try(roxygen2::parse_file (i)))
+    failing <- flist[sapply(blocks, inherits, "try-error")]
+    if (length (failing) > 0L) {
+      stop ("parsing problem in: ", paste (failing, collapse = ", "))
+    }
+
     names (blocks) <- flist
     blocks <- do.call (c, blocks)
 
