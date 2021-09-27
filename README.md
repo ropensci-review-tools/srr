@@ -9,9 +9,15 @@ Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repo
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# [rOpenSci](https://ropensci.org) **S**oftware **R**eview **R**oclets (srr)
+# srr
 
-First, the answer to an important question: **[What is a
+“srr” stands for **S**oftware **R**eview **R**oclets, and is
+[rOpenSci](https://ropensci.org)’s package for extending documentation
+to include additional components specific to the software review
+process. The package currently facilitates documenting how statistical
+software complies with our collections of [Statistical Software
+Standards](https://stats-devguide.ropensci.org/standards.html). Before
+proceeding, the answer to an important question: **[What is a
 “roclet”](https://github.com/r-lib/roxygen2/issues/1086)?**
 
 -   A roclet is an object used by the
