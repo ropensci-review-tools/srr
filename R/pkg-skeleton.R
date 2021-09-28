@@ -71,6 +71,7 @@ write_r_fn <- function (d, pkg_name) {
     writeLines (rfile, con = file.path (dr, "test.R"))
 
     rfile <- c ("#' @keywords internal",
+                "#' @importFrom Rcpp evalCpp",
                 "\"_PACKAGE\"",
                 "",
                 paste0 ("# The following block is used by ",
