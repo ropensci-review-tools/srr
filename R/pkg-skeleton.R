@@ -35,14 +35,17 @@ write_desc <- function (d, pkg_name) {
                "LinkingTo:",
                "    Rcpp",
                "License: GPL-3",
-               "Encoding: UTF-8",
-               paste0 ("Roxygen: list(markdown = TRUE, ",
-                       "roclets = c (\"rd\", \"namespace\", ",
-                       "\"srr::srr_stats_roclet\"))"))
+               "Encoding: UTF-8")
 
     rv <- get_roxygen_version ()
-    if (!is.null (rv))
-        desc <- c (desc, paste0 ("RoxygenNote: ", rv))
+    if (!is.null (rv)) {
+
+        desc <- c (desc,
+                   #paste0 ("RoxygenNote: ", rv),
+                   paste0 ("Roxygen: list(markdown = TRUE, ",
+                           "roclets = c (\"rd\", \"namespace\", ",
+                           "\"srr::srr_stats_roclet\"))"))
+    }
 
     writeLines (desc, con = file.path (d, "DESCRIPTION"))
 }
