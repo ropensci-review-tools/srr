@@ -125,7 +125,8 @@ write_readme <- function (d, pkg_name) {
     # nolint start --- lines > 80 characters
     rfile <- c (paste0 ("# ", pkg_name),
                 "",
-                "This is a skeleton of an [`srr` statistics](https://github.com/ropenscilabs/srr)",
+                paste0 ("This is a skeleton of an [`srr` statistics]",
+                        "(https://github.com/ropensci-review-tools/srr)"),
                 "package, intended developers to tweak as they like, in order to understand ",
                 "how the package's roclets work.",
                 "",
