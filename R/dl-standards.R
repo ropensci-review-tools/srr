@@ -1,5 +1,5 @@
 # functions to download current standards from reference (bookdown) site
-# https://github.com/ropenscilabs/statistical-software-review-book
+# https://github.com/ropensci/statistical-software-review-book
 
 #' @param raw If `TRUE`, use api.github.com to access raw file contents,
 #' otherwise standard github.com URL.
@@ -14,7 +14,7 @@ base_url <- function (raw = FALSE) {
 }
 
 #' @return List of all current categories as obtained from directory contents of
-#' https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards # nolint
+#' https://github.com/ropensci/statistical-software-review-book/tree/main/standards # nolint
 #' @note This can be done via base_url(), "/git/trees/main?recursive=1", but
 #' that requires an authorized request to the V3 API, while direct download of
 #' files can be done without that, so is safer here.
@@ -119,9 +119,7 @@ format_standards <- function (s) {
 category_titles_urls <- function (category) {
 
     ret <- list ()
-    u_base <- paste0 ("https://ropenscilabs.github.io/",
-                     "statistical-software-review-book/",
-                     "standards.html#")
+    u_base <- "https://stats-devguide.ropensci.org/standards.html#"
 
     if (category == "general")
         ret <- list (title = "General",
@@ -161,7 +159,7 @@ category_titles_urls <- function (category) {
 #' local clipboard ready to paste.
 #'
 #' @param category One of the names of files given in the directory contents of
-#' \url{https://github.com/ropenscilabs/statistical-software-review-book/tree/main/standards},
+#' \url{https://github.com/ropensci/statistical-software-review-book/tree/main/standards},
 #' each of which is ultimately formatted into a sub-section of the standards.
 #' @param filename Optional name of local file to save markdown-formatted
 #' checklist. A suffix of `.md` will be automatically appended.
@@ -276,9 +274,7 @@ get_standards_checklists <- function (category = NULL) {
 
     s <- dl_standards (category = "general")
     s <- format_standards (s)
-    u <- paste0 ("https://ropenscilabs.github.io/",
-                 "statistical-software-review-book/",
-                 "standards.html#general-standards-for-statistical-software")
+    u <- "https://stats-devguide.ropensci.org/standards.html#general-standards"
     s <- c (paste0 ("## [General Standards](", u, ")"),
             "", s, "")
 
