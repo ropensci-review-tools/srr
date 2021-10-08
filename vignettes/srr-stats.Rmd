@@ -20,11 +20,10 @@ containing roclets for general use in helping those developing and reviewing
 packages submitted to rOpenSci. At present, the `srr` package only contains
 roclets and associated functions to help those developing and reviewing
 packages submitted to rOpenSci's system for [Statistical Software
-Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
-This vignette demonstrates how developers are intended to use this package to
-document the alignment of their software with rOpenSci's [standards for
-statistical
-software](https://ropenscilabs.github.io/statistical-software-review-book/standards.html).
+Review](https://stats-devguide.ropensci.org/). This vignette demonstrates how
+developers are intended to use this package to document the alignment of their
+software with rOpenSci's [standards for statistical
+software](https://stats-devguide.ropensci.org/standards.html).
 
 The main functions of the package are constructed as [`roxygen2`
 "roclets"](https://roxygen2.r-lib.org), meaning that these functions are called
