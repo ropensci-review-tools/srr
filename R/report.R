@@ -82,8 +82,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     md_lines <- c (md_title,
                    "",
                    paste0 ("[Click here for full text of all standards](",
-                           "https://ropenscilabs.github.io/",
-                           "statistical-software-review-book/standards.html)"),
+                           "https://stats-devguide.ropensci.org/standards.html"),
                    "",
                    md_lines)
 
