@@ -28,7 +28,7 @@ list_categories <- function () {
 
     x <- readLines (tmp)
     cats <- grep ("\\`\\`\\`\\{r\\s", x, value = TRUE)
-    cats <- regmatches (cats, regexpr ("standards\\/\\w+\\.Rmd", cats))
+    cats <- regmatches (cats, regexpr ("standards\\/(\\w|\\-)+\\.Rmd", cats))
     gsub ("standards\\/|\\.Rmd.*", "", cats)
 }
 
