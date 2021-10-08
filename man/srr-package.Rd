@@ -6,8 +6,7 @@
 \alias{srr-package}
 \title{srr: 'rOpenSci' Review Roclets}
 \description{
-Companion package to 'rOpenSci' statistical software review
-    project.
+Companion package to 'rOpenSci' statistical software review project.
 }
 \seealso{
 Useful links:
