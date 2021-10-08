@@ -30,11 +30,10 @@ proceeding, the answer to an important question: **[What is a
 This package currently serves to aid developers and reviewers of
 statistical software in aligning their software against our extensive
 [lists of
-standards](https://ropenscilabs.github.io/statistical-software-review-book/standards.html).
-In acknowledgement of [Colin
-Gillespie](https://github.com/csgillespie)’s sentiments expressed in his
-keynote speech at the [European R Users Meeting
-2020](https://2020.erum.io/program/keynotes-invited-speakers/):
+standards](https://stats-devguide.ropensci.org/standards.html). In
+acknowledgement of [Colin Gillespie](https://github.com/csgillespie)’s
+sentiments expressed in his keynote speech at the [European R Users
+Meeting 2020](https://2020.erum.io/program/keynotes-invited-speakers/):
 
 > Standards are good<br> Standards should be strict<br> No-one reads
 > standards
@@ -58,11 +57,11 @@ process several additional tags for use with
 At present, the package only contains roclets and associated functions
 to help those developing and reviewing packages submitted to rOpenSci’s
 system for [Statistical Software
-Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
-The functions are mostly intended to ease alignment and assessment of
-software against the standards detailed in the [main project
-book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
-(from here on referred to as the “SSR Book”).
+Review](https://stats-devguide.ropensci.org/). The functions are mostly
+intended to ease alignment and assessment of software against the
+standards detailed in the [main project
+book](https://stats-devguide.ropensci.org/standards.html) (from here on
+referred to as the “SSR Book”).
 
 ## Installation
 
@@ -107,9 +106,8 @@ package for submission to our peer review system, keep straight on
 reading. If you’ve been invited to review a package, you may skip the
 following section and just read the subsequent section. The general
 procedures for both developers and reviewers are described at length in
-the [SSR
-book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
-with this `README` intended to provide supporting technical details.
+the [SSR book](https://stats-devguide.ropensci.org/standards.html), with
+this `README` intended to provide supporting technical details.
 
 Note that the `srr` package can be applied only within the working
 directory of a package. There are no `package` or `path` arguments to
@@ -156,9 +154,9 @@ roclets.
 
     That function also returns links to the full descriptions of each
     category in the [main project
-    book](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
-    Any software within one or more of these categories may be
-    considered for review.
+    book](https://stats-devguide.ropensci.org/standards.html). Any
+    software within one or more of these categories may be considered
+    for review.
 
 3.  Enable your package to use the `srr_stats` roclets by modifying the
     package’s `DESCRIPTION` file so that the `Roxygen` line looks like

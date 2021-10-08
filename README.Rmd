@@ -37,7 +37,7 @@ a "roclet"](https://github.com/r-lib/roxygen2/issues/1086)?**
 
 This package currently serves to aid developers and reviewers of statistical
 software in aligning their software against our extensive [lists of
-standards](https://ropenscilabs.github.io/statistical-software-review-book/standards.html). 
+standards](https://stats-devguide.ropensci.org/standards.html).
 In acknowledgement of [Colin Gillespie](https://github.com/csgillespie)'s
 sentiments expressed in his keynote speech at the [European R Users Meeting
 2020](https://2020.erum.io/program/keynotes-invited-speakers/):
@@ -64,10 +64,10 @@ software review systems.
 At present, the package only contains roclets and associated functions to help
 those developing and reviewing packages submitted to rOpenSci's system for
 [Statistical Software
-Review](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
+Review](https://stats-devguide.ropensci.org/).
 The functions are mostly intended to ease alignment and assessment of software
 against the standards detailed in the [main project
-book](https://ropenscilabs.github.io/statistical-software-review-book/index.html)
+book](https://stats-devguide.ropensci.org/standards.html)
 (from here on referred to as the "SSR Book").
 
 ## Installation
@@ -116,7 +116,7 @@ review system, keep straight on reading. If you've been invited to review a
 package, you may skip the following section and just read the subsequent
 section. The general procedures for both developers and reviewers are described
 at length in the [SSR
-book](https://ropenscilabs.github.io/statistical-software-review-book/index.html),
+book](https://stats-devguide.ropensci.org/standards.html),
 with this `README` intended to provide supporting technical details.
 
 Note that the `srr` package can be applied only within the working directory of
@@ -150,7 +150,7 @@ describes how to link your package with `srr` in order to use these roclets.
     ```
     That function also returns links to the full descriptions of each category
     in the [main project
-    book](https://ropenscilabs.github.io/statistical-software-review-book/index.html).
+    book](https://stats-devguide.ropensci.org/standards.html).
     Any software within one or more of these categories may be considered for
     review. 
 3. Enable your package to use the `srr_stats` roclets by modifying the
