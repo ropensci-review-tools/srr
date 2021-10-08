@@ -1,11 +1,8 @@
 Package: srr
 Title: 'rOpenSci' Review Roclets
-Version: 0.0.1.111
+Version: 0.0.1.112
 Authors@R: 
-    person(given = "Mark",
-           family = "Padgham",
-           role = c("aut", "cre"),
-           email = "mark@ropensci.org",
+    person("Mark", "Padgham", , "mark@ropensci.org", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2172-5265"))
 Description: Companion package to 'rOpenSci' statistical software review
     project.

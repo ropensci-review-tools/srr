@@ -10,7 +10,7 @@ base_url <- function (raw = FALSE) {
         ret <- "https://raw.githubusercontent.com/"
     else
         ret <- "https://api.github.com/repos/"
-    return (paste0 (ret, "ropenscilabs/statistical-software-review-book/"))
+    return (paste0 (ret, "ropensci/statistical-software-review-book/"))
 }
 
 #' @return List of all current categories as obtained from directory contents of
@@ -58,20 +58,15 @@ dl_standards <- function (category = "general", quiet = FALSE) {
 
 stds_version <- function () {
 
-    u <- paste0 (base_url (raw = TRUE),
-                 "main/standards.Rmd")
+    u <- paste0 (base_url (raw = TRUE), "main/DESCRIPTION")
 
-    tmp <- file.path (tempdir (), "srr-standards-main.Rmd")
+    tmp <- file.path (tempdir (), "stats-devguide-DESCRIPTION")
     if (!file.exists (tmp))
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
-    x <- readLines (tmp)
+    d <- data.frame (read.dcf (tmp))
 
-    ptn <- "\\#\\s+Standards\\:\\s+Version\\s+"
-
-    x <- gsub (ptn, "", grep (ptn, x, value = TRUE))
-
-    return (strsplit (x, "\\s+") [[1]] [1])
+    return (d$Version)
 }
 
 #' @param s Full text describing and including a set of standards downloaded
