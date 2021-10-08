@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">srr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.096</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.119</span>
       </span>
     </div>
 
@@ -78,17 +78,17 @@
 
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-<div id="ropensci-software-review-roclets-srr" class="section level1">
+<div id="srr" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#ropensci-software-review-roclets-srr" class="anchor" aria-hidden="true"></a><a href="https://ropensci.org" class="external-link">rOpenSci</a> <strong>S</strong>oftware <strong>R</strong>eview <strong>R</strong>oclets (srr)</h1></div>
-<p>First, the answer to an important question: <strong><a href="https://github.com/r-lib/roxygen2/issues/1086" class="external-link">What is a “roclet”</a>?</strong></p>
+<a href="#srr" class="anchor" aria-hidden="true"></a>srr</h1></div>
+<p>“srr” stands for <strong>S</strong>oftware <strong>R</strong>eview <strong>R</strong>oclets, and is <a href="https://ropensci.org" class="external-link">rOpenSci</a>’s package for extending documentation to include additional components specific to the software review process. The package currently facilitates documenting how statistical software complies with our collections of <a href="https://stats-devguide.ropensci.org/standards.html" class="external-link">Statistical Software Standards</a>. Before proceeding, the answer to an important question: <strong><a href="https://github.com/r-lib/roxygen2/issues/1086" class="external-link">What is a “roclet”</a>?</strong></p>
 <ul>
 <li>A roclet is an object used by the <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package to convert <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a>-style documentation lines into some desired form of output.</li>
 </ul>
 <div id="why-then" class="section level2">
 <h2 class="hasAnchor">
 <a href="#why-then" class="anchor" aria-hidden="true"></a>Why then?</h2>
-<p>This package currently serves to aid developers and reviewers of statistical software in aligning their software against our extensive <a href="https://ropenscilabs.github.io/statistical-software-review-book/standards.html" class="external-link">lists of standards</a>. In acknowledgement of <a href="https://github.com/csgillespie" class="external-link">Colin Gillespie</a>’s sentiments expressed in his keynote speech at the <a href="https://2020.erum.io/program/keynotes-invited-speakers/" class="external-link">European R Users Meeting 2020</a>:</p>
+<p>This package currently serves to aid developers and reviewers of statistical software in aligning their software against our extensive <a href="https://stats-devguide.ropensci.org/standards.html" class="external-link">lists of standards</a>. In acknowledgement of <a href="https://github.com/csgillespie" class="external-link">Colin Gillespie</a>’s sentiments expressed in his keynote speech at the <a href="https://2020.erum.io/program/keynotes-invited-speakers/" class="external-link">European R Users Meeting 2020</a>:</p>
 <blockquote>
 <p>Standards are good<br> Standards should be strict<br> No-one reads standards</p>
 </blockquote>
@@ -98,7 +98,7 @@
 <h2 class="hasAnchor">
 <a href="#how" class="anchor" aria-hidden="true"></a>How?</h2>
 <p>The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package parses all documentation lines from all files in the <code>R/</code> directory of a package which begin with <code>#'</code>. Special tags beginning with <code>@</code>, such as <code>@param</code> or <code>@export</code>, may follow these symbols, and roclets define what is done with different kinds of tags. The <a href="https://roxygen2.r-lib.org" class="external-link"><code>roxygen2</code></a> package includes roclets to process a number of tags; the <code>srr</code> package implements custom roclets to process several additional tags for use with <a href="https://ropensci.org" class="external-link">rOpenSci</a>’s software review systems.</p>
-<p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a> (from here on referred to as the “SSR Book”).</p>
+<p>At present, the package only contains roclets and associated functions to help those developing and reviewing packages submitted to rOpenSci’s system for <a href="https://stats-devguide.ropensci.org/" class="external-link">Statistical Software Review</a>. The functions are mostly intended to ease alignment and assessment of software against the standards detailed in the <a href="https://stats-devguide.ropensci.org/standards.html" class="external-link">main project book</a> (from here on referred to as the “SSR Book”).</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -122,7 +122,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor" aria-hidden="true"></a>Overview</h2>
-<p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. Both the roclet and all functions intended for use in this context are prefixed with <code>srr_stats_</code>. The remainder of this document is in two main sections. If you’re developing a statistics package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
+<p>Both this <code>README</code>, and the main package vignette, describe the functionality of the package in the specific context of the statistical software review project. Both the roclet and all functions intended for use in this context are prefixed with <code>srr_stats_</code>. The remainder of this document is in two main sections. If you’re developing a statistics package for submission to our peer review system, keep straight on reading. If you’ve been invited to review a package, you may skip the following section and just read the subsequent section. The general procedures for both developers and reviewers are described at length in the <a href="https://stats-devguide.ropensci.org/standards.html" class="external-link">SSR book</a>, with this <code>README</code> intended to provide supporting technical details.</p>
 <p>Note that the <code>srr</code> package can be applied only within the working directory of a package. There are no <code>package</code> or <code>path</code> arguments to allow functions to be applied to packages anywhere other than in the current working directory.</p>
 </div>
 <div id="for-package-developers" class="section level2">
@@ -143,7 +143,7 @@
 <span id="cb6-6"><a href="#cb6-6"></a><span class="co">## [6] "Spatial"                                                        </span></span>
 <span id="cb6-7"><a href="#cb6-7"></a><span class="co">## [7] "Time Series"                                                    </span></span>
 <span id="cb6-8"><a href="#cb6-8"></a><span class="co">## [8] "Dimensionality Reduction, Clustering, and Unsupervised Learning"</span></span></code></pre></div>
-<p>That function also returns links to the full descriptions of each category in the <a href="https://ropenscilabs.github.io/statistical-software-review-book/index.html" class="external-link">main project book</a>. Any software within one or more of these categories may be considered for review.</p>
+<p>That function also returns links to the full descriptions of each category in the <a href="https://stats-devguide.ropensci.org/standards.html" class="external-link">main project book</a>. Any software within one or more of these categories may be considered for review.</p>
 </li>
 <li>
 <p>Enable your package to use the <code>srr_stats</code> roclets by modifying the package’s <code>DESCRIPTION</code> file so that the <code>Roxygen</code> line looks like this:</p>
@@ -177,6 +177,11 @@
 <p>While the <code>srr</code> package enables standards compliance to be documented through inserting <code>@srrstats</code> tags in as many locations as possible, in order to ensure compliance is documented as close as possible to the point within the code where each standard is addressed, it is not possible to insert <code>roxygen2</code> tags in every type of file. In general, standards may be inserted in any <code>.R</code> or <code>.Rmd</code> file, and most types of files in <code>src</code> or <code>inst/include</code> directories, as long as they are used with a package able to convert documentation to a corresponding R file (such as <a href="http://www.rcpp.org/" class="external-link"><code>Rcpp</code></a>’s generation of <code>RcppExports.R</code> files which include the C++ documentation).</p>
 <p>Tags may generally not be placed in any other kinds of files, including <code>.md</code> files such as <code>CONTRIBUTING.md</code>, or other files without extensions such as <code>DESCRIPTION</code>, <code>NAMESPACE</code>, or <code>NEWS</code>. Standards which are best addressed in such files must be placed in some other generic location (such as <code>R/srr-standards.R</code>), with a cross-reference to the file in which they are actually addressed.</p>
 </div>
+</div>
+<div id="code-of-conduct" class="section level2">
+<h2 class="hasAnchor">
+<a href="#code-of-conduct" class="anchor" aria-hidden="true"></a>Code of Conduct</h2>
+<p>Please note that this package is released with a <a href="https://ropensci.org/code-of-conduct/" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
 
@@ -229,7 +234,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.9000.9000.9000.</p>
 </div>
 
       </footer>
