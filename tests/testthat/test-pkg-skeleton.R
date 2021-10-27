@@ -11,19 +11,19 @@ test_that("dummy package", {
 
               x <- capture.output (roxygen2::roxygenise (d), type = "message")
 
-              expect_true (any (grepl ("@srrstats standards:", x)))
+              expect_true (any (grepl ("@srrstats standards \\(", x)))
               expect_true (any (grepl ("\\s\\*\\s\\[G1\\.1,", x)))
 
-              expect_true (any (grepl ("@srrstatsNA standards:", x)))
+              expect_true (any (grepl ("@srrstatsNA standards \\(", x)))
               expect_true (any (grepl ("\\s\\*\\s\\[RE3\\.3\\]", x)))
               # S3.3 is an @srrstatsNA tag
               expect_true (grep ("\\s\\*\\s\\[RE3\\.3\\]", x) [1] >
-                           grep ("@srrstatsNA standards:", x) [1])
+                           grep ("@srrstatsNA standards \\(", x) [1])
 
-              expect_true (any (grepl ("@srrstatsTODO standards:", x)))
+              expect_true (any (grepl ("@srrstatsTODO standards \\(", x)))
               expect_true (any (grepl ("\\s\\*\\s\\[RE4\\.4\\]", x)))
               expect_true (grep ("\\s\\*\\s\\[RE4\\.4\\]", x) [1] >
-                           grep ("@srrstatsTODO standards:", x) [1])
+                           grep ("@srrstatsTODO standards \\(", x) [1])
               unlink (d, recursive = TRUE)
 })
 

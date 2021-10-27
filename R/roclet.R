@@ -31,6 +31,17 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     msgs_todo <- collect_one_tag (base_path, blocks,
                                            tag = "srrstatsTODO")
 
+    num_stds <- function (m) {
+        stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
+        stds <- lapply (stds, function (i)
+                        strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
+        length (unlist (stds))
+    }
+    num_mgs <- num_stds (msgs)
+    num_mgs_na <- num_stds (msgs_na)
+    num_mgs_todo <- num_stds (msgs_todo)
+    num_total <- num_mgs + num_mgs_na + num_mgs_todo
+
     check_no_mixed_tags (msgs, msgs_na, msgs_todo)
 
     has_output <- (length (msgs) > 0L |
@@ -43,17 +54,17 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     }
 
     if (length (msgs) > 0L) {
-        cli::cli_h3 ("@srrstats standards:")
+        cli::cli_h3 ("@srrstats standards ({num_mgs} / {num_total}):")
         print_one_msg_list (msgs)
     }
 
     if (length (msgs_na) > 0L) {
-        cli::cli_h3 ("@srrstatsNA standards:")
+        cli::cli_h3 ("@srrstatsNA standards ({num_mgs_na} / {num_total}):")
         print_one_msg_list (msgs_na)
     }
 
     if (length (msgs_todo) > 0L) {
-        cli::cli_h3 ("@srrstatsTODO standards:")
+        cli::cli_h3 ("@srrstatsTODO standards ({num_mgs_todo} / {num_total}):")
         print_one_msg_list (msgs_todo)
     }
     if (has_output) {
