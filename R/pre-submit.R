@@ -68,9 +68,14 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
                   "")
     } else if (length (stds_in_code$stds_todo) == 0) {
 
+        
         msg <- paste0 ("All applicable standards [v",
                        attr (categories, "stds_version"),
-                       "] have been documented in this package")
+                       "] have been documented in this package (",
+                       length (stds_in_code$stds),
+                       " complied with; ",
+                       length (stds_in_code$stds_na),
+                       " N/A standards)")
 
         if (!quiet)
             cli::cli_alert_success (msg)
