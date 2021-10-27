@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://docs.ropensci.org/srr/404.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/articles/srr-stats.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/authors.html</loc>
-  </url>
-  <url>
     <loc>https://docs.ropensci.org/srr/index.html</loc>
-  </url>
-  <url>
-    <loc>https://docs.ropensci.org/srr/reference/index.html</loc>
   </url>
   <url>
     <loc>https://docs.ropensci.org/srr/reference/srr-package.html</loc>
@@ -50,5 +29,8 @@
   </url>
   <url>
     <loc>https://docs.ropensci.org/srr/reference/srr_stats_roxygen.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/srr/articles/srr-stats.html</loc>
   </url>
 </urlset>
