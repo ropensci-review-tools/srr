@@ -30,6 +30,18 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     msgs <- get_all_msgs (path)
     std_txt <- get_stds_txt (msgs)
 
+    # count numbers of srr tags
+    num_stds <- function (m) {
+        stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
+        stds <- lapply (stds, function (i)
+                        strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
+        length (unlist (stds))
+    }
+    num_srr <- num_stds (msgs$msgs)
+    num_na <- num_stds (msgs$msgs_na)
+    num_todo <- num_stds (msgs$msgs_todo)
+    num_total <- num_srr + num_na + num_todo
+
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     md_lines <- lapply (tags, function (tag) {
                             res <- one_tag_to_markdown (msgs,
@@ -53,9 +65,14 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                                               unlist (md [which (dirs == d)]))
                                 }
 
+                                n <- switch (tag,
+                                             "srrstats" = num_srr,
+                                             "srrstatsNA" = num_na,
+                                             "srrstatsTODO" = num_todo)
+
                                 res <- c (paste0 ("## Standards with `",
                                                   tag,
-                                                  "` tag"),
+                                                  "` tag (", n, " / ", num_total, ")"),
                                           "",
                                           res,
                                           "",
