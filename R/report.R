@@ -79,12 +79,13 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                            ")")
     }
 
-    md_lines <- c (md_title,
-                   "",
-                   paste0 ("[Click here for full text of all standards](",
-                           "https://stats-devguide.ropensci.org/standards.html"),
-                   "",
-                   md_lines)
+    md_lines <- c (
+        md_title,
+        "",
+        paste0 ("[Click here for full text of all standards](",
+                "https://stats-devguide.ropensci.org/standards.html)"),
+        "",
+        md_lines)
 
     md_lines <- add_missing_stds (md_lines, std_txt)
 
