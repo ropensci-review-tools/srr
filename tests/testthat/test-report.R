@@ -7,12 +7,32 @@ test_that("srr_report", {
     categories <- categories [-which (categories == "general")]
     expect_length (categories, 7L)
 
-    f <- file.path (path, "R", "srr-stats.R")
-    expect_false (file.exists (f))
-    s <- srr_stats_roxygen (category = categories, filename = f)
+    f <- file.path (path, "R", "srr-stats-standards.R")
     expect_true (file.exists (f))
+    s <- srr_stats_roxygen (category = categories,
+                            filename = f,
+                            overwrite = TRUE)
 
-    r <- srr_report (path, view = FALSE)
+    expect_error (
+        r <- srr_report (path, view = FALSE),
+        paste0 ("Please rectify to ensure these standards are only ",
+                "associated with one tag"))
+
+    # rm duplicated stds from TODO list:
+    x <- readLines (f)
+    rm1 <- function (x, s = "G1.1") {
+        ptn <- paste0 ("\\{", gsub ("\\.", "\\\\.", s), "\\}")
+        x [-grep (ptn, x)]
+    }
+    s <- c ("G1.1", "G1.2", "G1.3", "G2.0", "G2.1", "RE2.2", "G2.3", "G1.4")
+    for (i in s) {
+        x <- rm1 (x, i)
+    }
+    writeLines (x, f)
+
+    expect_message (
+        r <- srr_report (path, view = FALSE))
+
     f <- attr (r, "file")
     expect_equal (tools::file_ext (f), "html")
     expect_true (file.exists (f))
