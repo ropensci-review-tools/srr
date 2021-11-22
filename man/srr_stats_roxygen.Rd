@@ -29,6 +29,19 @@ Obtain rOpenSci standards for statistical software, along with one or more
 category-specific standards, as a checklist, convert to project-specific
 \pkg{roxygen2} format, and save in nominated file.
 }
+\examples{
+\dontrun{
+path <- srr_stats_pkg_skeleton ()
+# contains a few standards; insert all with:
+f <- file.path (path, "R", "srr-stats-standards.R")
+file.exists (f)
+length (readLines (f)) # only 14 lines
+srr_stats_roxygen (category = "regression",
+                   file = f,
+                   overwrite = TRUE)
+length (readLines (f)) # now much longer
+}
+}
 \seealso{
 Other roxygen: 
 \code{\link{srr_stats_roclet}()}

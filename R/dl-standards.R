@@ -167,6 +167,13 @@ category_titles_urls <- function (category) {
 #' standards along with standards for any additional categories.
 #' @family helper
 #'
+#' @examples
+#' \dontrun{
+#' x <- srr_stats_checklist (category = "regression")
+#' # or write to specified file:
+#' f <- tempfile (fileext = ".md")
+#' x <- srr_stats_checklist (category = "regression", filename = f)
+#' }
 #' @export
 srr_stats_checklist <- function (category = NULL, filename = NULL) {
 
@@ -198,6 +205,18 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' will ask whether file should be overwritten.
 #' @return Nothing
 #' @family roxygen
+#' @examples
+#' \dontrun{
+#' path <- srr_stats_pkg_skeleton ()
+#' # contains a few standards; insert all with:
+#' f <- file.path (path, "R", "srr-stats-standards.R")
+#' file.exists (f)
+#' length (readLines (f)) # only 14 lines
+#' srr_stats_roxygen (category = "regression",
+#'                    file = f,
+#'                    overwrite = TRUE)
+#' length (readLines (f)) # now much longer
+#' }
 #' @export
 srr_stats_roxygen <- function (category = NULL,
                                filename = "srr-stats-standards.R",
@@ -309,7 +328,8 @@ get_standards_checklists <- function (category = NULL) {
 #' submitted to \link{srr_stats_checklist}), "title" (the full title), and
 #' "url".
 #' @family helper
-#'
+#' @examples
+#' srr_stats_categories ()
 #' @export
 srr_stats_categories <- function () {
 

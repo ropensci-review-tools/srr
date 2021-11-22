@@ -15,6 +15,9 @@ submitted to \link{srr_stats_checklist}), "title" (the full title), and
 List all currently available categories and associated URLs to full category
 descriptions.
 }
+\examples{
+srr_stats_categories ()
+}
 \seealso{
 Other helper: 
 \code{\link{srr_stats_checklist_check}()},

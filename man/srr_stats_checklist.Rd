@@ -23,6 +23,14 @@ Obtain rOpenSci standards for statistical software, along with one or more
 category-specific standards, as a checklist, and store the result in the
 local clipboard ready to paste.
 }
+\examples{
+\dontrun{
+x <- srr_stats_checklist (category = "regression")
+# or write to specified file:
+f <- tempfile (fileext = ".md")
+x <- srr_stats_checklist (category = "regression", filename = f)
+}
+}
 \seealso{
 Other helper: 
 \code{\link{srr_stats_categories}()},
