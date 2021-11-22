@@ -162,11 +162,15 @@ get_stds_txt <- function (msgs) {
 
     s_msgs <- parse_std_refs (msgs$msgs)
     s_na <- parse_std_refs (msgs$msgs_na)
+    s_todo <- parse_std_refs (msgs$msgs_todo)
     #s_todo <- parse_std_refs (msgs$msgs_todo)
     cats_msg <- get_categories (s_msgs)
     cats_na <- get_categories (s_na)
+    cats_todo <- get_categories (s_todo)
     #cats_todo <- get_categories (s_todo)
-    cats <- unique (c (cats_msg$category, cats_na$category))
+    cats <- unique (c (cats_msg$category,
+                       cats_na$category,
+                       cats_todo$category))
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
