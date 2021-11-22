@@ -287,7 +287,7 @@ add_missing_stds <- function (md_lines, std_txt) {
     md_stds <- grep ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
                      md_lines,
                      value = TRUE)
-    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+", md_stds)
+    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", md_stds)
     md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
     missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
     if (length (missing_stds) > 0) {
