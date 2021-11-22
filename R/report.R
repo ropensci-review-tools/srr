@@ -19,6 +19,14 @@
 #' }
 srr_report <- function (path = ".", branch = "", view = TRUE) {
 
+    o <- capture.output (
+        chk <- tryCatch (roxygen2::roxygenise (path),
+                         error = function (e) e)
+    )
+    if (methods::is (chk, "simpleError")) {
+        stop (chk$message)
+    }
+
     requireNamespace ("rmarkdown")
 
     if (path == ".")
