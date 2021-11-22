@@ -8,8 +8,11 @@
 #' documentation.
 #'
 #' @importFrom roxygen2 roclet
+#' @return A \pkg{roxygen2} roclet
 #' @family roxygen
 #'
+#' @examples
+#' srr_stats_roclet ()
 #' @export
 srr_stats_roclet <- function () {
     roxygen2::roclet ("srr_stats")

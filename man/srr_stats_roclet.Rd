@@ -6,6 +6,9 @@
 \usage{
 srr_stats_roclet()
 }
+\value{
+A \pkg{roxygen2} roclet
+}
 \description{
 Get values of all \code{srrstats} tags in function documentation
 }
@@ -13,6 +16,9 @@ Get values of all \code{srrstats} tags in function documentation
 Note that this function should never need to be called directly. It only
 exists to enable "@srrstats" tags to be parsed from \pkg{roxygen2}
 documentation.
+}
+\examples{
+srr_stats_roclet ()
 }
 \seealso{
 Other roxygen: 
