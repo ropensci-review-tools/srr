@@ -6,6 +6,12 @@
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
 #' @family helper
+#' @examples
+#' \dontrun{
+#' f <- tempfile (fileext = ".md")
+#' srr_stats_checklist (category = "regression", filename = f)
+#' chk <- srr_stats_checklist_check (f)
+#' }
 #' @export
 srr_stats_checklist_check <- function (file) {
 
