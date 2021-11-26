@@ -91,10 +91,21 @@ get_stds_from_code <- function (path) {
         return (NULL)
     }
 
-    flist <- list.files (file.path (path, "R"), full.names = TRUE)
+    dirs <- c (".", "R", "vignettes", "tests")
+    sfxs <- c ("\\.Rmd$", "\\.(R|r)$", "\\.Rmd$", "\\.(R|r)$")
+    rec <- c (FALSE, FALSE, TRUE, TRUE)
+
+    flist <- lapply (seq_along (dirs), function (i) {
+        list.files (file.path (path, dirs [i]),
+                    full.names = TRUE,
+                    recursive = rec [i],
+                    pattern = sfxs [i])
+                       })
+    flist <- unlist (flist)
+
     suppressWarnings ({
         blocks <- lapply (flist, function (i)
-                          tryCatch (roxygen2::parse_file (i),
+                          tryCatch (roxygen2::parse_file (i, env = NULL),
                                     error = function (e) list ()))
     })
     names (blocks) <- flist
