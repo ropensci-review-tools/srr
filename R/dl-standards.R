@@ -64,7 +64,12 @@ stds_version <- function () {
 
     d <- data.frame (read.dcf (tmp))
 
-    return (d$Version)
+    version <- d$Version
+    if (length (gregexpr ("\\.", version) [[1]]) > 2) {
+        version <- gsub ("\\.\\d{3}$", "", version, perl = TRUE)
+    }
+
+    return (version)
 }
 
 #' @param s Full text describing and including a set of standards downloaded
