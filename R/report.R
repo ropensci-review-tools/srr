@@ -43,7 +43,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
         stds <- lapply (stds, function (i)
                         strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
-        length (unlist (stds))
+        length (unique (unlist (stds)))
     }
     num_srr <- num_stds (msgs$msgs)
     num_na <- num_stds (msgs$msgs_na)
