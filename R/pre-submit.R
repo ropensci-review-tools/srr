@@ -48,6 +48,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     all_stds <- unlist (lapply (categories$category, get_standard_nums))
 
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
+    index_not <- which (!unique (unlist (stds_in_code)) %in% all_stds)
     if (length (index) > 0) {
         msg1 <- paste0 ("Package can not be submitted because the ",
                         "following standards [v",
@@ -66,6 +67,17 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
                   "",
                   all_stds [index],
                   "")
+    } else if (length (index_not) > 0L) {
+
+        # issue#25
+        not_a_std <- unique (unlist (stds_in_code)) [index_not]
+        msg <- "Your code includes the following standard"
+        if (length (not_a_std) > 1L) {
+            msg <- paste0 (msg, "s")
+        }
+        msg <- paste0 (msg, " which are not actual standards: [",
+                       not_a_std, "]")
+
     } else if (length (stds_in_code$stds_todo) == 0) {
 
         
