@@ -46,13 +46,19 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         stds <- gsub ("[0-9].*$", "", unique (unlist (stds)))
         table (stds)
     }
-    num_srr <- num_stds (msgs$msgs)
-    num_na <- num_stds (msgs$msgs_na)
-    num_todo <- num_stds (msgs$msgs_todo)
-    if (length (num_todo) == 0L) {
-        num_todo <- rep (0, length (num_srr))
-        names (num_todo) <- names (num_srr)
-    }
+    n_srr <- num_stds (msgs$msgs)
+    n_na <- num_stds (msgs$msgs_na)
+    n_todo <- num_stds (msgs$msgs_todo)
+
+    # Ensure all counts are same lengths:
+    categories <- unique (c (names (n_srr), names (n_na), names (n_todo)))
+    num_srr <- num_na <- num_todo <- rep (0, length (categories))
+    names (num_srr) <- names (num_na) <- names (num_todo) <- categories
+
+    num_srr [match (names (n_srr), categories)] <- n_srr
+    num_na [match (names (n_na), categories)] <- n_na
+    num_todo [match (names (n_todo), categories)] <- n_todo
+
     num_total <- num_srr + num_na + num_todo
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
