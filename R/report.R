@@ -38,16 +38,21 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     msgs <- get_all_msgs (path)
     std_txt <- get_stds_txt (msgs)
 
-    # count numbers of srr tags
+    # count numbers of srr tags, returning counts in different categories
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
         stds <- lapply (stds, function (i)
                         strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
-        length (unique (unlist (stds)))
+        stds <- gsub ("[0-9].*$", "", unique (unlist (stds)))
+        table (stds)
     }
     num_srr <- num_stds (msgs$msgs)
     num_na <- num_stds (msgs$msgs_na)
     num_todo <- num_stds (msgs$msgs_todo)
+    if (length (num_todo) == 0L) {
+        num_todo <- rep (0, length (num_srr))
+        names (num_todo) <- names (num_srr)
+    }
     num_total <- num_srr + num_na + num_todo
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
@@ -73,14 +78,31 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                                               unlist (md [which (dirs == d)]))
                                 }
 
-                                n <- switch (tag,
-                                             "srrstats" = num_srr,
-                                             "srrstatsNA" = num_na,
-                                             "srrstatsTODO" = num_todo)
+                                txt <- tolower (gsub ("srrstats", "", tag))
+                                if (!nzchar (txt)) {
+                                    txt <- "srr"
+                                }
+                                n <- get (paste0 ("num_", txt))
+                                tag_counts <- lapply (seq (n), function (i) {
+                                                          paste ("- ",
+                                                                 names (n) [i],
+                                                                 ": ",
+                                                                 n [i],
+                                                                 " / ",
+                                                                 num_total [i])
+                                              })
+                                tag_counts <- c (unlist (tag_counts),
+                                                 paste0 ("- Total : ",
+                                                         sum (n),
+                                                         " / ",
+                                                         sum (num_total)))
 
                                 res <- c (paste0 ("## Standards with `",
                                                   tag,
-                                                  "` tag (", n, " / ", num_total, ")"),
+                                                  "` tag"),
+                                          "",
+                                          "**Numbers of standards:**",
+                                          tag_counts,
                                           "",
                                           res,
                                           "",
