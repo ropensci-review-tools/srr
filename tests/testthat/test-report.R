@@ -1,5 +1,5 @@
 
-test_that("srr_report", {
+test_that ("srr_report", {
 
     path <- srr_stats_pkg_skeleton ()
 
@@ -9,14 +9,19 @@ test_that("srr_report", {
 
     f <- file.path (path, "R", "srr-stats-standards.R")
     expect_true (file.exists (f))
-    s <- srr_stats_roxygen (category = categories,
-                            filename = f,
-                            overwrite = TRUE)
+    s <- srr_stats_roxygen (
+        category = categories,
+        filename = f,
+        overwrite = TRUE
+    )
 
     expect_error (
         r <- srr_report (path, view = FALSE),
-        paste0 ("Please rectify to ensure these standards are only ",
-                "associated with one tag"))
+        paste0 (
+            "Please rectify to ensure these standards are only ",
+            "associated with one tag"
+        )
+    )
 
     # rm duplicated stds from TODO list:
     x <- readLines (f)
@@ -31,7 +36,8 @@ test_that("srr_report", {
     writeLines (x, f)
 
     expect_message (
-        r <- srr_report (path, view = FALSE))
+        r <- srr_report (path, view = FALSE)
+    )
 
     f <- attr (r, "file")
     expect_equal (tools::file_ext (f), "html")
