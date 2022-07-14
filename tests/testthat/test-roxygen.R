@@ -66,7 +66,7 @@ test_that ("roxygen standards", {
         # There is then one standard (G2.3) in src/cpptest.cpp plus TODO,
         # so:
         expect_error (
-            roxygen2::roxygenise (d),
+            suppressWarnings (roxygen2::roxygenise (d)),
             "Standards .* are listed with both .* tags"
         )
         f <- file.path (d, "src", "cpptest.cpp")
@@ -74,9 +74,12 @@ test_that ("roxygen standards", {
         writeLines (cpptest, con = f)
         # After fixing that and removing the file with duplicated
         # standards with mixed tags, things should once again work:
-        x2 <- capture.output (
-            roxygen2::roxygenise (d),
-            type = "message"
+        expect_warning (
+            x2 <- capture.output (
+                roxygen2::roxygenise (d),
+                type = "message"
+            ),
+            "Objects listed as exports, but not present in namespace"
         )
         # That deletes former test_fn, so re-run to remove that
         # message from output
