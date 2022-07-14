@@ -20,8 +20,10 @@
 srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     o <- capture.output (
-        chk <- tryCatch (roxygen2::roxygenise (path),
-                         error = function (e) e)
+        chk <- tryCatch (
+            roxygen2::roxygenise (path),
+            error = function (e) e
+        )
     )
     if (methods::is (chk, "simpleError")) {
         stop (chk$message)
@@ -45,8 +47,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     # count numbers of srr tags, returning counts in different categories
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
-        stds <- lapply (stds, function (i)
-                        strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
+        stds <- lapply (stds, function (i) {
+            strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]]
+        })
         stds <- gsub ("[0-9].*$", "", unique (unlist (stds)))
         res <- table (stds)
         if (length (res) == 0L) {
@@ -71,60 +74,74 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     md_lines <- lapply (tags, function (tag) {
-                            res <- one_tag_to_markdown (msgs,
-                                                        remote,
-                                                        tag,
-                                                        branch,
-                                                        std_txt)
-                            if (length (res) > 0) {
+        res <- one_tag_to_markdown (
+            msgs,
+            remote,
+            tag,
+            branch,
+            std_txt
+        )
+        if (length (res) > 0) {
 
-                                dirs <- attr (res, "dirs")
-                                dirs [dirs == "."] <- "root"
+            dirs <- attr (res, "dirs")
+            dirs [dirs == "."] <- "root"
 
-                                md <- res
-                                res <- NULL
-                                for (d in unique (dirs)) {
+            md <- res
+            res <- NULL
+            for (d in unique (dirs)) {
 
-                                    res <- c (res,
-                                              "",
-                                              paste0 ("### ", d, " directory"),
-                                              "",
-                                              unlist (md [which (dirs == d)]))
-                                }
+                res <- c (
+                    res,
+                    "",
+                    paste0 ("### ", d, " directory"),
+                    "",
+                    unlist (md [which (dirs == d)])
+                )
+            }
 
-                                txt <- tolower (gsub ("srrstats", "", tag))
-                                if (!nzchar (txt)) {
-                                    txt <- "srr"
-                                }
-                                n <- get (paste0 ("num_", txt))
-                                tag_counts <- lapply (seq (n), function (i) {
-                                                          paste ("- ",
-                                                                 names (n) [i],
-                                                                 ": ",
-                                                                 n [i],
-                                                                 " / ",
-                                                                 num_total [i])
-                                              })
-                                tag_counts <- c (unlist (tag_counts),
-                                                 paste0 ("- Total : ",
-                                                         sum (n),
-                                                         " / ",
-                                                         sum (num_total)))
+            txt <- tolower (gsub ("srrstats", "", tag))
+            if (!nzchar (txt)) {
+                txt <- "srr"
+            }
+            n <- get (paste0 ("num_", txt))
+            tag_counts <- lapply (seq (n), function (i) {
+                paste (
+                    "- ",
+                    names (n) [i],
+                    ": ",
+                    n [i],
+                    " / ",
+                    num_total [i]
+                )
+            })
+            tag_counts <- c (
+                unlist (tag_counts),
+                paste0 (
+                    "- Total : ",
+                    sum (n),
+                    " / ",
+                    sum (num_total)
+                )
+            )
 
-                                res <- c (paste0 ("## Standards with `",
-                                                  tag,
-                                                  "` tag"),
-                                          "",
-                                          "**Numbers of standards:**",
-                                          tag_counts,
-                                          "",
-                                          res,
-                                          "",
-                                          "---",
-                                          "")
-                            }
-                            return (res)
-                        })
+            res <- c (
+                paste0 (
+                    "## Standards with `",
+                    tag,
+                    "` tag"
+                ),
+                "",
+                "**Numbers of standards:**",
+                tag_counts,
+                "",
+                res,
+                "",
+                "---",
+                ""
+            )
+        }
+        return (res)
+    })
     md_lines <- unlist (md_lines)
 
     desc <- data.frame (read.dcf (file.path (path, "DESCRIPTION")))
@@ -133,20 +150,25 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     if (is.null (remote)) {
         md_title <- paste0 ("# srr report for ", pkg)
     } else {
-        md_title <- paste0 ("# srr report for [",
-                            pkg,
-                           "](",
-                           remote,
-                           ")")
+        md_title <- paste0 (
+            "# srr report for [",
+            pkg,
+            "](",
+            remote,
+            ")"
+        )
     }
 
     md_lines <- c (
         md_title,
         "",
-        paste0 ("[Click here for full text of all standards](",
-                "https://stats-devguide.ropensci.org/standards.html)"),
+        paste0 (
+            "[Click here for full text of all standards](",
+            "https://stats-devguide.ropensci.org/standards.html)"
+        ),
         "",
-        md_lines)
+        md_lines
+    )
 
     md_lines <- add_missing_stds (md_lines, std_txt)
 
@@ -157,10 +179,11 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     rmarkdown::render (input = f, output_file = out)
 
     u <- paste0 ("file://", out)
-    if (view)
+    if (view) {
         utils::browseURL (u)
-    else
+    } else {
         attr (md_lines, "file") <- out
+    }
 
     invisible (md_lines)
 }
@@ -168,20 +191,23 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 get_all_msgs <- function (path = ".") {
 
     flist <- normalizePath (list.files (file.path (path, "R"),
-                                        full.names = TRUE,
-                                        pattern = "\\.(r|R|q|s|S)$"))
+        full.names = TRUE,
+        pattern = "\\.(r|R|q|s|S)$"
+    ))
 
     pkg_name <- paste0 ("package:", pkg_name_from_desc (path))
-    if (!pkg_name %in% search ())
+    if (!pkg_name %in% search ()) {
         pkgload::load_all (path)
+    }
     pkg_env <- as.environment (pkg_name)
 
-    blocks <- lapply (flist, function (i)
-                      try (roxygen2::parse_file (i, env = pkg_env)))
+    blocks <- lapply (flist, function (i) {
+        try (roxygen2::parse_file (i, env = pkg_env))
+    })
 
-    failing <- flist[sapply(blocks, inherits, "try-error")]
+    failing <- flist [sapply (blocks, inherits, "try-error")]
     if (length (failing) > 0L) {
-      stop ("parsing problem in: ", paste (failing, collapse = ", "))
+        stop ("parsing problem in: ", paste (failing, collapse = ", "))
     }
 
     names (blocks) <- flist
@@ -193,9 +219,11 @@ get_all_msgs <- function (path = ".") {
     msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
     msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
 
-    list (msgs = msgs,
-          msgs_na = msgs_na,
-          msgs_todo = msgs_todo)
+    list (
+        msgs = msgs,
+        msgs_na = msgs_na,
+        msgs_todo = msgs_todo
+    )
 }
 
 #' Get text of actual standards contained in lists of standards messages
@@ -207,24 +235,30 @@ get_stds_txt <- function (msgs) {
     s_msgs <- parse_std_refs (msgs$msgs)
     s_na <- parse_std_refs (msgs$msgs_na)
     s_todo <- parse_std_refs (msgs$msgs_todo)
-    #s_todo <- parse_std_refs (msgs$msgs_todo)
+    # s_todo <- parse_std_refs (msgs$msgs_todo)
     cats_msg <- get_categories (s_msgs)
     cats_na <- get_categories (s_na)
     cats_todo <- get_categories (s_todo)
-    #cats_todo <- get_categories (s_todo)
-    cats <- unique (c (cats_msg$category,
-                       cats_na$category,
-                       cats_todo$category))
+    # cats_todo <- get_categories (s_todo)
+    cats <- unique (c (
+        cats_msg$category,
+        cats_na$category,
+        cats_todo$category
+    ))
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
     g <- regexpr ("\\*\\*", s)
     std_nums <- substring (s, 1, g - 1)
-    std_txt <- gsub ("^\\*|\\*$", "",
-                     substring (s, g + 3, nchar (s)))
+    std_txt <- gsub (
+        "^\\*|\\*$", "",
+        substring (s, g + 3, nchar (s))
+    )
 
-    data.frame (std = std_nums,
-                text = std_txt)
+    data.frame (
+        std = std_nums,
+        text = std_txt
+    )
 }
 
 #' one_tag_to_markdown
@@ -241,13 +275,18 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
     m <- m [[tag]]
 
     files <- gsub ("^.*of file\\s\\[|\\]$", "", unlist (m))
-    dirs <- vapply (strsplit (files, .Platform$file.sep),
-                    function (i) i [1],
-                    character (1))
+    dirs <- vapply (
+        strsplit (files, .Platform$file.sep),
+        function (i) i [1],
+        character (1)
+    )
 
-    m <- vapply (m, function (i)
-                 one_msg_to_markdown (i, remote, branch, std_txt),
-                 character (1))
+    m <- vapply (
+        m, function (i) {
+            one_msg_to_markdown (i, remote, branch, std_txt)
+        },
+        character (1)
+    )
 
     ret <- strsplit (m, "\n")
     attr (ret, "dirs") <- dirs
@@ -272,8 +311,9 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
     g <- gregexpr ("\\sline#[0-9]+", m)
     line_num <- NA_integer_
-    if (any (g [[1]] > 0))
+    if (any (g [[1]] > 0)) {
         line_num <- gsub ("\\sline#", "", regmatches (m, g) [[1]])
+    }
 
     fn <- NA_character_
     if (grepl ("\\sfunction\\s", m)) {
@@ -287,14 +327,17 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     if (!is.null (remote)) {
 
         remote_file <- paste0 (remote, "/blob/", branch, "/", file_name)
-        if (!is.na (line_num))
+        if (!is.na (line_num)) {
             remote_file <- paste0 (remote_file, "#L", line_num)
+        }
     }
 
     stds <- stds [which (stds %in% std_txt$std)]
     index <- match (stds, std_txt$std)
-    stds <- paste0 ("- ", std_txt$std [index],
-                    " ", std_txt$text [index])
+    stds <- paste0 (
+        "- ", std_txt$std [index],
+        " ", std_txt$text [index]
+    )
 
     br_open <- br_close <- ""
     if (!is.null (remote)) {
@@ -310,8 +353,9 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
         msg <- paste0 (msg, " on line#", line_num)
     }
     msg <- paste0 (msg, " of file ", br_open, file_name, br_close)
-    if (!is.null (remote))
+    if (!is.null (remote)) {
         msg <- paste0 (msg, "(", remote_file, ")")
+    }
     msg <- paste0 (msg, ":")
 
     return (paste0 (c (msg, stds), collapse = "\n"))
@@ -328,34 +372,44 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 #' @noRd
 add_missing_stds <- function (md_lines, std_txt) {
 
-    md_stds <- grep ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
-                     md_lines,
-                     value = TRUE)
+    md_stds <- grep (
+        "^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+        md_lines,
+        value = TRUE
+    )
     g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", md_stds)
     md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
     missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
     if (length (missing_stds) > 0) {
 
-        md_lines <- c (md_lines,
-                       "",
-                       "## Missing Standards",
-                       "",
-                       "The following standards are missing:")
+        md_lines <- c (
+            md_lines,
+            "",
+            "## Missing Standards",
+            "",
+            "The following standards are missing:"
+        )
 
         cats <- get_categories (missing_stds)
         for (i in seq (nrow (cats))) {
 
-            stds_i <- grep (paste0 ("^", cats$std_prefix [i]),
-                            missing_stds,
-                            value = TRUE)
+            stds_i <- grep (
+                paste0 ("^", cats$std_prefix [i]),
+                missing_stds,
+                value = TRUE
+            )
 
-            md_lines <- c (md_lines,
-                           "",
-                           paste0 (tools::toTitleCase (cats$category [i]),
-                                   " standards:"),
-                           "",
-                           paste0 (stds_i, collapse = ", "),
-                           "")
+            md_lines <- c (
+                md_lines,
+                "",
+                paste0 (
+                    tools::toTitleCase (cats$category [i]),
+                    " standards:"
+                ),
+                "",
+                paste0 (stds_i, collapse = ", "),
+                ""
+            )
         }
     }
 
