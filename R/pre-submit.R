@@ -16,31 +16,38 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
     msg <- ""
 
-    stds_in_code <- tryCatch (get_stds_from_code (path),
-                              error = function (e) e)
+    stds_in_code <- tryCatch (
+        get_stds_from_code (path),
+        error = function (e) e
+    )
     if (methods::is (stds_in_code, "error")) {
         msg <- stds_in_code$message
-        if (!quiet)
+        if (!quiet) {
             cli::cli_alert_warning (msg)
+        }
         return (msg)
     }
 
     no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
     if (no_stds) {
         msg_none <- "This package has no 'srr' standards"
-        if (!quiet)
+        if (!quiet) {
             cli::cli_alert_warning (msg_none)
+        }
         return (invisible ())
     }
 
-    #all_stds_in_code <- unique (unlist (stds_in_code))
+    # all_stds_in_code <- unique (unlist (stds_in_code))
 
     if (length (stds_in_code$stds_todo) > 0) {
 
-        msg <- paste0 ("This package still has TODO ",
-                        "standards and can not be submitted")
-        if (!quiet)
+        msg <- paste0 (
+            "This package still has TODO ",
+            "standards and can not be submitted"
+        )
+        if (!quiet) {
             cli::cli_alert_warning (msg)
+        }
     }
 
     categories <- get_categories (unique (do.call (c, stds_in_code)))
@@ -50,23 +57,28 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     index <- which (!all_stds %in% unique (unlist (stds_in_code)))
     index_not <- which (!unique (unlist (stds_in_code)) %in% all_stds)
     if (length (index) > 0) {
-        msg1 <- paste0 ("Package can not be submitted because the ",
-                        "following standards [v",
-                        attr (categories, "stds_version"),
-                        "] are missing from your code:")
+        msg1 <- paste0 (
+            "Package can not be submitted because the ",
+            "following standards [v",
+            attr (categories, "stds_version"),
+            "] are missing from your code:"
+        )
 
         if (!quiet) {
             cli::cli_alert_warning (msg1)
             cli::cli_ol ()
-            for (i in index)
+            for (i in index) {
                 cli::cli_li (all_stds [i])
+            }
             cli::cli_end ()
         }
-        msg <- c (msg,
-                  msg1,
-                  "",
-                  all_stds [index],
-                  "")
+        msg <- c (
+            msg,
+            msg1,
+            "",
+            all_stds [index],
+            ""
+        )
     } else if (length (index_not) > 0L) {
 
         # issue#25
@@ -75,22 +87,27 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         if (length (not_a_std) > 1L) {
             msg <- paste0 (msg, "s")
         }
-        msg <- paste0 (msg, " which are not actual standards: [",
-                       not_a_std, "]")
+        msg <- paste0 (
+            msg, " which are not actual standards: [",
+            not_a_std, "]"
+        )
 
     } else if (length (stds_in_code$stds_todo) == 0) {
 
-        
-        msg <- paste0 ("All applicable standards [v",
-                       attr (categories, "stds_version"),
-                       "] have been documented in this package (",
-                       length (stds_in_code$stds),
-                       " complied with; ",
-                       length (stds_in_code$stds_na),
-                       " N/A standards)")
 
-        if (!quiet)
+        msg <- paste0 (
+            "All applicable standards [v",
+            attr (categories, "stds_version"),
+            "] have been documented in this package (",
+            length (stds_in_code$stds),
+            " complied with; ",
+            length (stds_in_code$stds_na),
+            " N/A standards)"
+        )
+
+        if (!quiet) {
             cli::cli_alert_success (msg)
+        }
     }
 
     invisible (msg)
@@ -109,16 +126,19 @@ get_stds_from_code <- function (path) {
 
     flist <- lapply (seq_along (dirs), function (i) {
         list.files (file.path (path, dirs [i]),
-                    full.names = TRUE,
-                    recursive = rec [i],
-                    pattern = sfxs [i])
-                       })
+            full.names = TRUE,
+            recursive = rec [i],
+            pattern = sfxs [i]
+        )
+    })
     flist <- unlist (flist)
 
     suppressWarnings ({
-        blocks <- lapply (flist, function (i)
-                          tryCatch (roxygen2::parse_file (i, env = NULL),
-                                    error = function (e) list ()))
+        blocks <- lapply (flist, function (i) {
+            tryCatch (roxygen2::parse_file (i, env = NULL),
+                error = function (e) list ()
+            )
+        })
     })
     names (blocks) <- flist
     blocks <- do.call (c, blocks)
@@ -129,54 +149,63 @@ get_stds_from_code <- function (path) {
     msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
 
     list (
-          stds = parse_std_refs (msgs),
-          stds_na = parse_std_refs (msgs_na),
-          stds_todo = parse_std_refs (msgs_todo)
-          )
+        stds = parse_std_refs (msgs),
+        stds_na = parse_std_refs (msgs_na),
+        stds_todo = parse_std_refs (msgs_todo)
+    )
 }
 
 parse_std_refs <- function (msgs) {
 
     s <- lapply (msgs, function (i) {
-                i <- strsplit (i, "\\]") [[1]] [1]
-                i <- strsplit (i, "\\[") [[1]] [2]
-                i <- strsplit (i, ",\\s?") [[1]]
+        i <- strsplit (i, "\\]") [[1]] [1]
+        i <- strsplit (i, "\\[") [[1]] [2]
+        i <- strsplit (i, ",\\s?") [[1]]
 
-                chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", i)
-                if (any (!chk)) {
-                    stop ("Standard references [",
-                          paste0 (i [which (!chk)], collapse = ", "),
-                          "] are not in proper format.")
-                }
+        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", i)
+        if (any (!chk)) {
+            stop (
+                "Standard references [",
+                paste0 (i [which (!chk)], collapse = ", "),
+                "] are not in proper format."
+            )
+        }
 
-                return (i)
-                   })
+        return (i)
+    })
 
     return (sort (unique (unlist (s))))
 }
 
 get_categories <- function (stds) {
 
-    if (is.null (stds))
+    if (is.null (stds)) {
         return (NULL)
+    }
 
-    categories <- unique (vapply (strsplit (stds, "[0-9]"),
-                                  function (i) i [[1]],
-                                  character (1)))
+    categories <- unique (vapply (
+        strsplit (stds, "[0-9]"),
+        function (i) i [[1]],
+        character (1)
+    ))
 
     all_cats <- srr_stats_categories ()
-    if (any (!categories %in% all_cats$std_prefix))
+    if (any (!categories %in% all_cats$std_prefix)) {
         stop ("There are no standards with prefix [",
-              paste0 (categories [which (!categories %in% all_cats$std_prefix)],
-                      collapse = ", "),
-              "]", call. = FALSE)
+            paste0 (categories [which (!categories %in% all_cats$std_prefix)],
+                collapse = ", "
+            ),
+            "]",
+            call. = FALSE
+        )
+    }
 
     all_cats [match (categories, all_cats$std_prefix), ]
 }
 
 get_standard_nums <- function (category) {
 
-    s <- dl_standards(category, quiet = TRUE)
+    s <- dl_standards (category, quiet = TRUE)
     s <- format_standards (s)
 
     # Then extract standard numbers only
