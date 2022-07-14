@@ -6,10 +6,11 @@
 #' @noRd
 base_url <- function (raw = FALSE) {
 
-    if (raw)
+    if (raw) {
         ret <- "https://raw.githubusercontent.com/"
-    else
+    } else {
         ret <- "https://api.github.com/repos/"
+    }
     return (paste0 (ret, "ropensci/statistical-software-review-book/"))
 }
 
@@ -21,7 +22,7 @@ base_url <- function (raw = FALSE) {
 #' @noRd
 list_categories <- function () {
 
-    #u <- paste0 (base_url (), "git/trees/main?recursive=1")
+    # u <- paste0 (base_url (), "git/trees/main?recursive=1")
     u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
     tmp <- tempfile (fileext = ".Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
@@ -40,16 +41,22 @@ list_categories <- function () {
 #' @noRd
 dl_standards <- function (category = "general", quiet = FALSE) {
 
-    u <- paste0 (base_url (raw = TRUE),
-                 "main/standards/", category, ".Rmd")
+    u <- paste0 (
+        base_url (raw = TRUE),
+        "main/standards/", category, ".Rmd"
+    )
 
-    tmp <- file.path (tempdir (),
-                      paste0 ("srr-standards-", category, ".Rmd"))
-    if (!file.exists (tmp))
-        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
+    tmp <- file.path (
+        tempdir (),
+        paste0 ("srr-standards-", category, ".Rmd")
+    )
+    if (!file.exists (tmp)) {
+        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
+    } # nolint
 
-    if (!quiet)
+    if (!quiet) {
         cli::cli_alert_success ("Downloaded {category} standards")
+    }
 
     readLines (tmp)
 }
@@ -59,8 +66,9 @@ stds_version <- function () {
     u <- paste0 (base_url (raw = TRUE), "main/DESCRIPTION")
 
     tmp <- file.path (tempdir (), "stats-devguide-DESCRIPTION")
-    if (!file.exists (tmp))
-        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
+    if (!file.exists (tmp)) {
+        ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
+    } # nolint
 
     d <- data.frame (read.dcf (tmp))
 
@@ -80,29 +88,35 @@ format_standards <- function (s) {
 
     index1 <- grep ("\\s?-\\s\\[\\*\\*[A-Z]", s)
     index_sp <- grep ("^\\s*$", s)
-    index2 <- vapply (seq_along (index1), function (i) {
-                      ret <- index_sp [which (index_sp > index1 [i]) [1]]
-                      if (is.na (ret)) {
-                          if (i == length (index1)) {
-                              ret <- length (s)
-                          } else {
-                              ret <- index1 [i + 1] - 1L
-                          }
-                      } else if (i < length (index1)) {
-                          if (ret > index1 [i + 1])
-                              ret <- index1 [i + 1] - 1L
-                      }
-                      return (ret)},
-                      integer (1))
+    index2 <- vapply (
+        seq_along (index1), function (i) {
+            ret <- index_sp [which (index_sp > index1 [i]) [1]]
+            if (is.na (ret)) {
+                if (i == length (index1)) {
+                    ret <- length (s)
+                } else {
+                    ret <- index1 [i + 1] - 1L
+                }
+            } else if (i < length (index1)) {
+                if (ret > index1 [i + 1]) {
+                    ret <- index1 [i + 1] - 1L
+                }
+            }
+            return (ret)},
+        integer (1)
+    )
 
     # include 3rd- and 4th-level sub-section headings:
     index3 <- grep ("^\\#\\#\\#\\s|^\\#\\#\\#\\#\\s", s)
     index1 <- sort (c (index1, index3))
     index2 <- sort (c (index2, index3))
 
-    s <- vapply (seq_along (index1), function (i)
-                 paste0 (s [index1 [i]:index2 [i]], collapse = " "),
-                 character (1))
+    s <- vapply (
+        seq_along (index1), function (i) {
+            paste0 (s [index1 [i]:index2 [i]], collapse = " ")
+        },
+        character (1)
+    )
     # rm hyperlink of standards
     r <- regexpr ("\\]\\{#[A-Z]+[0-9]+\\_[0-9]+([a-z]?)\\}", s)
     regmatches (s, r) <- ""
@@ -126,33 +140,57 @@ category_titles_urls <- function (category) {
     ret <- list ()
     u_base <- "https://stats-devguide.ropensci.org/standards.html#"
 
-    if (category == "general")
-        ret <- list (title = "General",
-                     url = paste0 (u_base, "general-standards"))
-    if (category == "bayesian")
-        ret <- list (title = "Bayesian",
-                     url = paste0 (u_base, "bayesian-and-monte-carlo-software"))
-    else if (category == "eda")
-        ret <- list (title = "EDA",
-                     url = paste0 (u_base, "exploratory-data-analysis"))
-    else if (category == "ml")
-        ret <- list (title = "Machine Learning",
-                     url = paste0 (u_base, "machine-learning-software"))
-    else if (category == "regression")
-        ret <- list (title = "Regression and Supervised Learning",
-                     url = paste0 (u_base,
-                                   "regression-and-supervised-learning"))
-    else if (category == "time-series")
-        ret <- list (title = "Time Series",
-                     url = paste0 (u_base, "time-series-software"))
-    else if (category == "unsupervised")
-        ret <- list (title = paste0 ("Dimensionality Reduction, Clustering, ",
-                                     "and Unsupervised Learning"),
-                     url = paste0 (u_base, "dimensionality-reduction-",
-                                   "clustering-and-unsupervised-learning"))
-    else if (category == "spatial")
-        ret <- list (title = "Spatial",
-                     url = paste0 (u_base, "spatial-software"))
+    if (category == "general") {
+        ret <- list (
+            title = "General",
+            url = paste0 (u_base, "general-standards")
+        )
+    }
+    if (category == "bayesian") {
+        ret <- list (
+            title = "Bayesian",
+            url = paste0 (u_base, "bayesian-and-monte-carlo-software")
+        )
+    } else if (category == "eda") {
+        ret <- list (
+            title = "EDA",
+            url = paste0 (u_base, "exploratory-data-analysis")
+        )
+    } else if (category == "ml") {
+        ret <- list (
+            title = "Machine Learning",
+            url = paste0 (u_base, "machine-learning-software")
+        )
+    } else if (category == "regression") {
+        ret <- list (
+            title = "Regression and Supervised Learning",
+            url = paste0 (
+                u_base,
+                "regression-and-supervised-learning"
+            )
+        )
+    } else if (category == "time-series") {
+        ret <- list (
+            title = "Time Series",
+            url = paste0 (u_base, "time-series-software")
+        )
+    } else if (category == "unsupervised") {
+        ret <- list (
+            title = paste0 (
+                "Dimensionality Reduction, Clustering, ",
+                "and Unsupervised Learning"
+            ),
+            url = paste0 (
+                u_base, "dimensionality-reduction-",
+                "clustering-and-unsupervised-learning"
+            )
+        )
+    } else if (category == "spatial") {
+        ret <- list (
+            title = "Spatial",
+            url = paste0 (u_base, "spatial-software")
+        )
+    }
 
     return (ret)
 }
@@ -191,8 +229,9 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
         writeLines (text = s, con = filename)
     }
 
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") # used to turn off clipr in tests
+    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
         clipr::write_clip (s)
+    }
 
     invisible (s)
 }
@@ -217,9 +256,11 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' f <- file.path (path, "R", "srr-stats-standards.R")
 #' file.exists (f)
 #' length (readLines (f)) # only 14 lines
-#' srr_stats_roxygen (category = "regression",
-#'                    file = f,
-#'                    overwrite = TRUE)
+#' srr_stats_roxygen (
+#'     category = "regression",
+#'     file = f,
+#'     overwrite = TRUE
+#' )
 #' length (readLines (f)) # now much longer
 #' }
 #' @export
@@ -230,19 +271,22 @@ srr_stats_roxygen <- function (category = NULL,
     loc <- here::here ()
     if (dirname (filename) != ".") {
         loc <- path.expand (dirname (filename))
-        if (substring (loc, nchar (loc), nchar (loc)) == "R")
+        if (substring (loc, nchar (loc), nchar (loc)) == "R") {
             loc <- gsub (paste0 (.Platform$file.sep, "R$"), "", loc)
+        }
     }
 
-    if (!"DESCRIPTION" %in% list.files (loc))
+    if (!"DESCRIPTION" %in% list.files (loc)) {
         stop ("This function must be called within an R package directory")
+    }
 
     filename <- file.path (loc, "R", basename (filename))
 
     if (!overwrite & interactive () & file.exists (filename)) {
-        x <- readline ("Overwrite current file (y/n)? ")        # nocov
-        if (tolower (substring (x, 1, 1) != "y"))               # nocov
-            stop ("Okay, we'll stop there")                     # nocov
+        x <- readline ("Overwrite current file (y/n)? ") # nocov
+        if (tolower (substring (x, 1, 1) != "y")) { # nocov
+            stop ("Okay, we'll stop there")
+        } # nocov
     }
 
     s <- get_standards_checklists (category = category)
@@ -261,37 +305,43 @@ srr_stats_roxygen <- function (category = NULL,
     s <- paste0 (s_start, s_end)
 
     # nolint start -------- lines > 80 character --------
-    x <- c ("#' srr_stats",
-            "#'",
-            "#' All of the following standards initially have `@srrstatsTODO` tags.",
-            "#' These may be moved at any time to any other locations in your code.",
-            "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,",
-            "#' or `@srrstatsNA`, ensuring that references to every one of the following",
-            "#' standards remain somewhere within your code.",
-            "#' (These comments may be deleted at any time.)",
-            "#'",
-            "#' @srrstatsVerbose TRUE",
-            "#'",
-            paste0 ("#' @srrstatsTODO ", s),
-            "#' @noRd",
-            "NULL")
+    x <- c (
+        "#' srr_stats",
+        "#'",
+        "#' All of the following standards initially have `@srrstatsTODO` tags.",
+        "#' These may be moved at any time to any other locations in your code.",
+        "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,",
+        "#' or `@srrstatsNA`, ensuring that references to every one of the following",
+        "#' standards remain somewhere within your code.",
+        "#' (These comments may be deleted at any time.)",
+        "#'",
+        "#' @srrstatsVerbose TRUE",
+        "#'",
+        paste0 ("#' @srrstatsTODO ", s),
+        "#' @noRd",
+        "NULL"
+    )
 
     # Then add demo NA_standards
-    x <- c (x,
-            "",
-            "#' NA_standards",
-            "#'",
-            "#' Any non-applicable standards can have their tags changed from `@srrstatsTODO`",
-            "#' to `@srrstatsNA`, and placed together in this block, along with explanations",
-            "#' for why each of these standards have been deemed not applicable.",
-            "#' (These comments may also be deleted at any time.)",
-            "#' @noRd",
-            "NULL")
+    x <- c (
+        x,
+        "",
+        "#' NA_standards",
+        "#'",
+        "#' Any non-applicable standards can have their tags changed from `@srrstatsTODO`",
+        "#' to `@srrstatsNA`, and placed together in this block, along with explanations",
+        "#' for why each of these standards have been deemed not applicable.",
+        "#' (These comments may also be deleted at any time.)",
+        "#' @noRd",
+        "NULL"
+    )
     # nolint end
 
     writeLines (x, con = filename)
-    cli::cli_alert_info (paste0 ("Roxygen2-formatted standards written to [",
-                                 basename (filename), "]"))
+    cli::cli_alert_info (paste0 (
+        "Roxygen2-formatted standards written to [",
+        basename (filename), "]"
+    ))
 }
 
 get_standards_checklists <- function (category = NULL) {
@@ -299,11 +349,14 @@ get_standards_checklists <- function (category = NULL) {
     s <- dl_standards (category = "general")
     s <- format_standards (s)
     u <- "https://stats-devguide.ropensci.org/standards.html#general-standards"
-    s <- c (paste0 ("## [General Standards](", u, ")"),
-            "", s, "")
+    s <- c (
+        paste0 ("## [General Standards](", u, ")"),
+        "", s, ""
+    )
 
-    if (any (grepl ("general", category, ignore.case = TRUE)))
+    if (any (grepl ("general", category, ignore.case = TRUE))) {
         category <- category [-grep ("general", category, ignore.case = TRUE)]
+    }
 
     if (!is.null (category)) {
         categories <- tolower (list_categories ())
@@ -312,11 +365,13 @@ get_standards_checklists <- function (category = NULL) {
             cat_title <- category_titles_urls (category [i])
             s_cat <- dl_standards (category = category [i])
             s_cat <- format_standards (s_cat)
-            stitle <- paste0 ("## [",
-                              cat_title$title,
-                              " Standards](",
-                              cat_title$url,
-                              ")")
+            stitle <- paste0 (
+                "## [",
+                cat_title$title,
+                " Standards](",
+                cat_title$url,
+                ")"
+            )
             s <- c (s, "", "---", "", stitle, "", s_cat)
         }
     }
@@ -339,18 +394,21 @@ get_standards_checklists <- function (category = NULL) {
 srr_stats_categories <- function () {
 
     cats <- std_prefixes ()
-    cat_full <- unlist (lapply (cats$category, function (i)
-                                category_titles_urls (i)))
+    cat_full <- unlist (lapply (cats$category, function (i) {
+        category_titles_urls (i)
+    }))
 
     version <- stds_version ()
 
     index <- seq (length (cat_full) / 2) * 2
 
-    res <- data.frame (category = cats$category,
-                       std_prefix = cats$prefix,
-                       title = cat_full [index - 1],
-                       url = cat_full [index],
-                       stringsAsFactors = FALSE)
+    res <- data.frame (
+        category = cats$category,
+        std_prefix = cats$prefix,
+        title = cat_full [index - 1],
+        url = cat_full [index],
+        stringsAsFactors = FALSE
+    )
 
     attr (res, "stds_version") <- version
 
@@ -370,9 +428,11 @@ std_prefixes <- function () {
     prefixes [cats == "time-series"] <- "TS"
     prefixes [cats == "unsupervised"] <- "UL"
 
-    return (data.frame (category = cats,
-                        prefix = prefixes,
-                        stringsAsFactors = FALSE))
+    return (data.frame (
+        category = cats,
+        prefix = prefixes,
+        stringsAsFactors = FALSE
+    ))
 }
 
 #' @param s One set of standards with no spaces between sections or lines.
@@ -402,7 +462,7 @@ add_space_around_sections <- function (s) {
     # only
     index1 <- which (snew == "")
     index2 <- which (diff (index1) == 1)
-    snew <- snew [- (index1 [index2])]
+    snew <- snew [-(index1 [index2])]
 
     return (snew)
 }
