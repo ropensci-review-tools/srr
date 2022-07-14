@@ -37,6 +37,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     branch <- get_git_branch (path, branch)
 
     msgs <- get_all_msgs (path)
+    if (all (vapply (msgs, length, integer (1L)) == 0L)) {
+        return ("This is not an 'srr' package")
+    }
     std_txt <- get_stds_txt (msgs)
 
     # count numbers of srr tags, returning counts in different categories
