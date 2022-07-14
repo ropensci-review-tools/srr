@@ -18,19 +18,22 @@ srr_stats_checklist_check <- function (file) {
     x <- checklist_check_intern (file)
 
     cli::cli_alert_info ("Checklist copied to clipboard")
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") # used to turn off clipr in tests
+    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
         clipr::write_clip (x)
+    }
 
     invisible (x)
 }
 
 checklist_check_intern <- function (file) {
 
-    if (!file.exists (file))
+    if (!file.exists (file)) {
         stop ("File [", file, "] does not exist")
+    }
 
-    if (!tools::file_ext (file) == "md")
+    if (!tools::file_ext (file) == "md") {
         stop ("file must be in '.md' format")
+    }
 
     x0 <- readLines (file)
 
@@ -40,8 +43,10 @@ checklist_check_intern <- function (file) {
     x <- fix_nas (x, sym = "_")
 
     if (!identical (x0, x)) {
-        cli::cli_alert (paste0 ("file contained incorrect ",
-                                "formatting and has been modified"))
+        cli::cli_alert (paste0 (
+            "file contained incorrect ",
+            "formatting and has been modified"
+        ))
         writeLines (x, file)
     } else {
         cli::cli_alert_success ("No formatting issues found in file")
@@ -61,9 +66,11 @@ rebalance_bold <- function (x) {
         n <- regexpr (regex, x)
         if (any (n > 0)) {
             index <- which (n > 0)
-            x [index] <- paste0 (substring (x [index], 1, n [index]),
-                                 sym,
-                                 substring (x [index], n [index] + 1))
+            x [index] <- paste0 (
+                substring (x [index], 1, n [index]),
+                sym,
+                substring (x [index], n [index] + 1)
+            )
         }
         return (x)
     }
@@ -75,9 +82,11 @@ rebalance_bold <- function (x) {
         if (any (n > 0)) {
             index <- which (n > 0)
             ends <- n [index] + len [index] - 2
-            x [index] <- paste0 (substring (x [index], 1, ends),
-                                 sym,
-                                 substring (x [index], ends + 1))
+            x [index] <- paste0 (
+                substring (x [index], 1, ends),
+                sym,
+                substring (x [index], ends + 1)
+            )
         }
         return (x)
     }
@@ -106,9 +115,11 @@ fix_sequences <- function (x, sym = "*") {
     if (any (n > 0)) {
         index <- which (n > 0)
         ends <- n [index] + len [index] - 2
-        x [index] <- paste0 (substring (x [index], 1, ends),
-                             sym, sym,
-                             substring (x [index], ends + 1))
+        x [index] <- paste0 (
+            substring (x [index], 1, ends),
+            sym, sym,
+            substring (x [index], ends + 1)
+        )
     }
 
     # And missing symbols after dashes before standard identifier:
@@ -117,9 +128,11 @@ fix_sequences <- function (x, sym = "*") {
     len <- attr (n, "match.length")
     if (any (n > 0)) {
         index <- which (n > 0)
-        x [index] <- paste0 (substring (x [index], 1, n [index]),
-                             sym, sym,
-                             substring (x [index], n [index] + 1))
+        x [index] <- paste0 (
+            substring (x [index], 1, n [index]),
+            sym, sym,
+            substring (x [index], n [index] + 1)
+        )
     }
 
     return (x)
@@ -129,26 +142,34 @@ fix_nas <- function (x, sym = "*") {
     # replace "NA" with "N/A":
     regex <- paste0 ("\\", sym, "NA\\", sym)
     index <- grep (regex, x)
-    if (length (index) > 0)
-        x [index] <- gsub (regex,
-                           paste0 (sym, "N/A", sym),
-                           x [index])
+    if (length (index) > 0) {
+        x [index] <- gsub (
+            regex,
+            paste0 (sym, "N/A", sym),
+            x [index]
+        )
+    }
 
     # replace single preceding symbol with double
     regex <- paste0 ("\\s\\", sym, "N/A")
     index <- grep (regex, x)
-    if (length (index) > 0)
-        x [index] <- gsub (regex,
-                           paste0 (" ", sym, sym, "N/A"),
-                           x [index])
+    if (length (index) > 0) {
+        x [index] <- gsub (
+            regex,
+            paste0 (" ", sym, sym, "N/A"),
+            x [index]
+        )
+    }
 
     # replace single end symbol with double
     regex <- paste0 ("\\", sym, "N\\/A\\", sym, "(\\s|$)")
     index <- grep (regex, x)
     if (length (index) > 0) {
-        x [index] <- gsub (regex,
-                           paste0 (sym, "N/A", sym, sym, " "),
-                           x [index])
+        x [index] <- gsub (
+            regex,
+            paste0 (sym, "N/A", sym, sym, " "),
+            x [index]
+        )
         x [index] <- gsub ("\\s$", "", x [index])
     }
 
