@@ -10,7 +10,7 @@ test_that ("dummy package", {
     expect_true ("R" %in% files)
     expect_true ("tests" %in% files)
 
-    x <- capture.output (roxygen2::roxygenise (d), type = "message")
+    x <- utils::capture.output (roxygen2::roxygenise (d), type = "message")
 
     expect_true (any (grepl ("@srrstats standards \\(", x)))
     expect_true (any (grepl ("\\s\\*\\s\\[G1\\.1,", x)))

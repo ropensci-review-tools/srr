@@ -10,7 +10,7 @@ test_that ("release", {
     file.remove (file.path (d, "R", "test.R"))
     file.remove (file.path (d, "README.Rmd"))
 
-    x <- capture.output (
+    x <- utils::capture.output (
         srr_stats_pre_submit (d),
         type = "message"
     )

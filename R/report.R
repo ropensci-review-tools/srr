@@ -19,7 +19,7 @@
 #' }
 srr_report <- function (path = ".", branch = "", view = TRUE) {
 
-    o <- capture.output (
+    o <- utils::capture.output (
         chk <- tryCatch (
             roxygen2::roxygenise (path),
             error = function (e) e

@@ -16,7 +16,7 @@ test_that ("roxygen standards", {
     fp <- file.path (tempdir (), pkg_name, "tests")
     expect_true (file.exists (fp))
 
-    x <- capture.output (
+    x <- utils::capture.output (
         roxygen2::roxygenise (d),
         type = "message"
     )
@@ -75,7 +75,7 @@ test_that ("roxygen standards", {
         # After fixing that and removing the file with duplicated
         # standards with mixed tags, things should once again work:
         expect_warning (
-            x2 <- capture.output (
+            x2 <- utils::capture.output (
                 roxygen2::roxygenise (d),
                 type = "message"
             ),
@@ -83,7 +83,7 @@ test_that ("roxygen standards", {
         )
         # That deletes former test_fn, so re-run to remove that
         # message from output
-        x2 <- capture.output (
+        x2 <- utils::capture.output (
             roxygen2::roxygenise (d),
             type = "message"
         )
@@ -146,7 +146,7 @@ test_that ("roclet errors", {
     x0 <- readLines (f)
     x <- x0 [-grep ("@srrstatsVerbose", x0)]
     writeLines (x, f)
-    x <- capture.output (
+    x <- utils::capture.output (
         roxygen2::roxygenise (d),
         type = "message"
     )

@@ -23,7 +23,7 @@ test_that ("download standards", {
 
     expect_identical (s, readLines (filename))
 
-    x <- capture.output (
+    x <- utils::capture.output (
         s2 <- srr_stats_checklist_check (filename),
         type = "message"
     )
@@ -48,7 +48,7 @@ test_that ("download standards", {
     i <- grep ("\\*\\*G", s2) [1]
     s2 [i] <- gsub ("\\*\\*G", "\\*G", s2 [i])
     writeLines (s2, filename)
-    x <- capture.output (
+    x <- utils::capture.output (
         s3 <- srr_stats_checklist_check (filename),
         type = "message"
     )
@@ -66,7 +66,7 @@ test_that ("download standards", {
         paste0 (num, "\\*"), s2 [i]
     )
     writeLines (s2, filename)
-    x <- capture.output (
+    x <- utils::capture.output (
         s4 <- srr_stats_checklist_check (filename),
         type = "message"
     )
@@ -85,7 +85,7 @@ test_that ("download standards", {
     tmp <- fix_sequences (s2 [i], sym = "*")
     expect_true (grepl (paste0 (num, "\\*\\*--\\*\\*G5.5"), tmp))
     writeLines (s2, filename)
-    x <- capture.output (
+    x <- utils::capture.output (
         s5 <- srr_stats_checklist_check (filename),
         type = "message"
     )
@@ -100,7 +100,7 @@ test_that ("download standards", {
     tmp <- fix_nas (s2 [i])
     expect_true (grepl ("\\*\\*N\\/A\\*\\*$", tmp))
     writeLines (s2, filename)
-    x <- capture.output (
+    x <- utils::capture.output (
         s6 <- srr_stats_checklist_check (filename),
         type = "message"
     )
