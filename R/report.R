@@ -29,8 +29,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     requireNamespace ("rmarkdown")
 
-    if (path == ".")
+    if (path == ".") {
         path <- here::here ()
+    }
 
     remote <- get_git_remote (path)
     branch <- get_git_branch (path, branch)
@@ -44,7 +45,11 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         stds <- lapply (stds, function (i)
                         strsplit (gsub ("^\\[|\\]$", "", i), ",\\s?") [[1]])
         stds <- gsub ("[0-9].*$", "", unique (unlist (stds)))
-        table (stds)
+        res <- table (stds)
+        if (length (res) == 0L) {
+            res <- 0L
+        }
+        return (res)
     }
     n_srr <- num_stds (msgs$msgs)
     n_na <- num_stds (msgs$msgs_na)
