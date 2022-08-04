@@ -423,28 +423,28 @@ add_missing_stds <- function (md_lines, std_txt) {
 
 #' Check that standards document General plus at least one additional category.
 #'
-#' @param std_txt Result of call to `get_stds_txt` function, which has a column,
-#' "std", listing codes for each standards.
+#' @param std_codes Character vector of all standards codes included in package.
+#' Either the "std" column of result from call to `get_stds_txt` function (for
+#' full submissions), or the result of the `stds_in_code()` function (for
+#' pre-submissions).
 #' @return An empty string is general and category-specific standards are
 #' present, otherwise a text message describing missing standards.
 #' @noRd
-check_num_categories <- function (std_txt) {
+check_num_categories <- function (std_codes) {
 
-    s <- std_txt$std
-    std_cats <- unique (regmatches (s, regexpr ("^[A-Z]+", s)))
+    std_cats <- unique (regmatches (std_codes, regexpr ("^[A-Z]+", std_codes)))
 
     ret <- ""
 
     if (length (std_cats) < 2) {
 
         if (!"G" %in% std_cats) {
-            ret <- "No general standards have been documented."
+            ret <- "Error: No general standards have been documented."
         } else {
             ret <- paste0 (
-                "Package documents compliance only with general ",
-                "standards. Statistical packages must document ",
-                "compliance with at least one set of ",
-                "category-specific standards as well."
+                "Error: Package documents compliance only with general ",
+                "standards. Statistical packages must document compliance ",
+                "with at least one set of category-specific standards as well."
             )
         }
     }

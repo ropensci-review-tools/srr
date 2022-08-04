@@ -37,7 +37,10 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (invisible ())
     }
 
-    # all_stds_in_code <- unique (unlist (stds_in_code))
+    cat_check <- check_num_categories (unlist (stds_in_code)) # in report.R
+    if (nzchar (cat_check)) {
+        return (cat_check)
+    }
 
     if (length (stds_in_code$stds_todo) > 0) {
 
