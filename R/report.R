@@ -44,6 +44,11 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     }
     std_txt <- get_stds_txt (msgs)
 
+    cat_check <- check_num_categories (std_txt)
+    if (nzchar (cat_check)) { # srr docs only for 1 category
+        return (cat_check)
+    }
+
     # count numbers of srr tags, returning counts in different categories
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
@@ -414,4 +419,35 @@ add_missing_stds <- function (md_lines, std_txt) {
     }
 
     return (md_lines)
+}
+
+#' Check that standards document General plus at least one additional category.
+#'
+#' @param std_txt Result of call to `get_stds_txt` function, which has a column,
+#' "std", listing codes for each standards.
+#' @return An empty string is general and category-specific standards are
+#' present, otherwise a text message describing missing standards.
+#' @noRd
+check_num_categories <- function (std_txt) {
+
+    s <- std_txt$std
+    std_cats <- unique (regmatches (s, regexpr ("^[A-Z]+", s)))
+
+    ret <- ""
+
+    if (length (std_cats) < 2) {
+
+        if (!"G" %in% std_cats) {
+            ret <- "No general standards have been documented."
+        } else {
+            ret <- paste0 (
+                "Package documents compliance only with general ",
+                "standards. Statistical packages must document ",
+                "compliance with at least one set of ",
+                "category-specific standards as well."
+            )
+        }
+    }
+
+    return (ret)
 }
