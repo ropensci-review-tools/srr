@@ -44,7 +44,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     }
     std_txt <- get_stds_txt (msgs)
 
-    cat_check <- check_num_categories (std_txt)
+    cat_check <- check_num_categories (std_txt$std)
     if (nzchar (cat_check)) { # srr docs only for 1 category
         return (cat_check)
     }
