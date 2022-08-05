@@ -44,10 +44,10 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     }
     std_txt <- get_stds_txt (msgs)
 
+    # check_num_categories checks that 'srr' docs include at least General plus
+    # one other category of standards, and returns message starting with "Error"
+    # if not, otherwise an empty string.
     cat_check <- check_num_categories (std_txt$std)
-    if (nzchar (cat_check)) { # srr docs only for 1 category
-        return (cat_check)
-    }
 
     # count numbers of srr tags, returning counts in different categories
     num_stds <- function (m) {
@@ -171,6 +171,8 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
             "[Click here for full text of all standards](",
             "https://stats-devguide.ropensci.org/standards.html)"
         ),
+        "",
+        cat_check,
         "",
         md_lines
     )
