@@ -109,7 +109,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
                 txt <- "srr"
             }
             n <- get (paste0 ("num_", txt))
-            tag_counts <- lapply (seq (n), function (i) {
+            tag_counts <- lapply (seq_along (n), function (i) {
                 paste (
                     "- ",
                     names (n) [i],
