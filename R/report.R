@@ -179,11 +179,21 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
     md_lines <- add_missing_stds (md_lines, std_txt)
 
+
     f <- tempfile (fileext = ".Rmd")
     # need explicit line break to html render
     writeLines (paste0 (md_lines, "\n"), con = f)
     out <- paste0 (tools::file_path_sans_ext (f), ".html")
     rmarkdown::render (input = f, output_file = out)
+    if (nzchar (cat_check)) {
+        # sub markdown fail X for cat_check with HTML
+        md <- gsub (
+            "\\:heavy\\_multiplication\\_x\\:",
+            "&#10060;",
+            readLines (out)
+        )
+        writeLines (md, out)
+    }
 
     u <- paste0 ("file://", out)
     if (view) {
