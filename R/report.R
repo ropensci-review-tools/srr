@@ -444,9 +444,10 @@ check_num_categories <- function (std_codes) {
             ret <- "Error: No general standards have been documented."
         } else {
             ret <- paste0 (
-                "Error: Package documents compliance only with general ",
-                "standards. Statistical packages must document compliance ",
-                "with at least one set of category-specific standards as well."
+                ":heavy_multiplication_x: Error: ",
+                "Package documents compliance only with general standards.",
+                "Statistical packages must document compliance with at least ",
+                "one set of category-specific standards as well."
             )
         }
     }
