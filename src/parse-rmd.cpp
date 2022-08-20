@@ -23,7 +23,7 @@ void rcpp_parse_rmd (const std::string filename,
     in_file.clear ();
     in_file.seekg (0); 
 
-    int count = 0;
+
     int chunk_len = 0;
     bool in_chunk = false;
     while (getline (in_file, linetxt, '\n')) { 

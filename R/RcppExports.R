@@ -7,3 +7,4 @@
 rcpp_parse_rmd <- function(filename, tempfile) {
     invisible(.Call(`_srr_rcpp_parse_rmd`, filename, tempfile))
 }
+
