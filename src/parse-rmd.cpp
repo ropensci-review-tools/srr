@@ -67,7 +67,8 @@ void rcpp_parse_rmd (const std::string filename,
 
 void rmd::strip_leading_white (std::string &line)
 {
-    std::regex_replace (line, std::regex("^\\s+"), std::string(""));
+    const char* wt = " ";
+    line.erase (0, line.find_first_not_of (wt));
 }
 
 bool rmd::chunk_start (const std::string &line)
