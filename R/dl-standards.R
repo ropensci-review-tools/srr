@@ -14,25 +14,6 @@ base_url <- function (raw = FALSE) {
     return (paste0 (ret, "ropensci/statistical-software-review-book/"))
 }
 
-#' @return List of all current categories as obtained from directory contents of
-#' https://github.com/ropensci/statistical-software-review-book/tree/main/standards # nolint
-#' @note This can be done via base_url(), "/git/trees/main?recursive=1", but
-#' that requires an authorized request to the V3 API, while direct download of
-#' files can be done without that, so is safer here.
-#' @noRd
-list_categories <- function () {
-
-    # u <- paste0 (base_url (), "git/trees/main?recursive=1")
-    u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
-    tmp <- tempfile (fileext = ".Rmd")
-    ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
-
-    x <- readLines (tmp)
-    cats <- grep ("\\`\\`\\`\\{r\\s", x, value = TRUE)
-    cats <- regmatches (cats, regexpr ("standards\\-.*$+", cats))
-    gsub ("standards\\-|\\}$", "", cats)
-}
-
 #' @param category One of the names of files in above link (for
 #' `list_categories`)
 #' @param quiet Be quiet or not
@@ -377,62 +358,6 @@ get_standards_checklists <- function (category = NULL) {
     }
 
     return (s)
-}
-
-#' Get details of current statistical software categories
-#'
-#' List all currently available categories and associated URLs to full category
-#' descriptions.
-#'
-#' @return A `data.frame` with 3 columns of "category" (the categories to be
-#' submitted to \link{srr_stats_checklist}), "title" (the full title), and
-#' "url".
-#' @family helper
-#' @examples
-#' srr_stats_categories ()
-#' @export
-srr_stats_categories <- function () {
-
-    cats <- std_prefixes ()
-    cat_full <- unlist (lapply (cats$category, function (i) {
-        category_titles_urls (i)
-    }))
-
-    version <- stds_version ()
-
-    index <- seq (length (cat_full) / 2) * 2
-
-    res <- data.frame (
-        category = cats$category,
-        std_prefix = cats$prefix,
-        title = cat_full [index - 1],
-        url = cat_full [index],
-        stringsAsFactors = FALSE
-    )
-
-    attr (res, "stds_version") <- version
-
-    return (res)
-}
-
-std_prefixes <- function () {
-
-    cats <- list_categories ()
-    prefixes <- rep (NA_character_, length (cats))
-    prefixes [cats == "bayesian"] <- "BS"
-    prefixes [cats == "eda"] <- "EA"
-    prefixes [cats == "general"] <- "G"
-    prefixes [cats == "ml"] <- "ML"
-    prefixes [cats == "regression"] <- "RE"
-    prefixes [cats == "spatial"] <- "SP"
-    prefixes [cats == "time-series"] <- "TS"
-    prefixes [cats == "unsupervised"] <- "UL"
-
-    return (data.frame (
-        category = cats,
-        prefix = prefixes,
-        stringsAsFactors = FALSE
-    ))
 }
 
 #' @param s One set of standards with no spaces between sections or lines.
