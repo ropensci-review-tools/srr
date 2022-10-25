@@ -174,11 +174,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         "",
         cat_check,
         "",
+        add_missing_stds (md_lines, std_txt),
         md_lines
     )
-
-    md_lines <- add_missing_stds (md_lines, std_txt)
-
 
     f <- tempfile (fileext = ".Rmd")
     # need explicit line break to html render
@@ -397,11 +395,11 @@ add_missing_stds <- function (md_lines, std_txt) {
     g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", md_stds)
     md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
     missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
+
+    missing_md <- NULL
     if (length (missing_stds) > 0) {
 
-        md_lines <- c (
-            md_lines,
-            "",
+        missing_md <- c (
             "## Missing Standards",
             "",
             "The following standards are missing:"
@@ -416,8 +414,8 @@ add_missing_stds <- function (md_lines, std_txt) {
                 value = TRUE
             )
 
-            md_lines <- c (
-                md_lines,
+            missing_md <- c (
+                missing_md,
                 "",
                 paste0 (
                     tools::toTitleCase (cats$category [i]),
@@ -430,7 +428,7 @@ add_missing_stds <- function (md_lines, std_txt) {
         }
     }
 
-    return (md_lines)
+    return (missing_md)
 }
 
 #' Check that standards document General plus at least one additional category.
