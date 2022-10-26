@@ -124,7 +124,7 @@ get_stds_from_code <- function (path) {
     }
 
     dirs <- c (".", "R", "vignettes", "tests")
-    sfxs <- c ("\\.Rmd$", "\\.(R|r)$", "\\.Rmd$", "\\.(R|r)$")
+    sfxs <- c ("\\.(R|r)md$", "\\.(R|r)$", "\\.(R|r)md$", "\\.(R|r)$")
     rec <- c (FALSE, FALSE, TRUE, TRUE)
 
     flist <- lapply (seq_along (dirs), function (i) {
@@ -134,7 +134,7 @@ get_stds_from_code <- function (path) {
             pattern = sfxs [i]
         )
     })
-    flist <- unlist (flist)
+    flist <- normalizePath (unlist (flist))
 
     suppressWarnings ({
         blocks <- lapply (flist, function (i) {
