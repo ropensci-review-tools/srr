@@ -139,7 +139,12 @@ get_readme_blocks <- function (base_path) {
 
     blocks <- NULL
 
-    f <- file.path (base_path, "README.Rmd")
+    f <- list.files (
+        base_path,
+        pattern = "readme\\.rmd$",
+        ignore.case = TRUE,
+        full.names = TRUE
+    )
     if (file.exists (f)) {
         f <- normalizePath (f)
         fout <- tempfile ()
