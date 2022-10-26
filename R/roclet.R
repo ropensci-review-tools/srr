@@ -145,6 +145,10 @@ get_readme_blocks <- function (base_path) {
         ignore.case = TRUE,
         full.names = TRUE
     )
+    if (length (f) != 1L) {
+        return (blocks)
+    }
+
     if (file.exists (f)) {
         f <- normalizePath (f)
         fout <- tempfile ()
