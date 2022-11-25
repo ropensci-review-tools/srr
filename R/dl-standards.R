@@ -171,6 +171,11 @@ category_titles_urls <- function (category) {
             title = "Spatial",
             url = paste0 (u_base, "spatial-software")
         )
+    } else if (category == "distributions") {
+        ret <- list (
+            title = "Probability Distributions",
+            url = paste0 (u_base, "standards-distributions")
+        )
     }
 
     return (ret)

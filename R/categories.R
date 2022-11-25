@@ -122,6 +122,7 @@ std_prefixes <- function () {
     prefixes [cats == "spatial"] <- "SP"
     prefixes [cats == "time-series"] <- "TS"
     prefixes [cats == "unsupervised"] <- "UL"
+    prefixes [cats == "distributions"] <- "PD"
 
     return (data.frame (
         category = cats,
