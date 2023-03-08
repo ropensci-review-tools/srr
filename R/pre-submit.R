@@ -53,65 +53,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         }
     }
 
-    categories <- get_categories (unique (stds_in_code$stds))
-
-    all_stds <- unlist (lapply (categories$category, get_standard_nums))
-
-    index <- which (!all_stds %in% unique (stds_in_code$stds))
-    index_not <- which (!unique (stds_in_code$stds) %in% all_stds)
-    if (length (index) > 0) {
-        msg1 <- paste0 (
-            "Package can not be submitted because the ",
-            "following standards [v",
-            attr (categories, "stds_version"),
-            "] are missing from your code:"
-        )
-
-        if (!quiet) {
-            cli::cli_alert_warning (msg1)
-            cli::cli_ol ()
-            for (i in index) {
-                cli::cli_li (all_stds [i])
-            }
-            cli::cli_end ()
-        }
-        msg <- c (
-            msg,
-            msg1,
-            "",
-            all_stds [index],
-            ""
-        )
-    } else if (length (index_not) > 0L) {
-
-        # issue#25
-        not_a_std <- unique (stds_in_code$stds) [index_not]
-        msg <- "Your code includes the following standard"
-        if (length (not_a_std) > 1L) {
-            msg <- paste0 (msg, "s")
-        }
-        msg <- paste0 (
-            msg, " which are not actual standards: [",
-            not_a_std, "]"
-        )
-
-    } else if (!any (grepl ("todo", stds_in_code$stds))) {
-
-
-        msg <- paste0 (
-            "All applicable standards [v",
-            attr (categories, "stds_version"),
-            "] have been documented in this package (",
-            length (stds_in_code$stds),
-            " complied with; ",
-            length (stds_in_code$stds_na),
-            " N/A standards)"
-        )
-
-        if (!quiet) {
-            cli::cli_alert_success (msg)
-        }
-    }
+    msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
 
     invisible (msg)
 }
@@ -197,4 +139,67 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
     })
 
     return (do.call (rbind, s))
+}
+
+check_missing_standards <- function (stds_in_code, quiet = FALSE) {
+
+    categories <- get_categories (unique (stds_in_code$stds))
+
+    all_stds <- unlist (lapply (categories$category, get_standard_nums))
+
+    index <- which (!all_stds %in% unique (stds_in_code$stds))
+    index_not <- which (!unique (stds_in_code$stds) %in% all_stds)
+    if (length (index) > 0) {
+        msg <- paste0 (
+            "Package can not be submitted because the ",
+            "following standards [v",
+            attr (categories, "stds_version"),
+            "] are missing from your code:"
+        )
+
+        if (!quiet) {
+            cli::cli_alert_warning (msg)
+            cli::cli_ol ()
+            for (i in index) {
+                cli::cli_li (all_stds [i])
+            }
+            cli::cli_end ()
+        }
+        msg <- c (
+            msg,
+            "",
+            all_stds [index],
+            ""
+        )
+    } else if (length (index_not) > 0L) {
+
+        # issue#25
+        not_a_std <- unique (stds_in_code$stds) [index_not]
+        msg <- "Your code includes the following standard"
+        if (length (not_a_std) > 1L) {
+            msg <- paste0 (msg, "s")
+        }
+        msg <- paste0 (
+            msg, " which are not actual standards: [",
+            not_a_std, "]"
+        )
+
+    } else if (!any (grepl ("todo", stds_in_code$stds))) {
+
+        msg <- paste0 (
+            "All applicable standards [v",
+            attr (categories, "stds_version"),
+            "] have been documented in this package (",
+            length (stds_in_code$stds),
+            " complied with; ",
+            length (stds_in_code$stds_na),
+            " N/A standards)"
+        )
+
+        if (!quiet) {
+            cli::cli_alert_success (msg)
+        }
+    }
+
+    return (msg)
 }
