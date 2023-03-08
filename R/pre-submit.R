@@ -54,6 +54,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     }
 
     msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
+    msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
 
     invisible (msg)
 }
@@ -139,6 +140,49 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
     })
 
     return (do.call (rbind, s))
+}
+
+#' Check that documentation of standards is appropriately distributed throughout
+#' all files.
+#'
+#' @param max_proportion The maximal permissible proportion of all standards
+#' which may be documented in a single file. Any packages which documented more
+#' than this value in a single file will trigger a warning message.
+#' @noRd
+check_standards_in_files <- function (stds_in_code, max_proprtion = 0.5,
+                                      quiet = FALSE) {
+
+    msg <- msg1 <- msg2 <- ""
+
+    s <- stds_in_code [stds_in_code$std_type == "std", ]
+    dirs <- table (regmatches (s$file, regexpr ("^.*\\/", s$file)))
+    if (length (dirs) < 2) {
+        msg1 <- paste0 (
+            "Standards should be documented in multiple ",
+            "directories, yet are only present in one"
+        )
+    }
+
+    files <- table (s$file)
+    if (max (files) > (max_proprtion * sum (files))) {
+        msg2 <- paste0 (
+            "Standards should be documented in most package ",
+            "files, yet are mostly only documented in one file."
+        )
+    }
+
+    # msg1 overrides msg2, so this function only issues one of these two!
+    if (nzchar (msg2)) {
+        msg <- msg2
+    } else if (nzchar (msg1)) {
+        msg <- msg1
+    }
+
+    if (nzchar (msg) & !quiet) {
+        cli::cli_alert_warning (msg)
+    }
+
+    return (msg)
 }
 
 check_missing_standards <- function (stds_in_code, quiet = FALSE) {
