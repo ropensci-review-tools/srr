@@ -42,7 +42,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (cat_check)
     }
 
-    if (length (stds_in_code$stds_todo) > 0) {
+    if (any (grepl ("todo", stds_in_code$std_type))) {
 
         msg <- paste0 (
             "This package still has TODO ",
@@ -53,12 +53,12 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         }
     }
 
-    categories <- get_categories (unique (do.call (c, stds_in_code)))
+    categories <- get_categories (unique (stds_in_code$stds))
 
     all_stds <- unlist (lapply (categories$category, get_standard_nums))
 
-    index <- which (!all_stds %in% unique (unlist (stds_in_code)))
-    index_not <- which (!unique (unlist (stds_in_code)) %in% all_stds)
+    index <- which (!all_stds %in% unique (stds_in_code$stds))
+    index_not <- which (!unique (stds_in_code$stds) %in% all_stds)
     if (length (index) > 0) {
         msg1 <- paste0 (
             "Package can not be submitted because the ",
@@ -85,7 +85,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     } else if (length (index_not) > 0L) {
 
         # issue#25
-        not_a_std <- unique (unlist (stds_in_code)) [index_not]
+        not_a_std <- unique (stds_in_code$stds) [index_not]
         msg <- "Your code includes the following standard"
         if (length (not_a_std) > 1L) {
             msg <- paste0 (msg, "s")
@@ -95,7 +95,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
             not_a_std, "]"
         )
 
-    } else if (length (stds_in_code$stds_todo) == 0) {
+    } else if (!any (grepl ("todo", stds_in_code$stds))) {
 
 
         msg <- paste0 (
@@ -151,21 +151,32 @@ get_stds_from_code <- function (path) {
     msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
     msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
 
-    list (
-        stds = parse_std_refs (msgs),
-        stds_na = parse_std_refs (msgs_na),
-        stds_todo = parse_std_refs (msgs_todo)
+    ret <- list (
+        stds = parse_std_refs (msgs, "std"),
+        stds_na = parse_std_refs (msgs_na, "na"),
+        stds_todo = parse_std_refs (msgs_todo, "todo")
     )
+
+    do.call (rbind, ret)
 }
 
-parse_std_refs <- function (msgs) {
+parse_std_refs <- function (msgs, std_type = "srr_stats") {
 
     s <- lapply (msgs, function (i) {
+
+        stds <- regmatches (i, regexpr ("^\\[.*?\\]", i))
+        i <- gsub (stds, "", i, fixed = TRUE)
+        stds <- gsub ("^\\[|\\]$", "", stds)
+        fname <- regmatches (i, regexpr ("\\[.*?\\]", i))
+        fname <- gsub ("^\\[|\\]$", "", fname)
+        lnum <- regmatches (i, regexpr ("\\#[0-9]+", i))
+        lnum <- as.numeric (gsub ("^\\#", "", lnum))
+
         i <- strsplit (i, "\\]") [[1]] [1]
         i <- strsplit (i, "\\[") [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
-        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", i)
+        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
         if (any (!chk)) {
             stop (
                 "Standard references [",
@@ -174,8 +185,16 @@ parse_std_refs <- function (msgs) {
             )
         }
 
-        return (i)
+        stds <- strsplit (stds, ",\\s?") [[1]]
+
+        return (data.frame (
+            std_type = rep (std_type, length (stds)),
+            stds = stds,
+            file = rep (fname, length (stds)),
+            line_num = rep (lnum, length (stds))
+        ))
+
     })
 
-    return (sort (unique (unlist (s))))
+    return (do.call (rbind, s))
 }
