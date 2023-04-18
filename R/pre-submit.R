@@ -42,7 +42,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (cat_check)
     }
 
-    if (length (stds_in_code$stds_todo) > 0) {
+    if (any (grepl ("todo", stds_in_code$std_type))) {
 
         msg <- paste0 (
             "This package still has TODO ",
@@ -53,65 +53,8 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         }
     }
 
-    categories <- get_categories (unique (do.call (c, stds_in_code)))
-
-    all_stds <- unlist (lapply (categories$category, get_standard_nums))
-
-    index <- which (!all_stds %in% unique (unlist (stds_in_code)))
-    index_not <- which (!unique (unlist (stds_in_code)) %in% all_stds)
-    if (length (index) > 0) {
-        msg1 <- paste0 (
-            "Package can not be submitted because the ",
-            "following standards [v",
-            attr (categories, "stds_version"),
-            "] are missing from your code:"
-        )
-
-        if (!quiet) {
-            cli::cli_alert_warning (msg1)
-            cli::cli_ol ()
-            for (i in index) {
-                cli::cli_li (all_stds [i])
-            }
-            cli::cli_end ()
-        }
-        msg <- c (
-            msg,
-            msg1,
-            "",
-            all_stds [index],
-            ""
-        )
-    } else if (length (index_not) > 0L) {
-
-        # issue#25
-        not_a_std <- unique (unlist (stds_in_code)) [index_not]
-        msg <- "Your code includes the following standard"
-        if (length (not_a_std) > 1L) {
-            msg <- paste0 (msg, "s")
-        }
-        msg <- paste0 (
-            msg, " which are not actual standards: [",
-            not_a_std, "]"
-        )
-
-    } else if (length (stds_in_code$stds_todo) == 0) {
-
-
-        msg <- paste0 (
-            "All applicable standards [v",
-            attr (categories, "stds_version"),
-            "] have been documented in this package (",
-            length (stds_in_code$stds),
-            " complied with; ",
-            length (stds_in_code$stds_na),
-            " N/A standards)"
-        )
-
-        if (!quiet) {
-            cli::cli_alert_success (msg)
-        }
-    }
+    msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
+    msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
 
     invisible (msg)
 }
@@ -151,21 +94,32 @@ get_stds_from_code <- function (path) {
     msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
     msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
 
-    list (
-        stds = parse_std_refs (msgs),
-        stds_na = parse_std_refs (msgs_na),
-        stds_todo = parse_std_refs (msgs_todo)
+    ret <- list (
+        stds = parse_std_refs (msgs, "std"),
+        stds_na = parse_std_refs (msgs_na, "na"),
+        stds_todo = parse_std_refs (msgs_todo, "todo")
     )
+
+    do.call (rbind, ret)
 }
 
-parse_std_refs <- function (msgs) {
+parse_std_refs <- function (msgs, std_type = "srr_stats") {
 
     s <- lapply (msgs, function (i) {
+
+        stds <- regmatches (i, regexpr ("^\\[.*?\\]", i))
+        i <- gsub (stds, "", i, fixed = TRUE)
+        stds <- gsub ("^\\[|\\]$", "", stds)
+        fname <- regmatches (i, regexpr ("\\[.*?\\]", i))
+        fname <- gsub ("^\\[|\\]$", "", fname)
+        lnum <- regmatches (i, regexpr ("\\#[0-9]+", i))
+        lnum <- as.numeric (gsub ("^\\#", "", lnum))
+
         i <- strsplit (i, "\\]") [[1]] [1]
         i <- strsplit (i, "\\[") [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
-        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", i)
+        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
         if (any (!chk)) {
             stop (
                 "Standard references [",
@@ -174,8 +128,122 @@ parse_std_refs <- function (msgs) {
             )
         }
 
-        return (i)
+        stds <- strsplit (stds, ",\\s?") [[1]]
+
+        return (data.frame (
+            std_type = rep (std_type, length (stds)),
+            stds = stds,
+            file = rep (fname, length (stds)),
+            line_num = rep (lnum, length (stds))
+        ))
+
     })
 
-    return (sort (unique (unlist (s))))
+    return (do.call (rbind, s))
+}
+
+#' Check that documentation of standards is appropriately distributed throughout
+#' all files.
+#'
+#' @param max_proportion The maximal permissible proportion of all standards
+#' which may be documented in a single file. Any packages which documented more
+#' than this value in a single file will trigger a warning message.
+#' @noRd
+check_standards_in_files <- function (stds_in_code, max_proprtion = 0.5,
+                                      quiet = FALSE) {
+
+    msg <- msg1 <- msg2 <- ""
+
+    s <- stds_in_code [stds_in_code$std_type == "std", ]
+    dirs <- table (regmatches (s$file, regexpr ("^.*\\/", s$file)))
+    if (length (dirs) < 2) {
+        msg1 <- paste0 (
+            "Standards should be documented in multiple ",
+            "directories, yet are only present in one"
+        )
+    }
+
+    files <- table (s$file)
+    if (max (files) > (max_proprtion * sum (files))) {
+        msg2 <- paste0 (
+            "Standards should be documented in most package ",
+            "files, yet are mostly only documented in one file."
+        )
+    }
+
+    # msg1 overrides msg2, so this function only issues one of these two!
+    if (nzchar (msg2)) {
+        msg <- msg2
+    } else if (nzchar (msg1)) {
+        msg <- msg1
+    }
+
+    if (nzchar (msg) & !quiet) {
+        cli::cli_alert_warning (msg)
+    }
+
+    return (msg)
+}
+
+check_missing_standards <- function (stds_in_code, quiet = FALSE) {
+
+    categories <- get_categories (unique (stds_in_code$stds))
+
+    all_stds <- unlist (lapply (categories$category, get_standard_nums))
+
+    index <- which (!all_stds %in% unique (stds_in_code$stds))
+    index_not <- which (!unique (stds_in_code$stds) %in% all_stds)
+    if (length (index) > 0) {
+        msg <- paste0 (
+            "Package can not be submitted because the ",
+            "following standards [v",
+            attr (categories, "stds_version"),
+            "] are missing from your code:"
+        )
+
+        if (!quiet) {
+            cli::cli_alert_warning (msg)
+            cli::cli_ol ()
+            for (i in index) {
+                cli::cli_li (all_stds [i])
+            }
+            cli::cli_end ()
+        }
+        msg <- c (
+            msg,
+            "",
+            all_stds [index],
+            ""
+        )
+    } else if (length (index_not) > 0L) {
+
+        # issue#25
+        not_a_std <- unique (stds_in_code$stds) [index_not]
+        msg <- "Your code includes the following standard"
+        if (length (not_a_std) > 1L) {
+            msg <- paste0 (msg, "s")
+        }
+        msg <- paste0 (
+            msg, " which are not actual standards: [",
+            not_a_std, "]"
+        )
+
+    } else if (!any (grepl ("todo", stds_in_code$stds))) {
+
+        msg <- paste0 (
+            "All applicable standards [v",
+            attr (categories, "stds_version"),
+            "] have been documented in this package (",
+            length (stds_in_code$stds),
+            " complied with; ",
+            length (stds_in_code$stds_na),
+            " N/A standards)"
+        )
+
+        if (!quiet) {
+            cli::cli_alert_success (msg)
+        }
+    }
+
+    return (msg)
 }

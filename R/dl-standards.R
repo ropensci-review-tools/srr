@@ -403,7 +403,9 @@ add_space_around_sections <- function (s) {
     # only
     index1 <- which (snew == "")
     index2 <- which (diff (index1) == 1)
-    snew <- snew [-(index1 [index2])]
+    if (length (index2) > 0) {
+        snew <- snew [-(index1 [index2])]
+    }
 
     return (snew)
 }
