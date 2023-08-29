@@ -1,20 +1,20 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "srr",
-  "description": "Companion package to 'rOpenSci' statistical software review\n    project.",
+  "description": "Companion package to 'rOpenSci' statistical software review project.",
   "name": "srr: 'rOpenSci' Review Roclets",
+  "relatedLink": "https://docs.ropensci.org/srr/",
+  "codeRepository": "https://github.com/ropensci-review-tools/srr",
+  "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.1.192",
+  "version": "0.0.1.193",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.1.2 (2021-11-01)",
+  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
   "author": [
     {
       "@type": "Person",
@@ -24,9 +24,6 @@
       "@id": "https://orcid.org/0000-0003-2172-5265"
     }
   ],
-  "contributor": {},
-  "copyrightHolder": {},
-  "funder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -99,8 +96,8 @@
       "sameAs": "https://CRAN.R-project.org/package=testthat"
     }
   ],
-  "softwareRequirements": [
-    {
+  "softwareRequirements": {
+    "1": {
       "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
@@ -112,7 +109,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=cli"
     },
-    {
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "clipr",
       "name": "clipr",
@@ -124,7 +121,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=clipr"
     },
-    {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "gert",
       "name": "gert",
@@ -136,7 +133,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=gert"
     },
-    {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "here",
       "name": "here",
@@ -148,12 +145,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=here"
     },
-    {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "pkgload",
       "name": "pkgload",
@@ -165,7 +162,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=pkgload"
     },
-    {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
@@ -177,7 +174,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "roxygen2",
       "name": "roxygen2",
@@ -188,24 +185,10 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
-    }
-  ],
-  "codeRepository": "https://github.com/ropensci-review-tools/srr",
-  "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "fileSize": "1567.06KB",
-  "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
-    "https://codecov.io/gh/ropensci-review-tools/srr"
-  ],
-  "developmentStatus": "https://www.repostatus.org/#concept",
-  "provider": {
-    "@id": "https://cran.r-project.org",
-    "@type": "Organization",
-    "name": "Comprehensive R Archive Network (CRAN)",
-    "url": "https://cran.r-project.org"
+    },
+    "SystemRequirements": null
   },
-  "relatedLink": "https://docs.ropensci.org/srr/",
+  "fileSize": "1413.279KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -221,5 +204,8 @@
       "url": "https://github.com/ropensci-review-tools/srr",
       "description": "R package version 0.0.1"
     }
-  ]
+  ],
+  "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
+  "contIntegration": ["https://github.com/ropensci-review-tools/srr/actions", "https://codecov.io/gh/ropensci-review-tools/srr"],
+  "developmentStatus": "https://www.repostatus.org/#concept"
 }
