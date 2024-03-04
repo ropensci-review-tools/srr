@@ -234,9 +234,9 @@ check_missing_standards <- function (stds_in_code, quiet = FALSE) {
             "All applicable standards [v",
             attr (categories, "stds_version"),
             "] have been documented in this package (",
-            length (stds_in_code$stds),
+            length (which (stds_in_code$std_type == "std")),
             " complied with; ",
-            length (stds_in_code$stds_na),
+            length (which (stds_in_code$std_type == "na")),
             " N/A standards)"
         )
 
