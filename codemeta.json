@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.1.195",
+  "version": "0.1.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.1 (2023-06-16)",
+  "runtimePlatform": "R version 4.3.2 (2023-10-31)",
   "author": [
     {
       "@type": "Person",
@@ -186,9 +186,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "1413.279KB",
+  "fileSize": "1414.674KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -206,9 +206,6 @@
     }
   ],
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
-    "https://codecov.io/gh/ropensci-review-tools/srr"
-  ],
+  "contIntegration": ["https://github.com/ropensci-review-tools/srr/actions", "https://codecov.io/gh/ropensci-review-tools/srr"],
   "developmentStatus": "https://www.repostatus.org/#concept"
 }
