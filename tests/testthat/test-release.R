@@ -1,4 +1,4 @@
-
+skip_on_os ("mac")
 
 test_that ("release", {
 

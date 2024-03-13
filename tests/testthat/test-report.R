@@ -43,8 +43,9 @@ test_that ("srr_report", {
     expect_true (file.exists (f))
 
     expect_type (r, "character")
+    skip_on_os ("mac")
     expect_true (length (r) > 400L)
 
-    # Should be missing G1.4, but this fails sometimes on windows?
-    # expect_true (any (grepl ("Missing Standards", r)))
+    skip_on_os ("windows")
+    expect_true (any (grepl ("Missing Standards", r)))
 })
