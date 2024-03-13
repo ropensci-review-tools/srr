@@ -206,20 +206,21 @@ get_all_msgs <- function (path = ".") {
 
     flist <- get_all_file_names (path)
 
-    pkg_name <- paste0 ("package:", pkg_name_from_desc (path))
-    if (!pkg_name %in% search ()) {
-        pkgload::load_all (path)
-    }
-    pkg_env <- as.environment (pkg_name)
-
     blocks <- lapply (flist, function (i) {
         this_file <- i
-        if (grepl ("\\.Rmd$", i)) {
+        is_rmd <- grepl ("\\.Rmd$", i)
+        if (is_rmd) {
             fout <- tempfile ()
             rcpp_parse_rmd (i, fout)
             this_file <- fout
         }
-        res <- try (roxygen2::parse_file (this_file, env = pkg_env))
+        res <- try (roxygen2::parse_file (this_file, env = NULL))
+        if (is_rmd) {
+            res <- lapply (res, function (j) {
+                j$file <- i
+                return (j)
+            })
+        }
         return (res)
     })
 

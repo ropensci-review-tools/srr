@@ -1,4 +1,3 @@
-
 #' srr_stats_roclet
 #'
 #' Get values of all `srrstats` tags in function documentation
@@ -90,13 +89,27 @@ collect_blocks <- function (blocks, base_path) {
     )
     rcpp_blocks <- blocks [which (rcpp)]
     blocks <- blocks [which (!rcpp)]
-    test_blocks <- get_test_blocks (base_path)
-    readme_blocks <- get_readme_blocks (base_path)
+
+    file_paths <- vapply (blocks, function (i) {
+        gsub (base_path, "", i$file)
+    }, character (1), USE.NAMES = FALSE)
+    re <- regexpr ("^.*\\/", file_paths)
+    file_dirs <- rep (".", length (file_paths))
+    index <- which (re > 0)
+    file_dirs [index] <- regmatches (file_paths, re)
+    file_dirs <- gsub ("^\\/", "", file_dirs)
+    file_dirs <- gsub ("\\/.*$", "", file_dirs)
+
+    readme_blocks <- blocks [which (file_dirs == ".")]
+    test_blocks <- blocks [which (file_dirs == "tests")]
+    r_blocks <- blocks [which (file_dirs == "R")]
+    vignette_blocks <- blocks [which (file_dirs == "vignettes")]
 
     blocks <- list (
-        R = blocks,
+        R = r_blocks,
         src = rcpp_blocks,
         tests = test_blocks,
+        vignettes = vignette_blocks,
         readme = readme_blocks
     )
 
@@ -135,44 +148,6 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-get_readme_blocks <- function (base_path) {
-
-    blocks <- NULL
-
-    f <- list.files (
-        base_path,
-        pattern = "readme\\.rmd$",
-        ignore.case = TRUE,
-        full.names = TRUE
-    )
-    if (length (f) != 1L) {
-        return (blocks)
-    }
-
-    if (file.exists (f)) {
-        f <- normalizePath (f)
-        fout <- tempfile ()
-        rcpp_parse_rmd (f, fout)
-        blocks <- tryCatch (
-            roxygen2::parse_file (fout, env = NULL),
-            error = function (e) e
-        )
-
-        if (methods::is (blocks, "error")) {
-
-            blocks <- NULL
-
-        } else {
-
-            blocks <- lapply (blocks, function (i) {
-                i$file <- f
-                return (i)    })
-        }
-    }
-
-    return (blocks)
-}
-
 parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
@@ -198,8 +173,7 @@ print_one_msg_list <- function (msgs) {
 }
 
 # Collect all messages for one tag
-collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
-                             tag = "srrstats") {
+collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
     msgs <- list ()
     for (block in blocks$R) {
@@ -211,6 +185,7 @@ collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
     )
     msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
     msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
+    msgs <- c (msgs, get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes"))
 
     return (msgs)
 }
@@ -446,22 +421,6 @@ get_src_tags <- function (blocks, base_path, tag = "srrstats") {
     } # end for block in blocks
 
     return (msgs)
-}
-
-get_test_blocks <- function (base_path) {
-
-
-    flist <- list.files (file.path (base_path, "tests"),
-        pattern = "\\.R$",
-        recursive = TRUE,
-        full.names = TRUE
-    )
-
-    blocks <- lapply (flist, function (i) roxygen2::parse_file (i, env = NULL))
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-
-    return (blocks)
 }
 
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {

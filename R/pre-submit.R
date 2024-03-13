@@ -61,27 +61,12 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
 get_stds_from_code <- function (path) {
 
-    flist <- get_all_file_names (path)
-
-    suppressWarnings ({
-        blocks <- lapply (flist, function (i) {
-            tryCatch (roxygen2::parse_file (i, env = NULL),
-                error = function (e) list ()
-            )
-        })
-    })
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-    blocks <- collect_blocks (blocks, path)
-
-    msgs <- collect_one_tag (path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
+    msgs <- get_all_msgs (path) # in report.R
 
     ret <- list (
-        stds = parse_std_refs (msgs, "std"),
-        stds_na = parse_std_refs (msgs_na, "na"),
-        stds_todo = parse_std_refs (msgs_todo, "todo")
+        stds = parse_std_refs (msgs$msgs, "std"),
+        stds_na = parse_std_refs (msgs$msgs_na, "na"),
+        stds_todo = parse_std_refs (msgs$msgs_todo, "todo")
     )
 
     do.call (rbind, ret)
