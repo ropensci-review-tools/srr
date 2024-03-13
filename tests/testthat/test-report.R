@@ -1,4 +1,3 @@
-
 test_that ("srr_report", {
 
     path <- srr_stats_pkg_skeleton ()
@@ -46,6 +45,6 @@ test_that ("srr_report", {
     expect_type (r, "character")
     expect_true (length (r) > 400L)
 
-    # Should be no missing standards:
-    expect_false (any (grepl ("Missing Standards", r)))
+    # Should be missing G1.4:
+    expect_true (any (grepl ("Missing Standards", r)))
 })
