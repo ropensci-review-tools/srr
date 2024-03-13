@@ -1,4 +1,3 @@
-
 #' Generate report from `ssr` tags.
 #'
 #' @param path Path to package for which report is to be generated
@@ -205,10 +204,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
 get_all_msgs <- function (path = ".") {
 
-    flist <- normalizePath (list.files (file.path (path, "R"),
-        full.names = TRUE,
-        pattern = "\\.(r|R|q|s|S)$"
-    ))
+    flist <- get_all_file_names (path)
 
     pkg_name <- paste0 ("package:", pkg_name_from_desc (path))
     if (!pkg_name %in% search ()) {
