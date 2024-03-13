@@ -213,7 +213,14 @@ get_all_msgs <- function (path = ".") {
     pkg_env <- as.environment (pkg_name)
 
     blocks <- lapply (flist, function (i) {
-        try (roxygen2::parse_file (i, env = pkg_env))
+        this_file <- i
+        if (grepl ("\\.Rmd$", i)) {
+            fout <- tempfile ()
+            rcpp_parse_rmd (i, fout)
+            this_file <- fout
+        }
+        res <- try (roxygen2::parse_file (this_file, env = pkg_env))
+        return (res)
     })
 
     failing <- flist [sapply (blocks, inherits, "try-error")]
