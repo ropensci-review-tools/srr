@@ -20,8 +20,8 @@ srr_stats_categories ()
 }
 \seealso{
 Other helper: 
-\code{\link{srr_stats_checklist_check}()},
 \code{\link{srr_stats_checklist}()},
+\code{\link{srr_stats_checklist_check}()},
 \code{\link{srr_stats_pkg_skeleton}()},
 \code{\link{srr_stats_pre_submit}()}
 }
