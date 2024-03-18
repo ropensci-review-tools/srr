@@ -1,4 +1,3 @@
-
 repo_is_git <- function (path) {
 
     g <- tryCatch (
@@ -55,6 +54,9 @@ get_git_branch <- function (path, branch = "") {
 
     if (!repo_is_git (path)) {
         return (NULL)
+    }
+    if (is.null (branch)) {
+        branch <- ""
     }
 
     g <- gert::git_info (path)
