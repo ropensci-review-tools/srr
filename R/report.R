@@ -7,6 +7,11 @@
 #' @param branch By default a report will be generated from the current branch
 #' as set on the local git repository; this parameter can be used to specify any
 #' alternative branch.
+#' @param roxygenise If `TRUE` (default), documentation will first be updated
+#' with the \pkg{roxygen2} package. This requires local installation of the
+#' package, which may take some time if the package has not previously been
+#' installed. If this parameter is `FALSE`, the `roxygen2` package is not used,
+#' documentation is not updated, and reports are generally generated faster.
 #' @return (invisibly) Markdown-formatted lines used to generate the final html
 #' document.
 #' @family report
@@ -16,16 +21,19 @@
 #' path <- srr_stats_pkg_skeleton ()
 #' srr_report (path)
 #' }
-srr_report <- function (path = ".", branch = "", view = TRUE) {
+srr_report <- function (path = ".", branch = "",
+                        view = TRUE, roxygenise = TRUE) {
 
-    o <- utils::capture.output (
-        chk <- tryCatch (
-            roxygen2::roxygenise (path),
-            error = function (e) e
+    if (roxygenise) {
+        o <- utils::capture.output (
+            chk <- tryCatch (
+                roxygen2::roxygenise (path),
+                error = function (e) e
+            )
         )
-    )
-    if (methods::is (chk, "simpleError")) {
-        stop (chk$message)
+        if (methods::is (chk, "simpleError")) {
+            stop (chk$message)
+        }
     }
 
     requireNamespace ("rmarkdown")

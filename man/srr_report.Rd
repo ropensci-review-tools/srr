@@ -4,7 +4,7 @@
 \alias{srr_report}
 \title{Generate report from \code{ssr} tags.}
 \usage{
-srr_report(path = ".", branch = "", view = TRUE)
+srr_report(path = ".", branch = "", view = TRUE, roxygenise = TRUE)
 }
 \arguments{
 \item{path}{Path to package for which report is to be generated}
@@ -16,6 +16,12 @@ alternative branch.}
 \item{view}{If \code{TRUE} (default), a html-formatted version of the report is
 opened in default system browser. If \code{FALSE}, the return object includes the
 name of a \code{html}-rendered version of the report in an attribute named 'file'.}
+
+\item{roxygenise}{If \code{TRUE} (default), documentation will first be updated
+with the \pkg{roxygen2} package. This requires local installation of the
+package, which may take some time if the package has not previously been
+installed. If this parameter is \code{FALSE}, the \code{roxygen2} package is not used,
+documentation is not updated, and reports are generally generated faster.}
 }
 \value{
 (invisibly) Markdown-formatted lines used to generate the final html
