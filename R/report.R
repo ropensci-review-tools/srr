@@ -222,7 +222,10 @@ get_all_msgs <- function (path = ".") {
             rcpp_parse_rmd (i, fout)
             this_file <- fout
         }
-        res <- try (roxygen2::parse_file (this_file, env = NULL))
+        res <- tryCatch (
+            roxygen2::parse_file (this_file, env = NULL),
+            error = function (e) NULL # ignore errors and do not parse
+        )
         if (is_rmd) {
             res <- lapply (res, function (j) {
                 j$file <- i
