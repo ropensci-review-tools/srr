@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.2.014",
+  "version": "0.1.3",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.3.3 (2024-02-29)",
+  "runtimePlatform": "R version 4.4.0 (2024-04-24)",
   "author": [
     {
       "@type": "Person",
@@ -152,18 +152,6 @@
     },
     "6": {
       "@type": "SoftwareApplication",
-      "identifier": "pkgload",
-      "name": "pkgload",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=pkgload"
-    },
-    "7": {
-      "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
       "provider": {
@@ -174,7 +162,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    "8": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "roxygen2",
       "name": "roxygen2",
@@ -186,9 +174,9 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "1414.08KB",
+  "fileSize": "1416.361KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -206,9 +194,6 @@
     }
   ],
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
-    "https://codecov.io/gh/ropensci-review-tools/srr"
-  ],
+  "contIntegration": ["https://github.com/ropensci-review-tools/srr/actions", "https://codecov.io/gh/ropensci-review-tools/srr"],
   "developmentStatus": "https://www.repostatus.org/#concept"
 }
