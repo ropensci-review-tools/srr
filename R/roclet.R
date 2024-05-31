@@ -104,11 +104,13 @@ collect_blocks <- function (blocks, base_path) {
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
     vignette_blocks <- blocks [which (file_dirs == "vignettes")]
+    inst_blocks <- blocks [which (file_dirs == "inst")]
 
     blocks <- list (
         R = r_blocks,
         src = rcpp_blocks,
         tests = test_blocks,
+        inst = inst_blocks,
         vignettes = vignette_blocks,
         readme = readme_blocks
     )
