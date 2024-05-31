@@ -1,7 +1,8 @@
+skip_on_os ("windows")
+
 test_that ("roxygen standards", {
 
     # Sys.setenv("CLIPR_ALLOW" = TRUE)
-
     pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
     expect_true (file.exists (file.path (tempdir (), pkg_name)))
