@@ -100,7 +100,7 @@ collect_blocks <- function (blocks, base_path) {
     file_dirs <- gsub ("^\\/", "", file_dirs)
     file_dirs <- gsub ("\\/.*$", "", file_dirs)
 
-    readme_blocks <- blocks [which (file_dirs == ".")]
+    readme_blocks <- blocks [which (file_dirs == "")]
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
     vignette_blocks <- blocks [which (file_dirs == "vignettes")]
