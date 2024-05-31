@@ -1,3 +1,5 @@
+skip_on_os ("windows")
+
 test_that ("srr_report", {
 
     path <- srr_stats_pkg_skeleton ()
