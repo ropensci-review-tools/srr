@@ -183,7 +183,8 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
     }
     msgs <- c (
         msgs,
-        get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
+        get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat"),
+        get_other_tags (blocks$inst, tag = tag, dir = "inst")
     )
     msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
     msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
@@ -238,10 +239,15 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     if (fn_name && !is.null (func_name)) {
         msg <- paste0 (msg, " in function '", func_name, "()'")
     }
+    ptn <- paste0 ("^.*", dir, "\\/")
+    fpath <- regmatches (block$file, regexpr (ptn, block$file))
+    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
+
     msg <- paste0 (
         msg, " on line#", block_line,
         " of file [",
-        file.path (dir, basename (block_backref)), "]"
+        fpath_full,
+        "]"
     )
 
     return (msg)
@@ -298,11 +304,16 @@ process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolin
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
+    ptn <- paste0 ("^.*", dir, "\\/")
+    fpath <- regmatches (block$file, regexpr (ptn, block$file))
+    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
+
     msg <- paste0 (
         "[", paste0 (snum, collapse = ", "),
         "] on line#", block_line,
         " of file [",
-        file.path (dir, basename (block_backref)), "]"
+        fpath_full,
+        "]"
     )
 
     return (msg)
@@ -324,11 +335,16 @@ process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nol
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
+    ptn <- paste0 ("^.*", dir, "\\/")
+    fpath <- regmatches (block$file, regexpr (ptn, block$file))
+    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
+
     msg <- paste0 (
         "[", paste0 (snum, collapse = ", "),
         "] on line#", block_line,
         " of file [",
-        file.path (dir, basename (block_backref)), "]"
+        fpath_full,
+        "]"
     )
 
     return (msg)
@@ -438,7 +454,6 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
             fn_name = FALSE,
             dir = dir
         )
-
     }
 
     return (msgs)
