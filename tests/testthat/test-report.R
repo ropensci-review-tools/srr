@@ -6,7 +6,7 @@ test_that ("srr_report", {
 
     categories <- srr_stats_categories ()$category
     categories <- categories [-which (categories == "general")]
-    expect_length (categories, 8L)
+    expect_length (categories, 9L)
 
     f <- file.path (path, "R", "srr-stats-standards.R")
     expect_true (file.exists (f))
