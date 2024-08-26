@@ -463,11 +463,12 @@ check_num_categories <- function (std_codes) {
 
     if (length (std_cats) < 2) {
 
+        ret <- ":heavy_multiplication_x: Error: "
         if (!"G" %in% std_cats) {
-            ret <- "Error: No general standards have been documented."
+            ret <- paste0 (ret, "No general standards have been documented.")
         } else {
             ret <- paste0 (
-                ":heavy_multiplication_x: Error: ",
+                ret,
                 "Package documents compliance only with general standards. ",
                 "Statistical packages must document compliance with at least ",
                 "one set of category-specific standards as well."
