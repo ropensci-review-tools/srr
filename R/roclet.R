@@ -241,6 +241,11 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     }
     ptn <- paste0 ("^.*", dir, "\\/")
     fpath <- regmatches (block$file, regexpr (ptn, block$file))
+    if (length (fpath) == 0L) {
+        # Mostly only for 'tests/testthat.R' file, which should never have tags
+        # anyway, so is skipped here.
+        return (NULL)
+    }
     fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
 
     msg <- paste0 (
