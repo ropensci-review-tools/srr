@@ -468,7 +468,7 @@ check_num_categories <- function (std_codes) {
         } else {
             ret <- paste0 (
                 ":heavy_multiplication_x: Error: ",
-                "Package documents compliance only with general standards.",
+                "Package documents compliance only with general standards. ",
                 "Statistical packages must document compliance with at least ",
                 "one set of category-specific standards as well."
             )
