@@ -242,8 +242,16 @@ process_srrstats_tags <- function (tag = "srrstats", block,
         }
     }
     ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
+    if (grepl (ptn, block$file)) {
+        fpath <- regmatches (block$file, regexpr (ptn, block$file))
+        term_ptn <- "/"
+    } else {
+        # Generally only 'tests/testthat.R' where 'dir = tests/testthat'
+        term_ptn <- paste0 ("\\.", tools::file_ext (block$file))
+        ptn <- paste0 ("^.*", dir, term_ptn, "$")
+        fpath <- regmatches (block$file, regexpr (ptn, block$file))
+    }
+    fpath_full <- gsub (fpath, paste0 (dir, term_ptn), block$file)
 
     msg <- paste0 (
         msg, " on line#", block_line,
