@@ -258,34 +258,6 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     return (msg)
 }
 
-# extract the actual standards numbers from arbitrary text strings, first
-# capturing everything inside first "[...]":
-extract_standard_numbers <- function (standards) {
-
-    # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
-    # muck up standards ID, so have to be removed here:
-    g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
-    m <- lapply (regmatches (standards, g), function (i) {
-        res <- paste0 (i, collapse = "|")
-        res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
-        res <- gsub ("\\{", "\\\\{", res)
-        return (gsub ("\\}", "\\\\}", res))
-    })
-    for (i in seq_along (m)) {
-        standards [i] <- gsub (m [[i]], "", standards [i])
-    }
-
-    # These use regexpr and not gregexpr to only match first '{...}' while
-    # ignoring all subsequent ones
-    g_open <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", standards)
-    g_close <- regexpr ("[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
-    g_close <- g_close + attr (g_close, "match.length") - 1
-    standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
-    standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
-
-    return (standards)
-}
-
 #' process_srrstats_NA_tags
 #'
 #' @param fn_name Just a dummy here to allow do.call
@@ -353,6 +325,34 @@ process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nol
     )
 
     return (msg)
+}
+
+# extract the actual standards numbers from arbitrary text strings, first
+# capturing everything inside first "[...]":
+extract_standard_numbers <- function (standards) {
+
+    # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
+    # muck up standards ID, so have to be removed here:
+    g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
+    m <- lapply (regmatches (standards, g), function (i) {
+        res <- paste0 (i, collapse = "|")
+        res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
+        res <- gsub ("\\{", "\\\\{", res)
+        return (gsub ("\\}", "\\\\}", res))
+    })
+    for (i in seq_along (m)) {
+        standards [i] <- gsub (m [[i]], "", standards [i])
+    }
+
+    # These use regexpr and not gregexpr to only match first '{...}' while
+    # ignoring all subsequent ones
+    g_open <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", standards)
+    g_close <- regexpr ("[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
+    g_close <- g_close + attr (g_close, "match.length") - 1
+    standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
+    standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
+
+    return (standards)
 }
 
 get_block_backref <- function (block, base_path = NULL) {
