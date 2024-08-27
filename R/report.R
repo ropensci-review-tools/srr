@@ -41,6 +41,7 @@ srr_report <- function (path = ".", branch = "",
     if (path == ".") {
         path <- here::here ()
     }
+    path <- normalizePath (path)
 
     remote <- get_git_remote (path)
     branch <- get_git_branch (path, branch)

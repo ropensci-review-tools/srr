@@ -153,14 +153,14 @@ get_verbose_flag <- function (blocks) {
 parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        call_fn <- paste0 ("process_", tag, "_tags")
         msgs <- c (
             msgs,
-            do.call (call_fn, list (
+            process_srrstats_tags (
+                tag = tag,
                 block = block,
                 fn_name = fn_name,
                 dir = dir
-            ))
+            )
         )
     }
 
@@ -204,49 +204,54 @@ check_block_title <- function (block, tag) {
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (is.null (block_title), "", block_title)
-    if (grepl ("^NA\\_st", block_title)) {
+    if (tag != "srrstatsNA" && grepl ("^NA\\_st", block_title)) {
         stop (paste0 (
             "An NA_standards block should only contain ",
             "'@srrstatsNA' tags, and no '@",
             tag, "' tags."
         ))
+    } else if (tag == "srrstatsNA" & !block_title == "NA_standards") {
+        stop (
+            "@srrstatsNA tags should only appear in ",
+            "a block with a title of NA_standards"
+        )
     }
-
 }
 
 #' process_srrstats_tags
 #'
 #' @param fn_name Include name of calling function in message?
 #' @noRd
-process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
+process_srrstats_tags <- function (tag = "srrstats", block,
+                                   fn_name = TRUE, dir = "R") {
 
-    func_name <- block$object$alias
+    check_block_title (block, tag)
 
-    check_block_title (block, "srrstats")
-
-    standards <- roxygen2::block_get_tags (block, "srrstats")
+    standards <- roxygen2::block_get_tags (block, tag)
     standards <- unlist (lapply (standards, function (i) i$val))
-
     snum <- extract_standard_numbers (standards)
-    if (length (snum) < 1) {
-        stop ("srrstats tags found but no correctly-formatted standard numbers")
-    }
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
     msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
-    if (fn_name && !is.null (func_name)) {
-        msg <- paste0 (msg, " in function '", func_name, "()'")
+    if (fn_name) {
+        func_name <- block$object$alias
+        if (!is.null (func_name)) {
+            msg <- paste0 (msg, " in function '", func_name, "()'")
+        }
     }
     ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    if (length (fpath) == 0L) {
-        # Mostly only for 'tests/testthat.R' file, which should never have tags
-        # anyway, so is skipped here.
-        return (NULL)
+    if (grepl (ptn, block$file)) {
+        fpath <- regmatches (block$file, regexpr (ptn, block$file))
+        term_ptn <- "/"
+    } else {
+        # Generally only 'tests/testthat.R' where 'dir = tests/testthat'
+        term_ptn <- paste0 ("\\.", tools::file_ext (block$file))
+        ptn <- paste0 ("^.*", dir, term_ptn, "$")
+        fpath <- regmatches (block$file, regexpr (ptn, block$file))
     }
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
+    fpath_full <- gsub (fpath, paste0 (dir, term_ptn), block$file)
 
     msg <- paste0 (
         msg, " on line#", block_line,
@@ -257,6 +262,7 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 
     return (msg)
 }
+
 
 # extract the actual standards numbers from arbitrary text strings, first
 # capturing everything inside first "[...]":
@@ -282,77 +288,11 @@ extract_standard_numbers <- function (standards) {
     g_close <- g_close + attr (g_close, "match.length") - 1
     standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
     standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
-
-    return (standards)
-}
-
-#' process_srrstats_NA_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    block_title <- roxygen2::block_get_tag_value (block, "title")
-    block_title <- ifelse (length (block_title) == 0L, "", block_title)
-    if (!block_title == "NA_standards") {
-        stop (
-            "@srrstatsNA tags should only appear in ",
-            "a block with a title of NA_standards"
-        )
+    if (length (standards) < 1) {
+        stop ("srrstats tags found but no correctly-formatted standard numbers")
     }
 
-    standards <- roxygen2::block_get_tags (block, "srrstatsNA")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    snum <- extract_standard_numbers (standards)
-    # standards <- gsub ("\\s.*$", "", standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        fpath_full,
-        "]"
-    )
-
-    return (msg)
-}
-
-#' process_srrstats_TODO_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    check_block_title (block, "srrstatsTODO")
-
-    standards <- roxygen2::block_get_tags (block, "srrstatsTODO")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    # standards <- gsub ("\\s.*$", "", standards)
-    snum <- extract_standard_numbers (standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        fpath_full,
-        "]"
-    )
-
-    return (msg)
+    return (standards)
 }
 
 get_block_backref <- function (block, base_path = NULL) {
