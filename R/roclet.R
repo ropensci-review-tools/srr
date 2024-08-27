@@ -232,9 +232,6 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     standards <- unlist (lapply (standards, function (i) i$val))
 
     snum <- extract_standard_numbers (standards)
-    if (length (snum) < 1) {
-        stop ("srrstats tags found but no correctly-formatted standard numbers")
-    }
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
@@ -245,11 +242,6 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     }
     ptn <- paste0 ("^.*", dir, "\\/")
     fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    if (length (fpath) == 0L) {
-        # Mostly only for 'tests/testthat.R' file, which should never have tags
-        # anyway, so is skipped here.
-        return (NULL)
-    }
     fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
 
     msg <- paste0 (
@@ -273,7 +265,6 @@ process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolin
     standards <- roxygen2::block_get_tags (block, "srrstatsNA")
     standards <- unlist (lapply (standards, function (i) i$val))
     snum <- extract_standard_numbers (standards)
-    # standards <- gsub ("\\s.*$", "", standards)
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
@@ -303,7 +294,6 @@ process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nol
 
     standards <- roxygen2::block_get_tags (block, "srrstatsTODO")
     standards <- unlist (lapply (standards, function (i) i$val))
-    # standards <- gsub ("\\s.*$", "", standards)
     snum <- extract_standard_numbers (standards)
 
     block_backref <- get_block_backref (block)
@@ -348,6 +338,9 @@ extract_standard_numbers <- function (standards) {
     g_close <- g_close + attr (g_close, "match.length") - 1
     standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
     standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
+    if (length (standards) < 1) {
+        stop ("srrstats tags found but no correctly-formatted standard numbers")
+    }
 
     return (standards)
 }
