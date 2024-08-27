@@ -153,14 +153,14 @@ get_verbose_flag <- function (blocks) {
 parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        call_fn <- paste0 ("process_", tag, "_tags")
         msgs <- c (
             msgs,
-            do.call (call_fn, list (
+            process_srrstats_tags (
+                tag = tag,
                 block = block,
                 fn_name = fn_name,
                 dir = dir
-            ))
+            )
         )
     }
 
@@ -222,23 +222,24 @@ check_block_title <- function (block, tag) {
 #'
 #' @param fn_name Include name of calling function in message?
 #' @noRd
-process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
+process_srrstats_tags <- function (tag = "srrstats", block,
+                                   fn_name = TRUE, dir = "R") {
 
-    check_block_title (block, "srrstats")
+    check_block_title (block, tag)
 
-    func_name <- block$object$alias
-
-    standards <- roxygen2::block_get_tags (block, "srrstats")
+    standards <- roxygen2::block_get_tags (block, tag)
     standards <- unlist (lapply (standards, function (i) i$val))
-
     snum <- extract_standard_numbers (standards)
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
     msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
-    if (fn_name && !is.null (func_name)) {
-        msg <- paste0 (msg, " in function '", func_name, "()'")
+    if (fn_name) {
+        func_name <- block$object$alias
+        if (!is.null (func_name)) {
+            msg <- paste0 (msg, " in function '", func_name, "()'")
+        }
     }
     ptn <- paste0 ("^.*", dir, "\\/")
     fpath <- regmatches (block$file, regexpr (ptn, block$file))
@@ -254,65 +255,6 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
     return (msg)
 }
 
-#' process_srrstats_NA_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    check_block_title (block, "srrstatsNA")
-
-    standards <- roxygen2::block_get_tags (block, "srrstatsNA")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    snum <- extract_standard_numbers (standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        fpath_full,
-        "]"
-    )
-
-    return (msg)
-}
-
-#' process_srrstats_TODO_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    check_block_title (block, "srrstatsTODO")
-
-    standards <- roxygen2::block_get_tags (block, "srrstatsTODO")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    snum <- extract_standard_numbers (standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    ptn <- paste0 ("^.*", dir, "\\/")
-    fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    fpath_full <- gsub (fpath, paste0 (dir, "/"), block$file)
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        fpath_full,
-        "]"
-    )
-
-    return (msg)
-}
 
 # extract the actual standards numbers from arbitrary text strings, first
 # capturing everything inside first "[...]":
