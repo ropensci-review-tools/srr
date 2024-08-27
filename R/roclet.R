@@ -204,14 +204,18 @@ check_block_title <- function (block, tag) {
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (is.null (block_title), "", block_title)
-    if (grepl ("^NA\\_st", block_title)) {
+    if (tag != "srrstatsNA" && grepl ("^NA\\_st", block_title)) {
         stop (paste0 (
             "An NA_standards block should only contain ",
             "'@srrstatsNA' tags, and no '@",
             tag, "' tags."
         ))
+    } else if (tag == "srrstatsNA" & !block_title == "NA_standards") {
+        stop (
+            "@srrstatsNA tags should only appear in ",
+            "a block with a title of NA_standards"
+        )
     }
-
 }
 
 #' process_srrstats_tags
@@ -220,9 +224,9 @@ check_block_title <- function (block, tag) {
 #' @noRd
 process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 
-    func_name <- block$object$alias
-
     check_block_title (block, "srrstats")
+
+    func_name <- block$object$alias
 
     standards <- roxygen2::block_get_tags (block, "srrstats")
     standards <- unlist (lapply (standards, function (i) i$val))
@@ -264,14 +268,7 @@ process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
 #' @noRd
 process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
 
-    block_title <- roxygen2::block_get_tag_value (block, "title")
-    block_title <- ifelse (length (block_title) == 0L, "", block_title)
-    if (!block_title == "NA_standards") {
-        stop (
-            "@srrstatsNA tags should only appear in ",
-            "a block with a title of NA_standards"
-        )
-    }
+    check_block_title (block, "srrstatsNA")
 
     standards <- roxygen2::block_get_tags (block, "srrstatsNA")
     standards <- unlist (lapply (standards, function (i) i$val))
