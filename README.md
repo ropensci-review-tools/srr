@@ -20,10 +20,10 @@ Standards](https://stats-devguide.ropensci.org/standards.html). Before
 proceeding, the answer to an important question: **[What is a
 “roclet”](https://github.com/r-lib/roxygen2/issues/1086)?**
 
--   A roclet is an object used by the
-    [`roxygen2`](https://roxygen2.r-lib.org) package to convert
-    [`roxygen2`](https://roxygen2.r-lib.org)-style documentation lines
-    into some desired form of output.
+- A roclet is an object used by the
+  [`roxygen2`](https://roxygen2.r-lib.org) package to convert
+  [`roxygen2`](https://roxygen2.r-lib.org)-style documentation lines
+  into some desired form of output.
 
 ## Why then?
 
@@ -52,7 +52,8 @@ with different kinds of tags. The
 [`roxygen2`](https://roxygen2.r-lib.org) package includes roclets to
 process a number of tags; the `srr` package implements custom roclets to
 process several additional tags for use with
-[rOpenSci](https://ropensci.org)’s software review systems.
+[rOpenSci](https://ropensci.org)’s software review systems, and to
+process tags in locations other than just the `R/` directory.
 
 At present, the package only contains roclets and associated functions
 to help those developing and reviewing packages submitted to rOpenSci’s
@@ -70,15 +71,16 @@ The easiest way to install this package is via the associated
 As shown there, simply enable the universe with
 
 ``` r
-options(repos = c(
+options (repos = c (
     ropenscireviewtools = "https://ropensci-review-tools.r-universe.dev",
-    CRAN = "https://cloud.r-project.org"))
+    CRAN = "https://cloud.r-project.org"
+))
 ```
 
 And then install the usual way with,
 
 ``` r
-install.packages("srr")
+install.packages ("srr")
 ```
 
 Alternatively, the package can be installed by running one of the
@@ -151,6 +153,7 @@ roclets.
         ## [6] "Spatial"                                                        
         ## [7] "Time Series"                                                    
         ## [8] "Dimensionality Reduction, Clustering, and Unsupervised Learning"
+        ## [9] "Probability Distributions"
 
     That function also returns links to the full descriptions of each
     category in the [main project
@@ -163,7 +166,7 @@ roclets.
     this:
 
     ``` r
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
+    Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
@@ -233,6 +236,15 @@ roclets.
     [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
     the roclet will scan your package’s documentation for the state of
     standards, and will generate a summary of the result on your screen.
+    Note, however, that the `roxygen2` package [only scans files in the
+    R
+    directory](https://github.com/r-lib/roxygen2/blob/9652d15221109917d46768e836eaf55e33c21633/R/package_files.R#L1-L10),
+    and so this screen output will only summarise standards documented
+    there. Standards documented in other locations such as test files or
+    vignettes will be recognised and processed by the `srr` package,
+    even through they will not be recognised by the
+    `document()/roxygenise()` functions, and so will not appear in their
+    output.
 
 To help developers understand how to use these roclets, this package
 includes a function,
@@ -293,17 +305,19 @@ project, you agree to abide by its terms.
 
 ## Contributors
 
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
-All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropenscilabs/allcontributors) following the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
+All contributions to this project are gratefully acknowledged using the
+[`allcontributors`
+package](https://github.com/ropenscilabs/allcontributors) following the
+[all-contributors](https://allcontributors.org) specification.
+Contributions of any kind are welcome!
 
 ### Code
 
 <table>
-
 <tr>
 <td align="center">
 <a href="https://github.com/mpadge">
@@ -324,14 +338,11 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=maelle">maelle</a>
 </td>
 </tr>
-
 </table>
-
 
 ### Issue Authors
 
 <table>
-
 <tr>
 <td align="center">
 <a href="https://github.com/santikka">
@@ -346,14 +357,11 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Aschneiderpy">schneiderpy</a>
 </td>
 </tr>
-
 </table>
-
 
 ### Issue Contributors
 
 <table>
-
 <tr>
 <td align="center">
 <a href="https://github.com/jeroen">
@@ -362,9 +370,7 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+commenter%3Ajeroen">jeroen</a>
 </td>
 </tr>
-
 </table>
-
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
