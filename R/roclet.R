@@ -218,6 +218,31 @@ check_block_title <- function (block, tag) {
     }
 }
 
+get_fn_name_from_block <- function (block) {
+    func_name <- block$object$alias
+    if (is.null (func_name)) {
+        pd <- tryCatch (
+            utils::getParseData (parse (text = deparse (block$call))),
+            error = function (e) NULL
+        )
+        if (!is.null (pd)) {
+            if (nrow (pd) > 0L) {
+
+                pd <- pd [-(which (pd$token == "expr")), ]
+                if (nrow (pd) >= 3L) {
+                    if (pd$token [1] == "SYMBOL" &&
+                        pd$token [2] == "LEFT_ASSIGN" &&
+                        pd$token [3] == "FUNCTION") {
+                        func_name <- pd$text [1]
+                    }
+                }
+            }
+        }
+    }
+
+    return (func_name)
+}
+
 #' process_srrstats_tags
 #'
 #' @param fn_name Include name of calling function in message?
@@ -236,16 +261,7 @@ process_srrstats_tags <- function (tag = "srrstats", block,
 
     msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
     if (fn_name) {
-        func_name <- block$object$alias
-        if (is.null (func_name)) {
-            pd <- utils::getParseData (parse (text = deparse (block$call)))
-            pd <- pd [-(which (pd$token == "expr")), ]
-            if (pd$token [1] == "SYMBOL" &&
-                pd$token [2] == "LEFT_ASSIGN" &&
-                pd$token [3] == "FUNCTION") {
-                func_name <- pd$text [1]
-            }
-        }
+        func_name <- get_fn_name_from_block (block)
         if (!is.null (func_name)) {
             msg <- paste0 (msg, " in function '", func_name, "()'")
         }
