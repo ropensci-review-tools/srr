@@ -376,12 +376,12 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
         br_close <- "]"
     }
 
-    msg <- paste0 ("Standards in ")
+    msg <- paste0 ("Standards ")
     if (!is.na (fn)) {
-        msg <- paste0 (msg, "function '", fn, "'")
+        msg <- paste0 (msg, "in function '", fn, "'")
     }
     if (!is.na (line_num)) {
-        msg <- paste0 (msg, " on line#", line_num)
+        msg <- paste0 (msg, "on line#", line_num)
     }
     msg <- paste0 (msg, " of file ", br_open, file_name, br_close)
     if (!is.null (remote)) {
