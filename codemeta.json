@@ -8,7 +8,7 @@
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.3.17",
+  "version": "0.1.3.018",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -174,7 +174,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     },
-    "SystemRequirements": null
+    "SystemRequirements": {}
   },
   "fileSize": "1404.327KB",
   "citation": [
@@ -194,6 +194,9 @@
     }
   ],
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "contIntegration": ["https://github.com/ropensci-review-tools/srr/actions", "https://codecov.io/gh/ropensci-review-tools/srr"],
+  "contIntegration": [
+    "https://github.com/ropensci-review-tools/srr/actions",
+    "https://codecov.io/gh/ropensci-review-tools/srr"
+  ],
   "developmentStatus": "https://www.repostatus.org/#concept"
 }
