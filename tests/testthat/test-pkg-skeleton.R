@@ -27,6 +27,13 @@ test_that ("dummy package", {
     expect_true (any (grepl ("\\s\\*\\s\\[RE4\\.4\\]", x)))
     expect_true (grep ("\\s\\*\\s\\[RE4\\.4\\]", x) [1] >
         grep ("@srrstatsTODO standards \\(", x) [1])
+
+    # detach is critical here, because testthat uses `utils::sessionInfo()`,
+    # which checks namespaces and tries to load DESC file from pkg location.
+    pos <- match (paste0 ("package:", pkg_name), search ())
+    if (!is.na (pos)) {
+        detach (pos = pos, unload = TRUE)
+    }
     unlink (d, recursive = TRUE)
 })
 
@@ -44,6 +51,10 @@ test_that ("skeleton errors", {
             s <- srr_stats_pkg_skeleton (pkg_name = pkg_name),
             paste0 ("The path \\[", d, "\\] is not empty")
         )
+    }
+    p <- paste0 ("package:", pkg_name)
+    if (p %in% search ()) {
+        detach (p, unload = TRUE)
     }
     unlink (d, recursive = TRUE)
 })
