@@ -349,7 +349,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     fn <- NA_character_
     if (grepl ("\\sfunction\\s", m)) {
         g <- gregexpr ("\\sfunction\\s+\\'.*\\'", m)
-        fn <- gsub ("^\\sfunction\\s+\\'|\\'$", "", regmatches (m, g) [[1]])
+        fn <- gsub ("^\\sfunction\\s+\\'|\\'$", " ", regmatches (m, g) [[1]])
     }
 
     g <- gregexpr ("file\\s+\\[.*\\]$", m)
