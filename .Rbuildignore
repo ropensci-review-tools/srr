@@ -4,7 +4,6 @@
 ^CONTRIBUTING.md$
 ^LICENSE\.md$
 ^README\.Rmd$
-^README\.md$
 ^\.Rproj\.user$
 ^\.github$
 ^\.hooks$
