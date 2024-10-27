@@ -87,13 +87,9 @@ collect_blocks <- function(blocks, base_path) {
   )
   rcpp_blocks <- blocks[which(rcpp)]
   blocks <- blocks[which(!rcpp)]
-
-  if (base_path == ".") {
-    base_path <- paste0(getwd(), "/")
-  }
-
+  
   file_paths <- vapply(blocks, function(i) {
-    gsub(base_path, "", i$file)
+    gsub(normalizePath(base_path), "", i$file)
   }, character(1), USE.NAMES = FALSE)
   re <- regexpr("^.*\\/", file_paths)
   file_dirs <- rep(".", length(file_paths))
