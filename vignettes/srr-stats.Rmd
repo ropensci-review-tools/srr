@@ -58,19 +58,19 @@ by default called `"demo"`, is constructed in R's
 and looks like this:
 
 ```{r dir-tree}
-library (srr)
-d <- srr_stats_pkg_skeleton (pkg_name = "package")
-fs::dir_tree (d)
+library(srr)
+d <- srr_stats_pkg_skeleton(pkg_name = "package")
+fs::dir_tree(d)
 ```
 
 The files listed there mostly exist to illustrate how standards can be included
 within code. The format of standards can be seen by examining any of those
 files. For example, the `test.R` file looks like this:
 ```{r test-file-dummy, eval = FALSE}
-readLines (file.path (d, "R", "test.R"))
+readLines(file.path(d, "R", "test.R"))
 ```
 ```{r test-file, echo = FALSE}
-print (readLines (file.path (d, "R", "test.R")), width = 20)
+print(readLines(file.path(d, "R", "test.R")), width = 20)
 ```
 
 That file illustrates some of the [`roxygen2`](https://roxygen2.r-lib.org) tags
@@ -81,13 +81,13 @@ which will produce output like the following:
 
 ```{r skeleton-output1-compile, eval = TRUE, echo = FALSE, message = FALSE, results = "hide"}
 # need to run once to compile /src so compile output does not appear on 2nd time
-pkgbuild::compile_dll (d)
+pkgbuild::compile_dll(d)
 ```
 ```{r skeleton-output-dummy, eval = FALSE, echo = TRUE, collapse = TRUE}
-roxygen2::roxygenise (d)
+roxygen2::roxygenise(d)
 ```
 ```{r skeleton-output, eval = TRUE, echo = FALSE, message = TRUE, collapse = TRUE}
-roxygen2::roxygenise (d)
+roxygen2::roxygenise(d)
 ```
 
 The "roclets" contained within this package parse any instances of the
@@ -106,7 +106,7 @@ The "roclets" can be enabled for a package by modifying the `DESCRIPTION` file
 so that the `Roxygen` line looks like this:
 
 ```{r roxygen, eval = FALSE}
-Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
+Roxygen:list(markdown = TRUE, roclets = c("namespace", "rd", "srr::srr_stats_roclet"))
 ```
 
 That will load the ["roclets"](https://roxygen2.r-lib.org) used by this package
@@ -182,12 +182,12 @@ formatting requirements:
    the next tag.) The following will accordingly only refer to G1.0, and not
    G1.1:
     ```{r}
-   #' @srrstats {G1.0} as well as {G1.1}.
+#' @srrstats {G1.0} as well as {G1.1}.
     ```
     The appropriate way to refer to multiple tags is to include them in the one set of curly braces, as shown above, or to use separate tags, like this:
     ```{r}
-    #' @srrstats {G1.0} as well as
-    #' @srrstats {G1.1}
+#' @srrstats {G1.0} as well as
+#' @srrstats {G1.1}
     ```
 5. Any standard may occur arbitrarily many times in any file(s) within a
    package. The only requirement is that any one standard should only be
@@ -221,8 +221,8 @@ following two lines will suffice:
 ```{r doc-ex-with-fn}
 #' @srrstats G1.0 This standard belongs here
 #' @noRd
-myfunction <- function (...) {
-    # ...
+myfunction <- function(...) {
+  # ...
 }
 ```
 If that block is not associated with a function, the documentation can be
@@ -240,11 +240,12 @@ function, they need neither `#' @noRd` tags, nor `NULL` definitions where none
 otherwise exist. An example is in the `tests/` directory of the package
 skeleton:
 ```{r tests-ex-dummy, eval = FALSE}
-readLines (file.path (d, "tests", "testthat", "test-a.R"))
+readLines(file.path(d, "tests", "testthat", "test-a.R"))
 ```
 ```{r tests-ex, echo = FALSE}
-print (readLines (file.path (d, "tests", "testthat", "test-a.R")),
-       width = 20)
+print(readLines(file.path(d, "tests", "testthat", "test-a.R")),
+  width = 20
+)
 ```
 
 While `@srrstats` tags can also be placed in the `src/` directory, the package
@@ -260,10 +261,10 @@ These blocks are converted by
 (optionally) suppress generation of `.Rd` documentation. The skeleton package
 again gives an example:
 ```{r src-ex-dummy, eval = FALSE}
-readLines (file.path (d, "src", "cpptest.cpp"))
+readLines(file.path(d, "src", "cpptest.cpp"))
 ```
 ```{r src-ex, echo = FALSE}
-print (readLines (file.path (d, "src", "cpptest.cpp")), width = 20)
+print(readLines(file.path(d, "src", "cpptest.cpp")), width = 20)
 ```
 
 ### 3.3 Documenting standards for documentation
@@ -273,7 +274,7 @@ Many standards refer to general package documentation, particularly in a
 be written in `.Rmd` format, for which `@srrstats` tags must be included within
 distinct code chunks. Again, the skeleton package has an example as follows:
 ```{r readme-ex}
-readLines (file.path (d, "README.Rmd"))
+readLines(file.path(d, "README.Rmd"))
 ```
 
 Those lines illustrate the expected form. `@srrstats` tags should be within
@@ -366,20 +367,24 @@ your own package for you `srr` documentation. The following lines demonstrate
 what happens if you insert actual standards into the package skeleton:
 
 ```{r dl-stds-fakey, echo = TRUE, eval = FALSE}
-srr_stats_roxygen (category = "regression", # for example
-                   filename = file.path (d, "R", "srr-stats-standards.R"),
-                   overwrite = TRUE)
+srr_stats_roxygen(
+  category = "regression", # for example
+  filename = file.path(d, "R", "srr-stats-standards.R"),
+  overwrite = TRUE
+)
 ```
 ```{r dl-stds, echo = FALSE, eval = TRUE, collapse = TRUE}
-srr_stats_roxygen (category = "regression", # for example
-                   filename = file.path (d, "R", "srr-stats-standards.R"),
-                   overwrite = TRUE)
+srr_stats_roxygen(
+  category = "regression", # for example
+  filename = file.path(d, "R", "srr-stats-standards.R"),
+  overwrite = TRUE
+)
 ```
 ```{r mixed-tags-fakey, echo = TRUE, eval = FALSE}
-roxygen2::roxygenise (d)
+roxygen2::roxygenise(d)
 ```
 ```{r mixed-tags, echo = FALSE, eval = TRUE, error = TRUE, collapse = TRUE}
-roxygen2::roxygenise (d)
+roxygen2::roxygenise(d)
 ```
 To ensure all standards are first inserted with `@srrstatsTODO` tags, and that
 there are no duplicates with other tags, please use only the

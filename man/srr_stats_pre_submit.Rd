@@ -19,10 +19,10 @@ Check that all standards are present in code, and listed either as
 '@srrstats' or '@srrstatsNA'
 }
 \examples{
-d <- srr_stats_pkg_skeleton ()
+d <- srr_stats_pkg_skeleton()
 # The skeleton has 'TODO' standards, and also has only a few from the full
 # list expected for the categories specified there.
-srr_stats_pre_submit (d)
+srr_stats_pre_submit(d)
 }
 \seealso{
 Other helper: 

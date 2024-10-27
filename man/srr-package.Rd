@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Mark Padgham \email{mark@ropensci.org} (\href{https://orcid.org/0000-0003-2172-5265}{ORCID})
 
+Other contributors:
+\itemize{
+  \item Mauricio Vargas Sepulveda (\href{https://orcid.org/0000-0003-1017-7574}{ORCID}) [contributor]
+}
+
 }
 \keyword{internal}

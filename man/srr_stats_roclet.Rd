@@ -18,7 +18,7 @@ exists to enable "@srrstats" tags to be parsed from \pkg{roxygen2}
 documentation.
 }
 \examples{
-srr_stats_roclet ()
+srr_stats_roclet()
 }
 \seealso{
 Other roxygen: 

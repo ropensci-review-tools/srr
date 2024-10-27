@@ -8,30 +8,29 @@
 #' "url".
 #' @family helper
 #' @examples
-#' srr_stats_categories ()
+#' srr_stats_categories()
 #' @export
-srr_stats_categories <- function () {
+srr_stats_categories <- function() {
+  cats <- std_prefixes()
+  cat_full <- unlist(lapply(cats$category, function(i) {
+    category_titles_urls(i)
+  }))
 
-    cats <- std_prefixes ()
-    cat_full <- unlist (lapply (cats$category, function (i) {
-        category_titles_urls (i)
-    }))
+  version <- stds_version()
 
-    version <- stds_version ()
+  index <- seq(length(cat_full) / 2) * 2
 
-    index <- seq (length (cat_full) / 2) * 2
+  res <- data.frame(
+    category = cats$category,
+    std_prefix = cats$prefix,
+    title = cat_full[index - 1],
+    url = cat_full[index],
+    stringsAsFactors = FALSE
+  )
 
-    res <- data.frame (
-        category = cats$category,
-        std_prefix = cats$prefix,
-        title = cat_full [index - 1],
-        url = cat_full [index],
-        stringsAsFactors = FALSE
-    )
+  attr(res, "stds_version") <- version
 
-    attr (res, "stds_version") <- version
-
-    return (res)
+  return(res)
 }
 
 
@@ -41,17 +40,16 @@ srr_stats_categories <- function () {
 #' that requires an authorized request to the V3 API, while direct download of
 #' files can be done without that, so is safer here.
 #' @noRd
-list_categories <- function () {
+list_categories <- function() {
+  # u <- paste0 (base_url (), "git/trees/main?recursive=1")
+  u <- paste0(base_url(raw = TRUE), "main/standards.Rmd")
+  tmp <- tempfile(fileext = ".Rmd")
+  ret <- utils::download.file(u, destfile = tmp, quiet = TRUE) # nolint
 
-    # u <- paste0 (base_url (), "git/trees/main?recursive=1")
-    u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
-    tmp <- tempfile (fileext = ".Rmd")
-    ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
-
-    x <- readLines (tmp)
-    cats <- grep ("\\`\\`\\`\\{r\\s", x, value = TRUE)
-    cats <- regmatches (cats, regexpr ("standards\\-.*$+", cats))
-    gsub ("standards\\-|\\}$", "", cats)
+  x <- readLines(tmp)
+  cats <- grep("\\`\\`\\`\\{r\\s", x, value = TRUE)
+  cats <- regmatches(cats, regexpr("standards\\-.*$+", cats))
+  gsub("standards\\-|\\}$", "", cats)
 }
 
 
@@ -61,30 +59,29 @@ list_categories <- function () {
 #' texts to retrieve vectors of single references of category code and standards
 #' numbers.
 #' @noRd
-get_categories <- function (stds) {
+get_categories <- function(stds) {
+  if (is.null(stds)) {
+    return(NULL)
+  }
 
-    if (is.null (stds)) {
-        return (NULL)
-    }
+  categories <- unique(vapply(
+    strsplit(stds, "[0-9]"),
+    function(i) i[[1]],
+    character(1)
+  ))
 
-    categories <- unique (vapply (
-        strsplit (stds, "[0-9]"),
-        function (i) i [[1]],
-        character (1)
-    ))
+  all_cats <- srr_stats_categories()
+  if (any(!categories %in% all_cats$std_prefix)) {
+    stop("There are no standards with prefix [",
+      paste0(categories[which(!categories %in% all_cats$std_prefix)],
+        collapse = ", "
+      ),
+      "]",
+      call. = FALSE
+    )
+  }
 
-    all_cats <- srr_stats_categories ()
-    if (any (!categories %in% all_cats$std_prefix)) {
-        stop ("There are no standards with prefix [",
-            paste0 (categories [which (!categories %in% all_cats$std_prefix)],
-                collapse = ", "
-            ),
-            "]",
-            call. = FALSE
-        )
-    }
-
-    all_cats [match (categories, all_cats$std_prefix), ]
+  all_cats[match(categories, all_cats$std_prefix), ]
 }
 
 #' Extract all enumerated standards for a nominated category
@@ -92,41 +89,39 @@ get_categories <- function (stds) {
 #' to be enumerated. (See `list_categories()` function for standardised category
 #' nomenclature.)
 #' @noRd
-get_standard_nums <- function (category) {
+get_standard_nums <- function(category) {
+  s <- dl_standards(category, quiet = TRUE)
+  s <- format_standards(s)
 
-    s <- dl_standards (category, quiet = TRUE)
-    s <- format_standards (s)
+  # Then extract standard numbers only
+  s <- s[grep("\\-\\s+\\[\\s\\]\\s\\*\\*[A-Z]", s)]
+  # explicit gsub operations for clarity:
+  s <- gsub("^\\s+\\-", "-", s)
+  # remove first checkbox bits:
+  s <- gsub("^\\-\\s+\\[\\s\\]\\s\\*\\*", "", s)
+  # then extract standard numbers only
+  m <- gregexpr("^[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", s)
+  s <- unlist(regmatches(s, m))
 
-    # Then extract standard numbers only
-    s <- s [grep ("\\-\\s+\\[\\s\\]\\s\\*\\*[A-Z]", s)]
-    # explicit gsub operations for clarity:
-    s <- gsub ("^\\s+\\-", "-", s)
-    # remove first checkbox bits:
-    s <- gsub ("^\\-\\s+\\[\\s\\]\\s\\*\\*", "", s)
-    # then extract standard numbers only
-    m <- gregexpr ("^[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", s)
-    s <- unlist (regmatches (s, m))
-
-    return (s)
+  return(s)
 }
 
-std_prefixes <- function () {
+std_prefixes <- function() {
+  cats <- list_categories()
+  prefixes <- rep(NA_character_, length(cats))
+  prefixes[cats == "bayesian"] <- "BS"
+  prefixes[cats == "eda"] <- "EA"
+  prefixes[cats == "general"] <- "G"
+  prefixes[cats == "ml"] <- "ML"
+  prefixes[cats == "regression"] <- "RE"
+  prefixes[cats == "spatial"] <- "SP"
+  prefixes[cats == "time-series"] <- "TS"
+  prefixes[cats == "unsupervised"] <- "UL"
+  prefixes[cats == "distributions"] <- "PD"
 
-    cats <- list_categories ()
-    prefixes <- rep (NA_character_, length (cats))
-    prefixes [cats == "bayesian"] <- "BS"
-    prefixes [cats == "eda"] <- "EA"
-    prefixes [cats == "general"] <- "G"
-    prefixes [cats == "ml"] <- "ML"
-    prefixes [cats == "regression"] <- "RE"
-    prefixes [cats == "spatial"] <- "SP"
-    prefixes [cats == "time-series"] <- "TS"
-    prefixes [cats == "unsupervised"] <- "UL"
-    prefixes [cats == "distributions"] <- "PD"
-
-    return (data.frame (
-        category = cats,
-        prefix = prefixes,
-        stringsAsFactors = FALSE
-    ))
+  return(data.frame(
+    category = cats,
+    prefix = prefixes,
+    stringsAsFactors = FALSE
+  ))
 }

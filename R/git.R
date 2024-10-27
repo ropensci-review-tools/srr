@@ -1,70 +1,64 @@
-repo_is_git <- function (path) {
+repo_is_git <- function(path) {
+  g <- tryCatch(
+    gert::git_find(path),
+    error = function(e) e
+  )
 
-    g <- tryCatch (
-        gert::git_find (path),
-        error = function (e) e
-    )
-
-    return (!methods::is (g, "libgit2_error"))
+  return(!methods::is(g, "libgit2_error"))
 }
 
-get_git_remote <- function (path = ".") {
+get_git_remote <- function(path = ".") {
+  r <- NULL
 
-    r <- NULL
-
-    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
-
-        desc <- file.path (path, "DESCRIPTION")
-        if (!file.exists (desc)) {
-            return (NULL)
-        }
-
-        d <- data.frame (read.dcf (desc))
-        if (!"URL" %in% names (d)) {
-            return (NULL)
-        }
-
-        r <- strsplit (d$URL, "\\s+") [[1]]
-        r <- grep ("^https", r, value = TRUE)
-        if (length (r) > 1) {
-            r <- grep ("git", r, value = TRUE)
-        }
-        if (length (r) > 1) {
-            r <- r [which (!grepl ("\\.io", r))]
-        }
-
-    } else if (repo_is_git (path)) {
-
-        r <- gert::git_remote_list (path)$url
-        if (length (r) != 1) {
-            warning (
-                "There appears to be more than one git remote; ",
-                "the first will be chosen"
-            )
-            r <- r [1]
-        }
-
-        r <- gsub (".*\\t|\\s.*$", "", r)
+  if (!any(grepl("^\\.git$", list.files(path, all.files = TRUE)))) {
+    desc <- file.path(path, "DESCRIPTION")
+    if (!file.exists(desc)) {
+      return(NULL)
     }
 
-    return (r)
+    d <- data.frame(read.dcf(desc))
+    if (!"URL" %in% names(d)) {
+      return(NULL)
+    }
+
+    r <- strsplit(d$URL, "\\s+")[[1]]
+    r <- grep("^https", r, value = TRUE)
+    if (length(r) > 1) {
+      r <- grep("git", r, value = TRUE)
+    }
+    if (length(r) > 1) {
+      r <- r[which(!grepl("\\.io", r))]
+    }
+  } else if (repo_is_git(path)) {
+    r <- gert::git_remote_list(path)$url
+    if (length(r) != 1) {
+      warning(
+        "There appears to be more than one git remote; ",
+        "the first will be chosen"
+      )
+      r <- r[1]
+    }
+
+    r <- gsub(".*\\t|\\s.*$", "", r)
+  }
+
+  return(r)
 }
 
-get_git_branch <- function (path, branch = "") {
+get_git_branch <- function(path, branch = "") {
+  if (!repo_is_git(path)) {
+    return(NULL)
+  }
+  if (is.null(branch)) {
+    branch <- ""
+  }
 
-    if (!repo_is_git (path)) {
-        return (NULL)
-    }
-    if (is.null (branch)) {
-        branch <- ""
-    }
+  g <- gert::git_info(path)
+  if (branch == "") {
+    branch <- g$shorthand
+  } else if (branch != g$shorthand) {
+    gert::git_branch_checkout(branch = branch, repo = path)
+  }
 
-    g <- gert::git_info (path)
-    if (branch == "") {
-        branch <- g$shorthand
-    } else if (branch != g$shorthand) {
-        gert::git_branch_checkout (branch = branch, repo = path)
-    }
-
-    return (branch)
+  return(branch)
 }

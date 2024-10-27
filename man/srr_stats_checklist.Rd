@@ -25,10 +25,10 @@ local clipboard ready to paste.
 }
 \examples{
 \dontrun{
-x <- srr_stats_checklist (category = "regression")
+x <- srr_stats_checklist(category = "regression")
 # or write to specified file:
-f <- tempfile (fileext = ".md")
-x <- srr_stats_checklist (category = "regression", filename = f)
+f <- tempfile(fileext = ".md")
+x <- srr_stats_checklist(category = "regression", filename = f)
 }
 }
 \seealso{

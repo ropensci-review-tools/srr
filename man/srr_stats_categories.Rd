@@ -16,7 +16,7 @@ List all currently available categories and associated URLs to full category
 descriptions.
 }
 \examples{
-srr_stats_categories ()
+srr_stats_categories()
 }
 \seealso{
 Other helper: 
