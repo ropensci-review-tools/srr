@@ -228,7 +228,7 @@ write_test_files <- function (d, pkg_name) {
 #' # (capture.output of initial compliation messages)
 #' x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
 #' @export
-srr_stats_pkg_skeleton <- function (base_dir = fs::path_temp (), pkg_name = "demo") {
+srr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 
