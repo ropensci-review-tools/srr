@@ -45,7 +45,7 @@ list_categories <- function () {
 
     # u <- paste0 (base_url (), "git/trees/main?recursive=1")
     u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
-    tmp <- tempfile (fileext = ".Rmd")
+    tmp <- fs::file_temp (ext = "Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
     x <- readLines (tmp)
