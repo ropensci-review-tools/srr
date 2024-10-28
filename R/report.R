@@ -41,7 +41,7 @@ srr_report <- function (path = ".", branch = "",
     if (path == ".") {
         path <- here::here ()
     }
-    path <- normalizePath (path)
+    path <- fs::path_abs (fs::path_expand (path))
 
     remote <- get_git_remote (path)
     branch <- get_git_branch (path, branch)
@@ -157,7 +157,7 @@ srr_report <- function (path = ".", branch = "",
     })
     md_lines <- unlist (md_lines)
 
-    desc <- data.frame (read.dcf (file.path (path, "DESCRIPTION")))
+    desc <- data.frame (read.dcf (fs::path (path, "DESCRIPTION")))
     pkg <- desc$Package
 
     if (is.null (remote)) {
@@ -219,7 +219,7 @@ get_all_msgs <- function (path = ".") {
         this_file <- i
         is_rmd <- grepl ("\\.Rmd$", i)
         if (is_rmd) {
-            fout <- tempfile ()
+            fout <- fs::file_temp ()
             rcpp_parse_rmd (i, fout)
             this_file <- fout
         }
