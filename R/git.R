@@ -12,10 +12,10 @@ get_git_remote <- function (path = ".") {
 
     r <- NULL
 
-    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
+    if (fs::dir_exists (fs::path (path, ".git"))) {
 
-        desc <- file.path (path, "DESCRIPTION")
-        if (!file.exists (desc)) {
+        desc <- fs::path (path, "DESCRIPTION")
+        if (!fs::file_exists (desc)) {
             return (NULL)
         }
 

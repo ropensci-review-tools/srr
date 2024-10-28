@@ -1,32 +1,29 @@
 pkg_name_from_desc <- function (path) {
 
-    desc <- file.path (path, "DESCRIPTION")
+    desc <- fs::path (path, "DESCRIPTION")
     as.character (read.dcf (desc, "Package"))
 }
 
 get_all_file_names <- function (path) {
 
-    if (!dir.exists (file.path (path, "R"))) {
+    if (!fs::dir_exists (fs::path (path, "R"))) {
         warning ("Directory [", path, "] does not appear to be an R package")
         return (NULL)
     }
 
-    dirs <- c (".", "R", "vignettes", "tests", "inst")
+    dirs <- fs::path_abs (fs::path (path, c (".", "R", "vignettes", "tests", "inst")))
     sfxs <- c ("\\.(R|r)?md$", "\\.(R|r)$", "\\.(R|r)md$", "\\.(R|r)$", "\\.(R|r)?md$")
     rec <- c (FALSE, FALSE, TRUE, TRUE, TRUE)
+    index <- which (fs::dir_exists (dirs))
 
-    flist <- lapply (seq_along (dirs), function (i) {
-        list.files (file.path (path, dirs [i]),
-            full.names = TRUE,
-            recursive = rec [i],
-            pattern = sfxs [i]
-        )
+    flist <- lapply (index, function (i) {
+        fs::dir_ls (dirs [i], recurse = rec [i], regexp = sfxs [i], type = "file")
     })
-    flist <- normalizePath (unlist (flist))
+    flist <- unname (unlist (flist))
 
     # Get any duplicated files, usually one `.Rmd`, one `.md`, and reduce to
     # `.md` only, so it can be removed:
-    flist_noext <- tools::file_path_sans_ext (flist)
+    flist_noext <- fs::path_ext_remove (flist)
     dups <- which (duplicated (flist_noext))
     index <- vapply (dups, function (d) {
         these <- which (flist_noext == flist_noext [d])

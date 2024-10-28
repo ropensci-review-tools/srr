@@ -1,4 +1,3 @@
-
 #' Check a completed standards checklist
 #'
 #' Correct any potential formatting issues in a completed standards checklist
@@ -27,7 +26,7 @@ srr_stats_checklist_check <- function (file) {
 
 checklist_check_intern <- function (file) {
 
-    if (!file.exists (file)) {
+    if (!fs::file_exists (file)) {
         stop ("File [", file, "] does not exist")
     }
 

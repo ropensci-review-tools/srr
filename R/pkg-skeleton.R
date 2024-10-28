@@ -1,9 +1,8 @@
-
 make_pkg_path <- function (base_dir = tempdir (), pkg_name = "demo") {
 
-    d <- file.path (base_dir, pkg_name)
-    if (!file.exists (d)) {
-        dir.create (d, recursive = TRUE)
+    d <- fs::path (base_dir, pkg_name)
+    if (!fs::dir_exists (d)) {
+        fs::dir_create (d, recurse = TRUE)
     }
 
     return (d)
@@ -55,7 +54,7 @@ write_desc <- function (d, pkg_name) {
         )
     }
 
-    writeLines (desc, con = file.path (d, "DESCRIPTION"))
+    writeLines (desc, con = fs::path (d, "DESCRIPTION"))
 }
 
 write_r_fn <- function (d, pkg_name) {
@@ -75,11 +74,11 @@ write_r_fn <- function (d, pkg_name) {
         "  message(\"This function does nothing\")",
         "}"
     )
-    dr <- file.path (d, "R")
-    if (!file.exists (dr)) {
-        dir.create (dr)
+    dr <- fs::path (d, "R")
+    if (!fs::dir_exists (dr)) {
+        fs::dir_create (dr)
     }
-    writeLines (rfile, con = file.path (dr, "test.R"))
+    writeLines (rfile, con = fs::path (dr, "test.R"))
 
     rfile <- c (
         "#' @keywords internal",
@@ -96,7 +95,7 @@ write_r_fn <- function (d, pkg_name) {
         "## usethis namespace: end",
         "NULL"
     )
-    writeLines (rfile, con = file.path (dr, paste0 (pkg_name, "-package.R")))
+    writeLines (rfile, con = fs::path (dr, paste0 (pkg_name, "-package.R")))
 
     rfile <- c (
         "#' NA_standards",
@@ -114,7 +113,7 @@ write_r_fn <- function (d, pkg_name) {
         "#' @noRd",
         "NULL"
     )
-    writeLines (rfile, con = file.path (dr, "srr-stats-standards.R"))
+    writeLines (rfile, con = fs::path (dr, "srr-stats-standards.R"))
 }
 
 write_src_fn <- function (d) {
@@ -132,12 +131,12 @@ write_src_fn <- function (d) {
         "    return 1L; }"
     )
 
-    ds <- file.path (d, "src")
-    if (!file.exists (ds)) {
-        dir.create (ds)
+    ds <- fs::path (d, "src")
+    if (!fs::dir_exists (ds)) {
+        fs::dir_create (ds)
     }
 
-    writeLines (sfile, con = file.path (ds, "cpptest.cpp"))
+    writeLines (sfile, con = fs::path (ds, "cpptest.cpp"))
 }
 
 write_readme <- function (d, pkg_name) {
@@ -171,7 +170,7 @@ write_readme <- function (d, pkg_name) {
     )
     # nolint end
 
-    writeLines (rfile, con = file.path (d, "README.Rmd"))
+    writeLines (rfile, con = fs::path (d, "README.Rmd"))
 }
 
 write_namespace <- function (d, pkg_name) {
@@ -182,7 +181,7 @@ write_namespace <- function (d, pkg_name) {
         paste0 ("useDynLib(", pkg_name, ", .registration=TRUE)"),
         "importFrom(Rcpp, evalCpp)"
     )
-    writeLines (nfile, con = file.path (d, "NAMESPACE"))
+    writeLines (nfile, con = fs::path (d, "NAMESPACE"))
 }
 
 write_test_files <- function (d, pkg_name) {
@@ -194,11 +193,11 @@ write_test_files <- function (d, pkg_name) {
         paste0 ("test_check(\"", pkg_name, "\")")
     )
 
-    dt <- file.path (d, "tests", "testthat")
-    if (!file.exists (dt)) {
-        dir.create (dt, recursive = TRUE)
+    dt <- fs::path (d, "tests", "testthat")
+    if (!fs::dir_exists (dt)) {
+        fs::dir_create (dt, recurse = TRUE)
     }
-    writeLines (tfile, con = file.path (d, "tests", "testthat.R"))
+    writeLines (tfile, con = fs::path (d, "tests", "testthat.R"))
 
     tfile <- c (
         "#' @srrstats {RE2.2} is addressed here",
@@ -206,7 +205,7 @@ write_test_files <- function (d, pkg_name) {
         "    expect_true (TRUE)",
         "})"
     )
-    writeLines (tfile, con = file.path (d, "tests", "testthat", "test-a.R"))
+    writeLines (tfile, con = fs::path (d, "tests", "testthat", "test-a.R"))
 
 }
 
@@ -233,7 +232,7 @@ srr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 
     d <- make_pkg_path (base_dir, pkg_name)
 
-    if (length (list.files (d)) > 0L) {
+    if (length (fs::dir_ls (d)) > 0L) {
         stop (
             "The path [", d, "] is not empty; ",
             "can only make a package in an empty directory\n",

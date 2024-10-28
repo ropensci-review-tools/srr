@@ -396,12 +396,12 @@ get_src_tags <- function (blocks, base_path, tag = "srrstats") {
 
             snum <- extract_standard_numbers (tag$val)
 
-            this_src <- file.path ("src", basename (this_src))
+            this_src <- fs::path ("src", basename (this_src))
             msgs <- c (msgs, paste0 (
                 "[", paste0 (snum, collapse = ", "),
                 "] in function '", this_fn,
                 "()' on line#", line_num, " of file [",
-                file.path ("src", basename (this_src)),
+                fs::path ("src", basename (this_src)),
                 "]"
             ))
 

@@ -5,6 +5,11 @@ test_that ("dummy package", {
     pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
+
+    # If directories can not be unlinked on any test systems, this test must be
+    # skipped.
+    skip_if (fs::dir_exists (fs::path (fs::path_temp (), pkg_name)))
+
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
     expect_true (file.exists (d))
     files <- list.files (d)
@@ -40,8 +45,11 @@ test_that ("dummy package", {
 test_that ("skeleton errors", {
 
     pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
-    d <- file.path (tempdir (), pkg_name)
-    dir.create (d)
+    d <- fs::path (fs::path_temp (), pkg_name)
+
+    skip_if (fs::dir_exists (d))
+
+    fs::dir_create (d)
     writeLines ("aaa", con = file.path (d, "aaa"))
 
     # This test fails on GitHub Windows runners:
@@ -56,5 +64,5 @@ test_that ("skeleton errors", {
     if (p %in% search ()) {
         detach (p, unload = TRUE)
     }
-    unlink (d, recursive = TRUE)
+    fs::dir_delete (d)
 })
