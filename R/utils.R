@@ -12,7 +12,9 @@ get_all_file_names <- function (path) {
     }
 
     dirs <- fs::path_abs (fs::path (path, c (".", "R", "vignettes", "tests", "inst")))
-    sfxs <- c ("\\.(R|r)?md$", "\\.(R|r)$", "\\.(R|r)md$", "\\.(R|r)$", "\\.(R|r)?md$")
+    sfx_r_only <- "\\.(R|r)$"
+    sfx_r_md <- "\\.(R|r)(?:md)?$"
+    sfxs <- c (sfx_r_md, sfx_r_only, sfx_r_md, sfx_r_only, sfx_r_md)
     rec <- c (FALSE, FALSE, TRUE, TRUE, TRUE)
     index <- which (fs::dir_exists (dirs))
 
