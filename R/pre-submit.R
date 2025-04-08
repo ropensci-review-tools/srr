@@ -56,6 +56,17 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
     msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
 
+    msgs <- get_all_msgs (path)
+    std_txt <- get_stds_txt (msgs)
+    change_msg <- std_txt_change_report (msgs, std_txt)
+    if (length (change_msg) > 0L) {
+        change_msg <- gsub ("^.*Error\\:[[:space:]]+", "", change_msg)
+        if (!quiet) {
+            cli::cli_alert_warning (change_msg)
+        }
+    }
+    msg <- c (msg, change_msg)
+
     invisible (msg)
 }
 
