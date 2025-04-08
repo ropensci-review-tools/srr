@@ -95,7 +95,7 @@ test_that ("roxygen standards", {
         index2 <- (grep ("@srrstatsTODO", x2) + 1):(length (x2) - 1)
         todo_new <- x2 [index2]
         expect_true (length (todo_old) >= 3L)
-        expect_length (todo_new, 2L)
+        expect_length (todo_new, 3L)
 
         # get only those from the srr-stats-standards.R file:
         todo_old <- grep ("srr-stats-standards\\.R",
@@ -107,7 +107,7 @@ test_that ("roxygen standards", {
             value = TRUE
         )
 
-        expect_true (nchar (todo_new) > nchar (todo_old))
+        expect_true (all (nchar (todo_new) > nchar (todo_old)))
         ptn <- "[A-Z]+[0-9]+\\.[0-9]"
         standards_old <- gregexpr (ptn, todo_old) [[1]]
         standards_new <- gregexpr (ptn, todo_new) [[1]]

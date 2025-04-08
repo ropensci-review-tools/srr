@@ -164,7 +164,11 @@ parse_one_msg_list <- function (msgs, std_num, std_txt, block, tag, fn_name = TR
         msgs <- c (msgs, res$message)
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 print_one_msg_list <- function (msgs) {
@@ -179,7 +183,8 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
     msgs <- std_num <- std_txt <- list ()
     for (block in blocks$R) {
-        msgs <- parse_one_msg_list (msgs, std_num, std_txt, block, tag = tag, fn_name = TRUE)
+        res <- parse_one_msg_list (msgs, std_num, std_txt, block, tag = tag, fn_name = TRUE)
+        msgs <- c (msgs, res$message)
     }
     msgs <- c (
         msgs,
@@ -428,7 +433,7 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (
+        res <- parse_one_msg_list (
             msgs,
             std_num,
             std_txt,
@@ -437,6 +442,7 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
             fn_name = FALSE,
             dir = dir
         )
+        msgs <- c (msgs, res$message)
     }
 
     return (msgs)
