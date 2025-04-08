@@ -150,18 +150,18 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
+parse_one_msg_list <- function (msgs, std_num, std_txt, block, tag, fn_name = TRUE, dir = "R") {
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        msgs <- c (
-            msgs,
-            process_srrstats_tags (
-                tag = tag,
-                block = block,
-                fn_name = fn_name,
-                dir = dir
-            )$message
+        res <- process_srrstats_tags (
+            tag = tag,
+            block = block,
+            fn_name = fn_name,
+            dir = dir
         )
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
+        msgs <- c (msgs, res$message)
     }
 
     return (msgs)
@@ -177,9 +177,9 @@ print_one_msg_list <- function (msgs) {
 # Collect all messages for one tag
 collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
-    msgs <- list ()
+    msgs <- std_num <- std_txt <- list ()
     for (block in blocks$R) {
-        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
+        msgs <- parse_one_msg_list (msgs, std_num, std_txt, block, tag = tag, fn_name = TRUE)
     }
     msgs <- c (
         msgs,
@@ -424,12 +424,14 @@ get_src_tags <- function (blocks, base_path, tag = "srrstats") {
 
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
-    msgs <- list ()
+    msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks) {
 
         msgs <- parse_one_msg_list (
             msgs,
+            std_num,
+            std_txt,
             block,
             tag = tag,
             fn_name = FALSE,
