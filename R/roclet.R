@@ -191,9 +191,9 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
             msgs, std_num, std_txt, block,
             tag = tag, fn_name = TRUE
         )
-        msgs <- c (msgs, res$message)
-        std_num <- c (std_num, res$std_num)
-        std_txt <- c (std_txt, res$std_txt)
+        msgs <- res$message
+        std_num <- res$std_num
+        std_txt <- res$std_txt
     }
 
     res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
@@ -469,9 +469,9 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
             fn_name = FALSE,
             dir = dir
         )
-        msgs <- c (msgs, res$message)
-        std_num <- c (std_num, res$std_num)
-        std_txt <- c (std_txt, res$std_txt)
+        msgs <- res$message
+        std_num <- res$std_num
+        std_txt <- res$std_txt
     }
 
     list (
