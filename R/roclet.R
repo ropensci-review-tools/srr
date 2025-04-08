@@ -160,7 +160,7 @@ parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
                 block = block,
                 fn_name = fn_name,
                 dir = dir
-            )
+            )$message
         )
     }
 
@@ -256,6 +256,11 @@ process_srrstats_tags <- function (tag = "srrstats", block,
     standards <- unlist (lapply (standards, function (i) i$val))
     snum <- extract_standard_numbers (standards)
 
+    standards_txt <- vapply (seq_along (snum), function (i) {
+        gsub (paste0 ("^.*", snum [i], "\\}"), "", standards [i])
+    }, character (1L))
+    standards_txt <- gsub ("^\\s+", "", standards_txt)
+
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
@@ -285,7 +290,13 @@ process_srrstats_tags <- function (tag = "srrstats", block,
         "]"
     )
 
-    return (msg)
+    res <- list (
+        message = msg,
+        std_num = snum,
+        std_txt = standards_txt
+    )
+
+    return (res)
 }
 
 
