@@ -153,7 +153,9 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-parse_one_msg_list <- function (msgs, std_num, std_txt, block, tag, fn_name = TRUE, dir = "R") {
+parse_one_msg_list <- function (block, tag, fn_name = TRUE, dir = "R") {
+
+    msgs <- std_num <- std_txt <- list ()
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
         res <- process_srrstats_tags (
@@ -162,9 +164,9 @@ parse_one_msg_list <- function (msgs, std_num, std_txt, block, tag, fn_name = TR
             fn_name = fn_name,
             dir = dir
         )
-        msgs <- c (msgs, res$message)
-        std_num <- c (std_num, res$std_num)
-        std_txt <- c (std_txt, res$std_txt)
+        msgs <- res$message
+        std_num <- res$std_num
+        std_txt <- res$std_txt
     }
 
     list (
@@ -187,13 +189,10 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
     msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks$R) {
-        res <- parse_one_msg_list (
-            msgs, std_num, std_txt, block,
-            tag = tag, fn_name = TRUE
-        )
-        msgs <- res$message
-        std_num <- res$std_num
-        std_txt <- res$std_txt
+        res <- parse_one_msg_list (block, tag = tag, fn_name = TRUE)
+        msgs <- c (msgs, res$message)
+        std_txt <- c (std_txt, res$std_txt)
+        std_num <- c (std_num, res$std_num)
     }
 
     res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
@@ -461,17 +460,14 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
     for (block in blocks) {
 
         res <- parse_one_msg_list (
-            msgs,
-            std_num,
-            std_txt,
             block,
             tag = tag,
             fn_name = FALSE,
             dir = dir
         )
-        msgs <- res$message
-        std_num <- res$std_num
-        std_txt <- res$std_txt
+        msgs <- c (msgs, res$message)
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
     }
 
     list (
