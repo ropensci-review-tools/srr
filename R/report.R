@@ -181,6 +181,7 @@ srr_report <- function (path = ".", branch = "",
         ),
         "",
         cat_check,
+        std_txt_change_report (msgs, std_txt),
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
