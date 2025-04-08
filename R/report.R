@@ -246,9 +246,14 @@ get_all_msgs <- function (path = ".") {
 
     blocks <- collect_blocks (blocks, path)
 
-    msgs <- collect_one_tag (path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (path, blocks, tag = i)
+    )
+    msgs <- res [[1]]$message
+    msgs_na <- res [[2]]$message
+    msgs_todo <- res [[3]]$message
 
     list (
         msgs = msgs,

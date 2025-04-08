@@ -29,11 +29,14 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     blocks <- collect_blocks (blocks, base_path)
 
     # ------ @srrstats tags:
-    msgs <- collect_one_tag (base_path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (base_path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (base_path, blocks,
-        tag = "srrstatsTODO"
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (base_path, blocks, tag = i)
     )
+    msgs <- res [[1]]$message
+    msgs_na <- res [[2]]$message
+    msgs_todo <- res [[3]]$message
 
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
@@ -182,8 +185,12 @@ print_one_msg_list <- function (msgs) {
 collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
     msgs <- std_num <- std_txt <- list ()
+
     for (block in blocks$R) {
-        res <- parse_one_msg_list (msgs, std_num, std_txt, block, tag = tag, fn_name = TRUE)
+        res <- parse_one_msg_list (
+            msgs, std_num, std_txt, block,
+            tag = tag, fn_name = TRUE
+        )
         msgs <- c (msgs, res$message)
         std_num <- c (std_num, res$std_num)
         std_txt <- c (std_txt, res$std_txt)
@@ -211,7 +218,11 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
     std_num <- c (std_num, res$std_num)
     std_txt <- c (std_txt, res$std_txt)
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 
