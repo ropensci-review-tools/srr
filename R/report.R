@@ -181,6 +181,7 @@ srr_report <- function (path = ".", branch = "",
         ),
         "",
         cat_check,
+        std_txt_change_report (msgs, std_txt),
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
@@ -246,14 +247,31 @@ get_all_msgs <- function (path = ".") {
 
     blocks <- collect_blocks (blocks, path)
 
-    msgs <- collect_one_tag (path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (path, blocks, tag = i)
+    )
+    msgs <- res [[1]]$message
+    std_num <- res [[1]]$std_num
+    std_txt <- res [[1]]$std_txt
+    msgs_na <- res [[2]]$message
+    std_num_na <- res [[2]]$std_num
+    std_txt_na <- res [[2]]$std_txt
+    msgs_todo <- res [[3]]$message
+    std_num_todo <- res [[3]]$std_num
+    std_txt_todo <- res [[3]]$std_txt
 
     list (
         msgs = msgs,
         msgs_na = msgs_na,
-        msgs_todo = msgs_todo
+        msgs_todo = msgs_todo,
+        std_num = std_num,
+        std_txt = std_txt,
+        std_num_na = std_num_na,
+        std_txt_na = std_txt_na,
+        std_num_todo = std_num_todo,
+        std_txt_todo = std_txt_todo
     )
 }
 

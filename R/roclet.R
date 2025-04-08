@@ -29,11 +29,14 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     blocks <- collect_blocks (blocks, base_path)
 
     # ------ @srrstats tags:
-    msgs <- collect_one_tag (base_path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (base_path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (base_path, blocks,
-        tag = "srrstatsTODO"
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (base_path, blocks, tag = i)
     )
+    msgs <- res [[1]]$message
+    msgs_na <- res [[2]]$message
+    msgs_todo <- res [[3]]$message
 
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
@@ -150,21 +153,27 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
+parse_one_msg_list <- function (block, tag, fn_name = TRUE, dir = "R") {
+
+    msgs <- std_num <- std_txt <- list ()
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        msgs <- c (
-            msgs,
-            process_srrstats_tags (
-                tag = tag,
-                block = block,
-                fn_name = fn_name,
-                dir = dir
-            )
+        res <- process_srrstats_tags (
+            tag = tag,
+            block = block,
+            fn_name = fn_name,
+            dir = dir
         )
+        msgs <- res$message
+        std_num <- res$std_num
+        std_txt <- res$std_txt
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 print_one_msg_list <- function (msgs) {
@@ -177,20 +186,42 @@ print_one_msg_list <- function (msgs) {
 # Collect all messages for one tag
 collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
-    msgs <- list ()
-    for (block in blocks$R) {
-        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
-    }
-    msgs <- c (
-        msgs,
-        get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat"),
-        get_other_tags (blocks$inst, tag = tag, dir = "inst")
-    )
-    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
-    msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
-    msgs <- c (msgs, get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes"))
+    msgs <- std_num <- std_txt <- list ()
 
-    return (msgs)
+    for (block in blocks$R) {
+        res <- parse_one_msg_list (block, tag = tag, fn_name = TRUE)
+        msgs <- c (msgs, res$message)
+        std_txt <- c (std_txt, res$std_txt)
+        std_num <- c (std_num, res$std_num)
+    }
+
+    res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    res <- get_other_tags (blocks$inst, tag = tag, dir = "inst")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
+
+    res <- get_other_tags (blocks$readme, tag = tag, dir = ".")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    res <- get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 
@@ -256,6 +287,11 @@ process_srrstats_tags <- function (tag = "srrstats", block,
     standards <- unlist (lapply (standards, function (i) i$val))
     snum <- extract_standard_numbers (standards)
 
+    standards_txt <- vapply (seq_along (snum), function (i) {
+        gsub (paste0 ("^.*", snum [i], "\\}"), "", standards [i])
+    }, character (1L))
+    standards_txt <- gsub ("^\\s+", "", standards_txt)
+
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
@@ -285,7 +321,13 @@ process_srrstats_tags <- function (tag = "srrstats", block,
         "]"
     )
 
-    return (msg)
+    res <- list (
+        message = msg,
+        std_num = snum,
+        std_txt = standards_txt
+    )
+
+    return (res)
 }
 
 
@@ -413,20 +455,26 @@ get_src_tags <- function (blocks, base_path, tag = "srrstats") {
 
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
-    msgs <- list ()
+    msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (
-            msgs,
+        res <- parse_one_msg_list (
             block,
             tag = tag,
             fn_name = FALSE,
             dir = dir
         )
+        msgs <- c (msgs, res$message)
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 #' @importFrom roxygen2 roclet_output

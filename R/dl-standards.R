@@ -31,11 +31,12 @@ dl_standards <- function (category = "general", quiet = FALSE) {
         tempdir (),
         paste0 ("srr-standards-", category, ".Rmd")
     )
-    if (!file.exists (tmp)) {
+    dl <- !file.exists (tmp)
+    if (dl) {
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
     } # nolint
 
-    if (!quiet) {
+    if (!quiet && dl) {
         cli::cli_alert_success ("Downloaded {category} standards")
     }
 

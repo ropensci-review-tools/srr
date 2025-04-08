@@ -90,12 +90,25 @@ test_that ("roxygen standards", {
         )
 
         # -1 at end because they finish with a cli::rule line
-        index <- (grep ("@srrstatsTODO", x) + 1):(length (x) - 1)
+        i1 <- grep ("@srrstatsTODO", x) + 1L
+        i2 <- grep ("^[[:punct:]]", x)
+        expect_length (i1, 1L)
+        expect_true (length (i2) > 1L)
+        index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_old <- x [index]
-        index2 <- (grep ("@srrstatsTODO", x2) + 1):(length (x2) - 1)
-        todo_new <- x2 [index2]
-        expect_true (length (todo_old) >= 3L)
-        expect_length (todo_new, 2L)
+
+        i1 <- grep ("@srrstatsTODO", x2) + 1L
+        i2 <- grep ("^[[:punct:]]", x2)
+        expect_length (i1, 1L)
+        expect_true (length (i2) > 1L)
+        index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
+        todo_new <- x2 [index]
+
+        expect_true (length (todo_old) >= 2L)
+        expect_true (length (todo_new) >= 2L)
+        n_old <- nchar (paste0 (todo_old, collapse = " "))
+        n_new <- nchar (paste0 (todo_new, collapse = " "))
+        expect_true (n_new / n_old > 2)
 
         # get only those from the srr-stats-standards.R file:
         todo_old <- grep ("srr-stats-standards\\.R",
@@ -107,6 +120,8 @@ test_that ("roxygen standards", {
             value = TRUE
         )
 
+        expect_length (todo_old, 1L)
+        expect_length (todo_new, 1L)
         expect_true (nchar (todo_new) > nchar (todo_old))
         ptn <- "[A-Z]+[0-9]+\\.[0-9]"
         standards_old <- gregexpr (ptn, todo_old) [[1]]
