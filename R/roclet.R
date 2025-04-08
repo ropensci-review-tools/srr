@@ -159,9 +159,9 @@ parse_one_msg_list <- function (msgs, std_num, std_txt, block, tag, fn_name = TR
             fn_name = fn_name,
             dir = dir
         )
+        msgs <- c (msgs, res$message)
         std_num <- c (std_num, res$std_num)
         std_txt <- c (std_txt, res$std_txt)
-        msgs <- c (msgs, res$message)
     }
 
     list (
@@ -185,15 +185,31 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
     for (block in blocks$R) {
         res <- parse_one_msg_list (msgs, std_num, std_txt, block, tag = tag, fn_name = TRUE)
         msgs <- c (msgs, res$message)
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
     }
-    msgs <- c (
-        msgs,
-        get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat"),
-        get_other_tags (blocks$inst, tag = tag, dir = "inst")
-    )
+
+    res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    res <- get_other_tags (blocks$inst, tag = tag, dir = "inst")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
     msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
-    msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
-    msgs <- c (msgs, get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes"))
+
+    res <- get_other_tags (blocks$readme, tag = tag, dir = ".")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
+
+    res <- get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
 
     return (msgs)
 }
@@ -443,9 +459,15 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
             dir = dir
         )
         msgs <- c (msgs, res$message)
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 #' @importFrom roxygen2 roclet_output
