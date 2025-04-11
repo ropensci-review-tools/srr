@@ -90,16 +90,3 @@ std_txt_change <- function (msgs, std_txt_src) {
 
     mean (txt_change)
 }
-
-std_txt_change_report <- function (msgs, std_txt_src, change_threshold = 0.5) {
-    ret <- NULL
-    txt_change <- std_txt_change (msgs, std_txt_src)
-    if (txt_change > change_threshold) {
-        ret <- paste0 (
-            ":heavy_multiplication_x: Error: ",
-            "Text of standards should document how package complies, ",
-            "not just copy original standards text."
-        )
-    }
-    return (ret)
-}

@@ -182,7 +182,7 @@ srr_report <- function (path = ".", branch = "",
         "",
         cat_check,
         stds_threshold_report (path, html = TRUE),
-        std_txt_change_report (msgs, std_txt), # in rocket-checks.R
+        std_txt_change_report (msgs, std_txt, html = TRUE), # in rocket-checks.R
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
@@ -496,6 +496,22 @@ check_num_categories <- function (std_codes) {
         }
     }
 
+    return (ret)
+}
+
+std_txt_change_report <- function (msgs, std_txt_src,
+                                   change_threshold = 0.5, html = FALSE) {
+
+    ret <- NULL
+    txt_change <- std_txt_change (msgs, std_txt_src) # in R/roclet-checks.R
+    sym <- ifelse (html, "&#10060;", ":heavy_multiplication_x:")
+    if (txt_change > change_threshold) {
+        ret <- paste0 (
+            sym,
+            " Error: Text of standards should document how package ",
+            "complies, not just copy original standards text."
+        )
+    }
     return (ret)
 }
 
