@@ -17,8 +17,8 @@ test_that ("srr_report", {
     )
 
     r <- srr_report (path, view = FALSE)
-    # Expect three errors:
-    errs <- grep ("\\:heavy\\_multiplication\\_x\\:\\sError\\:", r)
+    # Expect three errors, with HTML-formatted red crosses:
+    errs <- grep ("&#10060; Error:", r, fixed = TRUE)
     expect_length (errs, 3L)
 
     msg <- "Package must comply with at least 50% of all standards"
@@ -43,7 +43,8 @@ test_that ("srr_report", {
     expect_message (
         r <- srr_report (path, view = FALSE)
     )
-    expect_true (any (grepl ("\\:heavy\\_multiplication\\_x\\:", r)))
+    errs <- grep ("&#10060; Error:", r, fixed = TRUE)
+    expect_length (errs, 3L)
 
     f <- attr (r, "file")
     expect_equal (tools::file_ext (f), "html")
