@@ -16,13 +16,9 @@ test_that ("srr_report", {
         overwrite = TRUE
     )
 
-    expect_error (
-        r <- srr_report (path, view = FALSE),
-        paste0 (
-            "Please rectify to ensure these standards are only ",
-            "associated with one tag"
-        )
-    )
+    r <- srr_report (path, view = FALSE)
+    # Fail because standards have not been modified from original text:
+    expect_true (any (grepl ("\\:heavy\\_multiplication\\_x\\:", r)))
 
     # rm duplicated stds from TODO list:
     x <- readLines (f)
@@ -39,6 +35,7 @@ test_that ("srr_report", {
     expect_message (
         r <- srr_report (path, view = FALSE)
     )
+    expect_true (any (grepl ("\\:heavy\\_multiplication\\_x\\:", r)))
 
     f <- attr (r, "file")
     expect_equal (tools::file_ext (f), "html")
