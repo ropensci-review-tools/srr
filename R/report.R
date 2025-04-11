@@ -27,7 +27,7 @@ srr_report <- function (path = ".", branch = "",
     if (roxygenise) {
         o <- utils::capture.output (
             chk <- tryCatch (
-                roxygen2::roxygenise (path),
+                roxygen2::roxygenise (path, load_code = FALSE),
                 error = function (e) e
             )
         )
