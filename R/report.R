@@ -181,7 +181,7 @@ srr_report <- function (path = ".", branch = "",
         ),
         "",
         cat_check,
-        stds_threshold_report (path),
+        stds_threshold_report (path, html = TRUE),
         std_txt_change_report (msgs, std_txt), # in rocket-checks.R
         "",
         add_missing_stds (md_lines, std_txt),
@@ -499,7 +499,7 @@ check_num_categories <- function (std_codes) {
     return (ret)
 }
 
-stds_threshold_report <- function (path) {
+stds_threshold_report <- function (path, html = FALSE) {
 
     stds_in_code <- tryCatch (
         get_stds_from_code (path),
@@ -511,9 +511,9 @@ stds_threshold_report <- function (path) {
 
     ret <- NULL
     compliance_statement <- check_stds_threshold (stds_in_code)
+    sym <- ifelse (html, "&#10060;", ":heavy_multiplication_x:")
     if (length (compliance_statement) > 0L) {
-        msg <- ":heavy_multiplication_x: Error: "
-        ret <- paste0 (msg, compliance_statement)
+        ret <- paste0 (sym, " Error: ", compliance_statement)
     }
 
     return (ret)
