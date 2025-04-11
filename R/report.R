@@ -181,8 +181,8 @@ srr_report <- function (path = ".", branch = "",
         ),
         "",
         cat_check,
-        stds_threshold_report (path, html = TRUE),
-        std_txt_change_report (msgs, std_txt, html = TRUE), # in rocket-checks.R
+        stds_threshold_report (path),
+        std_txt_change_report (msgs, std_txt),
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
@@ -193,13 +193,12 @@ srr_report <- function (path = ".", branch = "",
     writeLines (paste0 (md_lines, "\n"), con = f)
     out <- paste0 (tools::file_path_sans_ext (f), ".html")
     rmarkdown::render (input = f, output_file = out)
-    if (nzchar (cat_check)) {
+
+    err_sym <- "\\:heavy\\_multiplication\\_x\\:"
+    has_errs <- any (grepl (err_sym, md_lines))
+    if (has_errs) {
         # sub markdown fail X for cat_check with HTML
-        md <- gsub (
-            "\\:heavy\\_multiplication\\_x\\:",
-            "&#10060;",
-            readLines (out)
-        )
+        md <- gsub (err_sym, "&#10060;", readLines (out))
         writeLines (md, out)
     }
 
@@ -500,22 +499,21 @@ check_num_categories <- function (std_codes) {
 }
 
 std_txt_change_report <- function (msgs, std_txt_src,
-                                   change_threshold = 0.5, html = FALSE) {
+                                   change_threshold = 0.5) {
 
     ret <- NULL
     txt_change <- std_txt_change (msgs, std_txt_src) # in R/roclet-checks.R
-    sym <- ifelse (html, "&#10060;", ":heavy_multiplication_x:")
     if (txt_change > change_threshold) {
         ret <- paste0 (
-            sym,
-            " Error: Text of standards should document how package ",
+            ":heavy_multiplication_x: Error: ",
+            "Text of standards should document how package ",
             "complies, not just copy original standards text."
         )
     }
     return (ret)
 }
 
-stds_threshold_report <- function (path, html = FALSE) {
+stds_threshold_report <- function (path) {
 
     stds_in_code <- tryCatch (
         get_stds_from_code (path),
@@ -527,9 +525,9 @@ stds_threshold_report <- function (path, html = FALSE) {
 
     ret <- NULL
     compliance_statement <- check_stds_threshold (stds_in_code)
-    sym <- ifelse (html, "&#10060;", ":heavy_multiplication_x:")
+    sym <- ":heavy_multiplication_x: Error: "
     if (length (compliance_statement) > 0L) {
-        ret <- paste0 (sym, " Error: ", compliance_statement)
+        ret <- paste0 (sym, compliance_statement)
     }
 
     return (ret)
