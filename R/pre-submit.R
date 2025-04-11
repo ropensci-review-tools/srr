@@ -74,6 +74,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         for (s in compliance_statement) {
             cli::cli_alert_warning (s)
         }
+        msg <- c (msg, compliance_statement)
     }
 
     invisible (msg)
