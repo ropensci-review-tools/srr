@@ -80,7 +80,7 @@ std_txt_change <- function (msgs, std_txt_src) {
             index_ref <- rep (0L, length (index))
             index_ref [which (c (0L, diff (index)) < 0)] <- 1L
             max_len <- max (table (index_ref))
-            max_len / max (c (length (src), length (target)))
+            max_len <- max_len / max (c (length (src), length (target)))
         }
         return (max_len)
     })
