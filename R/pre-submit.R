@@ -69,7 +69,9 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
     compliance_statement <- check_stds_threshold (stds_in_code)
     if (length (compliance_statement) > 0L && !quiet) {
-        cli::cli_alert_warning (compliance_statement)
+        for (s in compliance_statement) {
+            cli::cli_alert_warning (s)
+        }
     }
 
     invisible (msg)
@@ -291,7 +293,7 @@ check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
     if (nrow (compliance_fail) > 0L) {
         if ("total" %in% compliance_fail$category) {
             compliance_tot <-
-                compliance_fail [compliance_fail$cateory == "total", ]
+                compliance_fail [compliance_fail$category == "total", ]
             compliance_pc <- round (compliance_tot$ratio * 100)
             msg <- compliance_msg (threshold_pc, compliance_pc, what = "all")
             compliance_fail <- compliance_fail [which (!compliance_fail$category == "total"), ]

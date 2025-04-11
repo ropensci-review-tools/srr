@@ -18,4 +18,9 @@ test_that ("release", {
     expect_true (length (x) > 100) # > 100 standards are missing
     msg <- "the following standards (.*) are missing from your code"
     expect_true (any (grepl (msg, x, ignore.case = TRUE)))
+
+    msg <- "must comply with at least 50% of all standards"
+    expect_true (any (grepl (msg, x)))
+    msg <- "must comply with at least 50% of category-specific standards"
+    expect_true (any (grepl (msg, x)))
 })
