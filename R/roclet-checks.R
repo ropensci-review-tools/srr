@@ -63,6 +63,9 @@ std_txt_change <- function (msgs, std_txt_src) {
         std_nums <- unlist (msgs [[paste0 ("std_num", i)]])
         std_txt <- unlist (msgs [[paste0 ("std_txt", i)]])
         index <- match (std_nums, std_txt_src$std)
+        # remove NA's for missing standards:
+        std_txt <- std_txt [which (!is.na (index))]
+        index <- index [which (!is.na (index))]
         std_txt_src$comment [index] <- std_txt
         tag_ext <- ifelse (nzchar (i), gsub ("\\_", "", toupper (i)), i)
         std_txt_src$tag [index] <- paste0 ("srrstats", tag_ext)
@@ -86,17 +89,4 @@ std_txt_change <- function (msgs, std_txt_src) {
     })
 
     mean (txt_change)
-}
-
-std_txt_change_report <- function (msgs, std_txt_src, change_threshold = 0.5) {
-    ret <- NULL
-    txt_change <- std_txt_change (msgs, std_txt_src)
-    if (txt_change > change_threshold) {
-        ret <- paste0 (
-            ":heavy_multiplication_x: Error: ",
-            "Text of standards should document how package complies, ",
-            "not just copy original standards text."
-        )
-    }
-    return (ret)
 }

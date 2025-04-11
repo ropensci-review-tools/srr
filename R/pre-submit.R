@@ -67,6 +67,13 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
     }
     msg <- c (msg, change_msg)
 
+    compliance_statement <- check_stds_threshold (stds_in_code)
+    if (length (compliance_statement) > 0L && !quiet) {
+        for (s in compliance_statement) {
+            cli::cli_alert_warning (s)
+        }
+    }
+
     invisible (msg)
 }
 
@@ -222,6 +229,86 @@ check_missing_standards <- function (stds_in_code, quiet = FALSE) {
 
         if (!quiet) {
             cli::cli_alert_success (msg)
+        }
+    }
+
+    return (msg)
+}
+
+#' Check that sufficiently many standards have been documented, both overall,
+#' and in selected category.
+#'
+#' @param stds_in_code `data.frame` returned from `get_stds_from_code()`
+#' function.
+#' @param threshold Threshold for proportion of standards which must be
+#' complied with.
+#' @return `NULL` is everything okay, otherwise a message about insufficient
+#' proportion of documented compliance statements.
+#' @noRd
+check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
+
+    categories <- get_categories (unique (stds_in_code$stds))
+
+    all_stds <- unlist (lapply (categories$category, get_standard_nums))
+    all_stds <- data.frame (
+        std_prefix = gsub ("[0-9].*$", "", all_stds),
+        standard = all_stds
+    )
+
+    stds_in_code <- stds_in_code [which (stds_in_code$std_type == "std"), ]
+    stds_in_code$std_prefix <- gsub ("[0-9].*$", "", stds_in_code$stds)
+
+    compliance <- lapply (categories$std_prefix, function (cat) {
+        data.frame (
+            category = cat,
+            total = length (which (all_stds$std_prefix == cat)),
+            complied = length (which (stds_in_code$std_prefix == cat))
+        )
+    })
+    compliance <- do.call (rbind, compliance)
+    compliance <- rbind (compliance, data.frame (
+        category = "total",
+        total = sum (compliance$total),
+        complied = sum (compliance$complied)
+    ))
+
+    compliance$ratio <- compliance$complied / compliance$total
+
+    compliance_msg <- function (threshold_pc, compliance_pc, what = "all") {
+        paste0 (
+            "Package must comply with at least ",
+            threshold_pc,
+            "% of ",
+            what,
+            " standards, but currently complies with only ",
+            compliance_pc,
+            "%"
+        )
+    }
+
+    compliance_fail <- compliance [which (compliance$ratio < threshold), ]
+    msg <- NULL
+    threshold_pc <- round (100 * threshold)
+    # Overall failure:
+    if (nrow (compliance_fail) > 0L) {
+        if ("total" %in% compliance_fail$category) {
+            compliance_tot <-
+                compliance_fail [compliance_fail$category == "total", ]
+            compliance_pc <- round (compliance_tot$ratio * 100)
+            msg <- compliance_msg (threshold_pc, compliance_pc, what = "all")
+            compliance_fail <- compliance_fail [which (!compliance_fail$category == "total"), ]
+        }
+    }
+    # Category-specific messages:
+    if (nrow (compliance_fail) > 0L) {
+        ratio <- sum (compliance_fail$complied) / sum (compliance_fail$total)
+        ratio_pc <- round (ratio * 100)
+        if (ratio < threshold) {
+            msg <- c (msg, compliance_msg (
+                threshold_pc,
+                ratio_pc,
+                what = "category-specific"
+            ))
         }
     }
 

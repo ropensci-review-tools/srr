@@ -8,13 +8,13 @@
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.3.040",
+  "version": "0.1.4.001",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.1 (2024-06-14)",
+  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
   "author": [
     {
       "@type": "Person",
@@ -176,7 +176,7 @@
     },
     "SystemRequirements": {}
   },
-  "fileSize": "1407.937KB",
+  "fileSize": "1375.502KB",
   "citation": [
     {
       "@type": "SoftwareSourceCode",
@@ -198,5 +198,10 @@
     "https://github.com/ropensci-review-tools/srr/actions",
     "https://codecov.io/gh/ropensci-review-tools/srr"
   ],
-  "developmentStatus": "https://www.repostatus.org/#concept"
+  "developmentStatus": "https://www.repostatus.org/#concept",
+  "keywords": [
+    "compliance-automation",
+    "r",
+    "statistical-software"
+  ]
 }
