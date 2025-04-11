@@ -16,11 +16,20 @@ test_that ("release", {
         type = "message"
     )
     expect_true (length (x) > 100) # > 100 standards are missing
+
+    errs <- grep ("^\\!", x)
+    expect_length (errs, 4L)
+
+    msg <- "package still has TODO standards and can not be submitted"
+    expect_length (grep (msg, x), 1L)
     msg <- "the following standards (.*) are missing from your code"
-    expect_true (any (grepl (msg, x, ignore.case = TRUE)))
+    expect_length (grep (msg, x), 1L)
 
     msg <- "must comply with at least 50% of all standards"
-    expect_true (any (grepl (msg, x)))
+    expect_length (grep (msg, x), 1L)
     msg <- "must comply with at least 50% of category-specific standards"
-    expect_true (any (grepl (msg, x)))
+    expect_length (grep (msg, x), 1L)
+
+    missing_stds <- grep ("^[0-9]+", x)
+    expect_true (length (missing_stds) > 100L)
 })
