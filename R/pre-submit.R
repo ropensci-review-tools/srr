@@ -14,6 +14,8 @@
 #' srr_stats_pre_submit (d)
 srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
+    path <- fs::path_abs (fs::path_expand (path))
+
     msg <- ""
 
     stds_in_code <- tryCatch (
