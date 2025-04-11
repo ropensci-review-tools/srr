@@ -17,8 +17,16 @@ test_that ("srr_report", {
     )
 
     r <- srr_report (path, view = FALSE)
-    # Fail because standards have not been modified from original text:
-    expect_true (any (grepl ("\\:heavy\\_multiplication\\_x\\:", r)))
+    # Expect three errors:
+    errs <- grep ("\\:heavy\\_multiplication\\_x\\:\\sError\\:", r)
+    expect_length (errs, 3L)
+
+    msg <- "Package must comply with at least 50% of all standards"
+    expect_length (grep (msg, r), 1L)
+    msg <- "must comply with at least 50% of category-specific standards"
+    expect_length (grep (msg, r), 1L)
+    msg <- "should document how package complies, not just copy original"
+    expect_length (grep (msg, r), 1L)
 
     # rm duplicated stds from TODO list:
     x <- readLines (f)

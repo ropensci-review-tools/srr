@@ -181,7 +181,8 @@ srr_report <- function (path = ".", branch = "",
         ),
         "",
         cat_check,
-        std_txt_change_report (msgs, std_txt),
+        stds_threshold_report (path),
+        std_txt_change_report (msgs, std_txt), # in rocket-checks.R
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
@@ -493,6 +494,26 @@ check_num_categories <- function (std_codes) {
                 "one set of category-specific standards as well."
             )
         }
+    }
+
+    return (ret)
+}
+
+stds_threshold_report <- function (path) {
+
+    stds_in_code <- tryCatch (
+        get_stds_from_code (path),
+        error = function (e) e
+    )
+    if (methods::is (stds_in_code, "error")) {
+        return (NULL) # Error handling for that in pre_submit fn()
+    }
+
+    ret <- NULL
+    compliance_statement <- check_stds_threshold (stds_in_code)
+    if (length (compliance_statement) > 0L) {
+        msg <- ":heavy_multiplication_x: Error: "
+        ret <- paste0 (msg, compliance_statement)
     }
 
     return (ret)
