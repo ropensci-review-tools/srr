@@ -24,7 +24,7 @@ get_git_remote <- function (path = ".") {
             return (NULL)
         }
 
-        r <- strsplit (d$URL, "\\s+") [[1]]
+        r <- strsplit (d$URL, ",?\\s+?") [[1]]
         r <- grep ("^https", r, value = TRUE)
         if (length (r) > 1) {
             r <- grep ("git", r, value = TRUE)
