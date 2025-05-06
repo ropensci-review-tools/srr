@@ -32,6 +32,11 @@ get_git_remote <- function (path = ".") {
         if (length (r) > 1) {
             r <- r [which (!grepl ("\\.io", r))]
         }
+        if (grepl ("\\.io", r) && "BugReports" %in% names (d)) {
+            r <- strsplit (d$BugReports, ",?\\s+?") [[1]]
+            r <- grep ("github\\.com", r, value = TRUE)
+            r <- gsub ("\\/issues$", "", r)
+        }
 
     } else if (repo_is_git (path)) {
 
