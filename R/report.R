@@ -36,7 +36,7 @@ srr_report <- function (path = ".", branch = "",
         }
     }
 
-    requireNamespace ("rmarkdown")
+    requireNamespace ("rmarkdown", quietly = TRUE)
 
     if (path == ".") {
         path <- here::here ()
