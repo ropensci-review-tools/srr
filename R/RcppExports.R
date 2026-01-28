@@ -4,7 +4,13 @@
 #' parse_rmd
 #'
 #' @noRd
-rcpp_parse_rmd <- function(filename, tempfile) {
-    invisible(.Call(`_srr_rcpp_parse_rmd`, filename, tempfile))
+rcpp_parse_rmd <- function (filename, tempfile) {
+    invisible (.Call (`_srr_rcpp_parse_rmd`, filename, tempfile))
 }
 
+#' parse_rs
+#'
+#' @noRd
+rcpp_parse_rs <- function (filename, tempfile) {
+    invisible (.Call (`_srr_rcpp_parse_rs`, filename, tempfile))
+}
