@@ -24,7 +24,16 @@ knitr: $(LFILE).Rmd ## Render README as markdown
 open: ## Open main HTML vignette in browser
 	xdg-open docs/articles/$(VIGNETTE).html &
 
-check: ## Run pkgcheck
+allcon: ## Run 'allcontributors::add_contributors'
+	Rscript -e 'allcontributors::add_contributors()'
+
+check: ## Run `rcmdcheck`
+	Rscript -e 'rcmdcheck::rcmdcheck()'
+
+test: ## Run test suite
+	Rscript -e 'testthat::test_local()'
+
+pkgcheck: ## Run `pkgcheck` and print results to screen.
 	Rscript -e 'library(pkgcheck); checks <- pkgcheck(); print(checks); summary (checks)'
 
 clean: ## Clean all junk files, including all pkgdown docs
