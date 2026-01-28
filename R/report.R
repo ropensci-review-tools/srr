@@ -216,19 +216,33 @@ get_all_msgs <- function (path = ".") {
 
     flist <- get_all_file_names (path)
 
-    blocks <- lapply (flist, function (i) {
-        this_file <- i
-        is_rmd <- grepl ("\\.Rmd$", i)
-        if (is_rmd) {
-            fout <- fs::file_temp ()
-            rcpp_parse_rmd (i, fout)
-            this_file <- fout
+    copy_src_file <- function (f) {
+
+        sfxs <- c ("Rmd", "rs")
+        f_sfx <- fs::path_ext (f)
+        if (!f_sfx %in% sfxs) {
+            return (f)
         }
+
+        parse_fn <- paste0 ("rcpp_parse_", tolower (f_sfx))
+        all_fns <- ls (asNamespace ("srr"), all.names = TRUE)
+        if (!parse_fn %in% all_fns) {
+            cli::cli_abort ("Internal function {fn} not defined.")
+        }
+
+        ftmp <- fs::file_temp ()
+        do.call (parse_fn, list (f, ftmp))
+
+        return (ftmp)
+    }
+
+    blocks <- lapply (flist, function (i) {
+        this_file <- copy_src_file (i)
         res <- tryCatch (
             roxygen2::parse_file (this_file, env = NULL),
             error = function (e) NULL # ignore errors and do not parse
         )
-        if (is_rmd) {
+        if (!identical (i, this_file)) {
             res <- lapply (res, function (j) {
                 j$file <- i
                 return (j)
