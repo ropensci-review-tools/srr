@@ -39,5 +39,16 @@ get_all_file_names <- function (path) {
         flist <- flist [-index]
     }
 
-    return (flist)
+    # Then add src files:
+    dirs <- fs::path_abs (fs::path (path, c ("inst", "src")))
+    dirs <- dirs [which (fs::dir_exists (dirs))]
+    flist_src <- unname (unlist (lapply (dirs, function (d) {
+        fs::dir_ls (d, recurse = TRUE, type = "file")
+    })))
+    flist_src <- flist_src [which (!grepl ("RcppExports", flist_src))]
+    flist_src_exts <- tolower (fs::path_ext (flist_src))
+    recognised_exts <- c ("cpp", "rs", "hpp", "h")
+    flist_src <- flist_src [which (flist_src_exts %in% recognised_exts)]
+
+    return (c (flist, flist_src))
 }
