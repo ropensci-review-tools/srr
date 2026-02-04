@@ -214,52 +214,16 @@ srr_report <- function (path = ".", branch = "",
 
 get_all_msgs <- function (path = ".") {
 
-    flist <- get_all_file_names (path)
-
-    copy_src_file <- function (f) {
-
-        sfxs <- c ("Rmd", "rs")
-        f_sfx <- fs::path_ext (f)
-        if (!f_sfx %in% sfxs) {
-            return (f)
-        }
-
-        parse_fn <- paste0 ("rcpp_parse_", tolower (f_sfx))
-        all_fns <- ls (asNamespace ("srr"), all.names = TRUE)
-        if (!parse_fn %in% all_fns) {
-            cli::cli_abort ("Internal function {fn} not defined.")
-        }
-
-        ftmp <- fs::file_temp ()
-        do.call (parse_fn, list (f, ftmp))
-
-        return (ftmp)
-    }
-
-    blocks <- lapply (flist, function (i) {
-        this_file <- copy_src_file (i)
-        res <- tryCatch (
-            roxygen2::parse_file (this_file, env = NULL),
-            error = function (e) NULL # ignore errors and do not parse
-        )
-        if (!identical (i, this_file)) {
-            res <- lapply (res, function (j) {
-                j$file <- i
-                return (j)
-            })
-        }
-        return (res)
-    })
+    # Roxygen method of initialy gathering all blocks in "./R":
+    flist <- fs::dir_ls (fs::path (path, "R"))
+    blocks <- lapply (flist, function (i) roxygen2::parse_file (i))
+    names (blocks) <- flist
+    blocks <- collect_blocks (do.call (c, blocks), path)
 
     failing <- flist [sapply (blocks, inherits, "try-error")]
     if (length (failing) > 0L) {
         stop ("parsing problem in: ", paste (failing, collapse = ", "))
     }
-
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-
-    blocks <- collect_blocks (blocks, path)
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     res <- lapply (
