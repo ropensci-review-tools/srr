@@ -42,6 +42,55 @@ test_that ("dummy package", {
     unlink (d, recursive = TRUE)
 })
 
+test_that ("rust code", {
+
+    skip_on_os ("windows")
+
+    pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
+        collapse = ""
+    )
+    # If directories can not be unlinked on any test systems, this test must be
+    # skipped.
+    skip_if (fs::dir_exists (fs::path (fs::path_temp (), pkg_name)))
+
+    d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
+    f_rs <- add_extra_skeleton_code (d)
+    expect_true (fs::file_exists (f_rs))
+    x <- utils::capture.output (roxygen2::roxygenise (d), type = "message")
+
+    # split 'x' into srr stats sections.
+    # cli unicode chars can be seen with 'stringi::stri_escape_unicode':
+    dashes <- "\u2500\u2500"
+    index <- rep (0L, length (x))
+    index [cli::ansi_grep (dashes, x)] <- 1L
+    index <- cumsum (index)
+    x <- split (x, f = as.factor (index))
+    index <- which (vapply (
+        x,
+        function (i) any (grepl ("srrstats.*standards", i)),
+        logical (1L)
+    ))
+    x <- x [index]
+    tags <- unname (unlist (lapply (
+        x,
+        function (i) regmatches (i, regexpr ("@srrstats[A-Z]*", i))
+    )))
+    x_srrstats <- x [[which (tags == "@srrstats")]]
+    x_contents <- regmatches (x_srrstats, gregexpr ("\\[.*?\\]", x_srrstats))
+    # That has [standards numbers] followed by [files], so:
+    x_files <- vapply (x_contents, function (i) i [2], character (1L))
+    x_files <- gsub ("^\\[|\\]$", "", x_files [which (!is.na (x_files))])
+
+    expect_true ("inst/extdata/file.rs" %in% x_files)
+    expect_true ("src/cpptest.cpp" %in% x_files)
+
+    pos <- match (paste0 ("package:", pkg_name), search ())
+    if (!is.na (pos)) {
+        detach (pos = pos, unload = TRUE)
+    }
+    fs::dir_delete (d)
+})
+
 test_that ("skeleton errors", {
 
     pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
