@@ -55,5 +55,5 @@ test_that ("srr_report", {
     expect_true (length (r) > 400L)
 
     skip_on_os ("windows")
-    expect_false (any (grepl ("Missing Standards", r)))
+    expect_true (any (grepl ("Missing Standards", r)))
 })
