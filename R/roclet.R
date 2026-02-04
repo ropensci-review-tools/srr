@@ -93,25 +93,28 @@ collect_blocks <- function (blocks, base_path) {
     rcpp_blocks <- blocks [which (rcpp)]
     blocks <- blocks [which (!rcpp)]
 
-    file_paths <- vapply (blocks, function (i) {
-        gsub (base_path, "", i$file)
-    }, character (1), USE.NAMES = FALSE)
-    re <- regexpr ("^.*\\/", file_paths)
-    file_dirs <- rep (".", length (file_paths))
-    index <- which (re > 0)
-    file_dirs [index] <- regmatches (file_paths, re)
-    file_dirs <- gsub ("^\\/", "", file_dirs)
-    file_dirs <- gsub ("\\/.*$", "", file_dirs)
+    extra_files <- get_extra_files (base_path)
+    blocks <- c (blocks, get_extra_blocks (extra_files))
 
-    readme_blocks <- blocks [which (file_dirs == "")]
+    file_paths <- vapply (blocks, function (i) {
+        fs::path_rel (i$file, base_path)
+    }, character (1), USE.NAMES = FALSE)
+    file_dirs <- vapply (
+        fs::path_split (file_paths),
+        function (f) f [1],
+        character (1L)
+    )
+
+    readme_blocks <- blocks [which (grepl ("^REAMDE", file_dirs))]
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
+    src_blocks <- blocks [which (file_dirs == "src")]
     vignette_blocks <- blocks [which (file_dirs == "vignettes")]
     inst_blocks <- blocks [which (file_dirs == "inst")]
 
     blocks <- list (
         R = r_blocks,
-        src = rcpp_blocks,
+        src = src_blocks,
         tests = test_blocks,
         inst = inst_blocks,
         vignettes = vignette_blocks,
@@ -119,6 +122,86 @@ collect_blocks <- function (blocks, base_path) {
     )
 
     return (blocks)
+}
+
+get_extra_files <- function (base_path) {
+
+    extra_dirs <- fs::path (base_path, c ("inst", "src", "tests", "vignettes"))
+    src_exts <- c ("c", "h", "hpp", "cpp", "rs")
+    r_exts <- c ("r", "rmd", "qmd")
+    exts <- list (c (src_exts, r_exts), src_exts, r_exts, c ("rmd", "qmd"))
+    index <- which (fs::dir_exists (extra_dirs))
+    extra_dirs <- extra_dirs [index]
+    exts <- exts [index]
+    flist <- lapply (seq_along (extra_dirs), function (d) {
+        f_d <- fs::dir_ls (extra_dirs [d], recurse = TRUE, type = "file")
+        exts_d <- tolower (fs::path_ext (f_d))
+        f_d [which (exts_d %in% exts [[d]])]
+    })
+
+    readmes <- fs::dir_ls (
+        base_path,
+        regexp = "README\\.",
+        type = "file",
+        recurse = FALSE
+    )
+    if (length (readmes) > 1L) {
+        exts <- tolower (fs::path_ext (readmes))
+        readmes <- readmes [which (exts %in% c ("rmd", "qmd"))]
+    }
+
+    unname (unlist (c (flist, readmes)))
+}
+
+get_extra_blocks <- function (extra_files) {
+
+    blocks <- lapply (extra_files, function (f) {
+
+        this_file <- f
+        this_ext <- tolower (fs::path_ext (f))
+
+        do_parse <- TRUE
+        res <- NULL
+
+        if (this_ext != "r") {
+            if (this_ext %in% c ("c", "h", "hpp", "cpp")) {
+                this_ext <- "c"
+            }
+            parse_fn <- paste0 ("rcpp_parse_", this_ext)
+            do_parse <- parse_fn_exists (parse_fn)
+            if (do_parse) {
+                fout <- fs::file_temp ()
+                do.call (parse_fn, list (f, fout))
+                this_file <- fout
+            }
+        }
+
+        if (do_parse) {
+            res <- tryCatch (
+                roxygen2::parse_file (this_file, env = NULL),
+                error = function (e) NULL # ignore errors and do not parse
+            )
+            if (f != this_file) {
+                res <- lapply (res, function (i) {
+                    i$file <- f
+                    return (i)
+                })
+            }
+        }
+        return (res)
+    })
+
+    lens <- vapply (blocks, length, integer (1L))
+    blocks <- do.call (c, blocks)
+    names (blocks) <- rep (extra_files, times = lens)
+
+    return (blocks)
+}
+
+parse_fn_exists <- function (parse_fn) {
+
+    all_fns <- ls (asNamespace ("srr"), all.names = TRUE)
+    parse_fn %in% all_fns
 }
 
 get_verbose_flag <- function (blocks) {
@@ -302,24 +385,19 @@ process_srrstats_tags <- function (tag = "srrstats", block,
             msg <- paste0 (msg, " in function '", func_name, "()'")
         }
     }
-    ptn <- paste0 ("^.*", dir, "\\/")
-    if (grepl (ptn, block$file)) {
-        fpath <- regmatches (block$file, regexpr (ptn, block$file))
-        term_ptn <- "/"
-    } else {
-        # Generally only 'tests/testthat.R' where 'dir = tests/testthat'
-        term_ptn <- paste0 ("\\.", tools::file_ext (block$file))
-        ptn <- paste0 ("^.*", dir, term_ptn, "$")
-        fpath <- regmatches (block$file, regexpr (ptn, block$file))
-    }
-    fpath_full <- gsub (fpath, paste0 (dir, term_ptn), block$file)
 
-    msg <- paste0 (
-        msg, " on line#", block_line,
-        " of file [",
-        fpath_full,
-        "]"
-    )
+    fpath <- fs::path_split (block$file) [[1]]
+    if (dir %in% fpath) {
+        index <- seq (match (dir, fpath), length (fpath))
+        fpath <- do.call (fs::path, as.list (fpath [index]))
+
+        msg <- paste0 (
+            msg, " on line#", block_line,
+            " of file [",
+            fpath,
+            "]"
+        )
+    }
 
     res <- list (
         message = msg,

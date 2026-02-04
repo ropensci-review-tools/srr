@@ -36,7 +36,7 @@ srr_report <- function (path = ".", branch = "",
         }
     }
 
-    requireNamespace ("rmarkdown")
+    requireNamespace ("rmarkdown", quietly = TRUE)
 
     if (path == ".") {
         path <- here::here ()
@@ -214,38 +214,16 @@ srr_report <- function (path = ".", branch = "",
 
 get_all_msgs <- function (path = ".") {
 
-    flist <- get_all_file_names (path)
-
-    blocks <- lapply (flist, function (i) {
-        this_file <- i
-        is_rmd <- grepl ("\\.Rmd$", i)
-        if (is_rmd) {
-            fout <- fs::file_temp ()
-            rcpp_parse_rmd (i, fout)
-            this_file <- fout
-        }
-        res <- tryCatch (
-            roxygen2::parse_file (this_file, env = NULL),
-            error = function (e) NULL # ignore errors and do not parse
-        )
-        if (is_rmd) {
-            res <- lapply (res, function (j) {
-                j$file <- i
-                return (j)
-            })
-        }
-        return (res)
-    })
+    # Roxygen method of initialy gathering all blocks in "./R":
+    flist <- fs::dir_ls (fs::path (path, "R"))
+    blocks <- lapply (flist, function (i) roxygen2::parse_file (i))
+    names (blocks) <- flist
+    blocks <- collect_blocks (do.call (c, blocks), path)
 
     failing <- flist [sapply (blocks, inherits, "try-error")]
     if (length (failing) > 0L) {
         stop ("parsing problem in: ", paste (failing, collapse = ", "))
     }
-
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-
-    blocks <- collect_blocks (blocks, path)
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
     res <- lapply (

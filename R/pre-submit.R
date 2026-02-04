@@ -101,9 +101,17 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
         i <- gsub (stds, "", i, fixed = TRUE)
         stds <- gsub ("^\\[|\\]$", "", stds)
         fname <- regmatches (i, regexpr ("\\[.*?\\]", i))
-        fname <- gsub ("^\\[|\\]$", "", fname)
+        fname <- ifelse (
+            length (fname) == 0L,
+            NA_character_,
+            gsub ("^\\[|\\]$", "", fname)
+        )
         lnum <- regmatches (i, regexpr ("\\#[0-9]+", i))
-        lnum <- as.numeric (gsub ("^\\#", "", lnum))
+        lnum <- ifelse (
+            length (lnum) == 0L,
+            NA_integer_,
+            as.integer (gsub ("^\\#", "", lnum))
+        )
 
         i <- strsplit (i, "\\]") [[1]] [1]
         i <- strsplit (i, "\\[") [[1]] [2]
