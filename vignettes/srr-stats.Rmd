@@ -86,9 +86,37 @@ pkgbuild::compile_dll (d)
 ```{r skeleton-output-dummy, eval = FALSE, echo = TRUE, collapse = TRUE}
 roxygen2::roxygenise (d)
 ```
-```{r skeleton-output, eval = TRUE, echo = FALSE, message = TRUE, collapse = TRUE}
+```{r skeleton-output, eval = FALSE, echo = FALSE, message = TRUE, collapse = TRUE}
 roxygen2::roxygenise (d)
 ```
+```{r roxygenize-fakey, echo = FALSE, eval = TRUE, collapse = TRUE}
+cli::cli_text ("Writing NAMESPACE")
+cli::cli_alert_info ("Loading package")
+message ("")
+txt <- "rOpenSci Statistical Software Standards"
+cli::rule (center = cli::col_green (txt), line_col = "green")
+cli::cli_h3 ("@srrstats standards (7 / 10):")
+msgs <- c (
+    "[G1.1, G1.2, G1.3, G2.0, G2.1] in function 'test_fn()' on line#11 of file [R/test.R]",
+    "[RE2.2] on line#2 of file [tests/testthat/test-a.R]",
+    "[G2.3] in function 'test()' on line#6 of file [src/cpptest.cpp]"
+)
+message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
+message ("")
+
+cli::cli_h3 ("@srrstatsNA standards (1 / 10):")
+msg <- "[RE3.3] on line#5 of file [R/srr-stats-standards.R]"
+message (paste0 ("  * ", msg, collapse = "\n"), sep = "")
+
+cli::cli_h3 ("@srrstatsTODO standards (2 / 10):")
+msgs <- c (
+    "[RE4.4] on line#14 of file [R/srr-stats-standards.R]",
+    "[RE1.1] in function 'test_fn()' on line#11 of file [R/test.R]"
+)
+message (paste0 ("  * ", msgs, collapse = "\n"), sep = "")
+```
+
+
 
 The "roclets" contained within this package parse any instances of the
 package-specified tags described below, and summarise the output by listing all
