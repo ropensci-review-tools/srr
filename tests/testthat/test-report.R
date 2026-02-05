@@ -1,10 +1,8 @@
-skip_on_os ("windows")
-
 test_that ("srr_report with missing standards", {
 
     path <- srr_stats_pkg_skeleton ()
-    f <- file.path (path, "R", "srr-stats-standards.R")
-    expect_true (file.exists (f))
+    f <- fs::path (path, "R", "srr-stats-standards.R")
+    expect_true (fs::file_exists (f))
 
     r <- srr_report (path, view = FALSE)
     # Expect three errors, with HTML-formatted red crosses:
@@ -32,8 +30,8 @@ test_that ("srr_report", {
     categories <- categories [-which (categories == "general")]
     expect_length (categories, 8L)
 
-    f <- file.path (path, "R", "srr-stats-standards.R")
-    expect_true (file.exists (f))
+    f <- fs::path (path, "R", "srr-stats-standards.R")
+    expect_true (fs::file_exists (f))
     s <- srr_stats_roxygen (
         category = categories,
         filename = f,
@@ -71,13 +69,11 @@ test_that ("srr_report", {
 
     f <- attr (r, "file")
     expect_equal (tools::file_ext (f), "html")
-    expect_true (file.exists (f))
+    expect_true (fs::file_exists (f))
 
     expect_type (r, "character")
-    skip_on_os ("mac")
     expect_true (length (r) > 400L)
 
-    skip_on_os ("windows")
     expect_false (any (grepl ("Missing Standards", r)))
 
     tryCatch (

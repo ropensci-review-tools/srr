@@ -1,15 +1,12 @@
-skip_on_os ("mac")
-skip_on_os ("windows")
-
-test_that ("release", {
+test_that ("pre-submit", {
 
     Sys.setenv ("CLIPR_ALLOW" = TRUE)
     Sys.setenv ("NOCLIPR" = TRUE)
 
     pkgname <- paste0 (sample (letters, 8), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkgname)
-    file.remove (file.path (d, "R", "test.R"))
-    file.remove (file.path (d, "README.Rmd"))
+    fs::file_delete (fs::path (d, "R", "test.R"))
+    fs::file_delete (fs::path (d, "README.Rmd"))
 
     x <- utils::capture.output (
         rep <- srr_stats_pre_submit (d),
@@ -42,4 +39,9 @@ test_that ("release", {
     expect_true (length (missing_stds_output) > 100L)
     expect_true (length (missing_stds_rep) > 100L)
     expect_equal (length (missing_stds_output), length (missing_stds_rep))
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })

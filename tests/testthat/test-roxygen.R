@@ -1,21 +1,20 @@
-skip_on_os ("windows")
-
 test_that ("roxygen standards", {
 
     # Sys.setenv("CLIPR_ALLOW" = TRUE)
     pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
-    expect_true (file.exists (file.path (tempdir (), pkg_name)))
-    fp <- file.path (tempdir (), pkg_name, "DESCRIPTION")
-    expect_true (file.exists (fp))
-    fp <- file.path (tempdir (), pkg_name, "NAMESPACE")
-    expect_true (file.exists (fp))
-    fp <- file.path (tempdir (), pkg_name, "R")
-    expect_true (file.exists (fp))
-    fp <- file.path (tempdir (), pkg_name, "src")
-    expect_true (file.exists (fp))
-    fp <- file.path (tempdir (), pkg_name, "tests")
-    expect_true (file.exists (fp))
+
+    expect_true (fs::file_exists (fs::path (fs::path_temp (), pkg_name)))
+    fp <- fs::path (tempdir (), pkg_name, "DESCRIPTION")
+    expect_true (fs::file_exists (fp))
+    fp <- fs::path (tempdir (), pkg_name, "NAMESPACE")
+    expect_true (fs::file_exists (fp))
+    fp <- fs::path (tempdir (), pkg_name, "R")
+    expect_true (fs::file_exists (fp))
+    fp <- fs::path (tempdir (), pkg_name, "src")
+    expect_true (fs::file_exists (fp))
+    fp <- fs::path (tempdir (), pkg_name, "tests")
+    expect_true (fs::file_exists (fp))
 
     x <- utils::capture.output (
         roxygen2::roxygenise (d),
@@ -34,12 +33,12 @@ test_that ("roxygen standards", {
     expect_true (grep ("@srrstatsNA standards \\(", x) >
         grep ("@srrstats standards \\(", x))
 
-    filename <- file.path (d, "R", "srr-stats-standards.R")
+    filename <- fs::path (d, "R", "srr-stats-standards.R")
     # remove DESC file from directory should error
-    desc <- file.path (d, "DESCRIPTION")
-    temp <- file.path (d, "temp")
-    chk <- file.rename (desc, temp)
-    if (chk) {
+    desc <- fs::path (d, "DESCRIPTION")
+    temp <- fs::path (d, "temp")
+    chk <- fs::file_move (desc, temp)
+    if (fs::file_exists (chk)) {
         expect_error (
             srr_stats_roxygen (filename = filename),
             paste0 (
@@ -47,7 +46,7 @@ test_that ("roxygen standards", {
                 "within an R package"
             )
         )
-        chk <- file.rename (temp, desc)
+        chk <- fs::file_move (temp, desc)
     }
     # writes all standards with "@srrstatsTODO" tags. Some of these
     # standards already exist as `@srrstats` in the skeleton, in
@@ -62,17 +61,22 @@ test_that ("roxygen standards", {
         "Standards .* are listed with both .* tags"
     )
 
-    if (file.remove (file.path (d, "R", "test.R")) &
-        file.remove (file.path (d, "README.Rmd"))) {
+    d1 <- fs::file_delete (fs::path (d, "R", "test.R"))
+    d2 <- fs::file_delete (fs::path (d, "README.Rmd"))
+
+    if (!fs::file_exists (d1) && !fs::file_exists (d2)) {
+
         # There is then one standard (G2.3) in src/cpptest.cpp plus TODO,
         # so:
         expect_error (
             suppressWarnings (roxygen2::roxygenise (d)),
             "Standards .* are listed with both .* tags"
         )
-        f <- file.path (d, "src", "cpptest.cpp")
-        cpptest <- gsub ("srrstats", "srrstatsTODO", readLines (f))
-        writeLines (cpptest, con = f)
+        f <- fs::path (d, "src", "cpptest.cpp")
+        if (fs::file_exists (f)) {
+            cpptest <- gsub ("srrstats", "srrstatsTODO", readLines (f))
+            writeLines (cpptest, con = f)
+        }
         # After fixing that and removing the file with duplicated
         # standards with mixed tags, things should once again work:
         expect_warning (
@@ -129,6 +133,11 @@ test_that ("roxygen standards", {
         expect_length (standards_old, 1)
         expect_true (length (standards_new) > 50)
     }
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
 
 test_that ("roclet errors", {
@@ -137,14 +146,16 @@ test_that ("roclet errors", {
     d <- srr_stats_pkg_skeleton (pkg_name = nm)
 
     # ------1. Adding extract @srrstatsVerbose tag should error:
-    f <- file.path (d, "R", "test.R")
-    x <- c (
-        readLines (f),
-        "",
-        "#' @srrstatsVerbose TRUE",
-        "NULL"
-    )
-    writeLines (x, f)
+    f <- fs::path (d, "R", "test.R")
+    if (fs::file_exists (f)) {
+        x <- c (
+            readLines (f),
+            "",
+            "#' @srrstatsVerbose TRUE",
+            "NULL"
+        )
+        writeLines (x, f)
+    }
 
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
@@ -158,10 +169,12 @@ test_that ("roclet errors", {
 
     # ------2. Docs should be auto-verbose when @srrstatsVerbose flag
     # ------   is removed
-    f <- file.path (d, "R", "srr-stats-standards.R")
-    x0 <- readLines (f)
-    x <- x0 [-grep ("@srrstatsVerbose", x0)]
-    writeLines (x, f)
+    f <- fs::path (d, "R", "srr-stats-standards.R")
+    if (fs::file_exists (f)) {
+        x0 <- readLines (f)
+        x <- x0 [-grep ("@srrstatsVerbose", x0)]
+        writeLines (x, f)
+    }
     x <- utils::capture.output (
         roxygen2::roxygenise (d),
         type = "message"
@@ -187,11 +200,13 @@ test_that ("roclet errors", {
 
     # --------4. @srrstatsNA tags should only be in a block named
     # --------   "NA_standards"
-    f <- file.path (d, "R", "srr-stats-standards.R")
-    x <- x0 <- readLines (f)
-    i <- grep ("NA\\_standards", x)
-    x [i] <- "#' not_NA_standards"
-    writeLines (x, con = f)
+    f <- fs::path (d, "R", "srr-stats-standards.R")
+    if (fs::file_exists (f)) {
+        x <- x0 <- readLines (f)
+        i <- grep ("NA\\_standards", x)
+        x [i] <- "#' not_NA_standards"
+        writeLines (x, con = f)
+    }
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
     )
@@ -201,4 +216,9 @@ test_that ("roclet errors", {
         "block with a title of NA_standards"
     )
     expect_true (grepl (txt, out$message))
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })

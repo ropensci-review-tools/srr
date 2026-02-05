@@ -188,7 +188,7 @@ srr_report <- function (path = ".", branch = "",
         md_lines
     )
 
-    f <- tempfile (fileext = ".Rmd")
+    f <- fs::file_temp (ext = "Rmd")
     # need explicit line break to html render
     writeLines (paste0 (md_lines, "\n"), con = f)
     out <- paste0 (tools::file_path_sans_ext (f), ".html")
@@ -303,7 +303,7 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
 
     files <- gsub ("^.*of file\\s\\[|\\]$", "", unlist (m))
     dirs <- vapply (
-        strsplit (files, .Platform$file.sep),
+        fs::path_split (files),
         function (i) i [1],
         character (1)
     )

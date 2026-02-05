@@ -27,11 +27,11 @@ dl_standards <- function (category = "general", quiet = FALSE) {
         "main/standards/", category, ".Rmd"
     )
 
-    tmp <- file.path (
-        tempdir (),
+    tmp <- fs::path (
+        fs::path_temp (),
         paste0 ("srr-standards-", category, ".Rmd")
     )
-    dl <- !file.exists (tmp)
+    dl <- !fs::file_exists (tmp)
     if (dl) {
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
     } # nolint
@@ -47,8 +47,8 @@ stds_version <- function () {
 
     u <- paste0 (base_url (raw = TRUE), "main/DESCRIPTION")
 
-    tmp <- file.path (tempdir (), "stats-devguide-DESCRIPTION")
-    if (!file.exists (tmp)) {
+    tmp <- fs::path (fs::path_temp (), "stats-devguide-DESCRIPTION")
+    if (!fs::file_exists (tmp)) {
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
     } # nolint
 
@@ -256,20 +256,21 @@ srr_stats_roxygen <- function (category = NULL,
                                overwrite = FALSE) {
 
     loc <- here::here ()
-    if (dirname (filename) != ".") {
-        loc <- path.expand (dirname (filename))
-        if (substring (loc, nchar (loc), nchar (loc)) == "R") {
-            loc <- gsub (paste0 (.Platform$file.sep, "R$"), "", loc)
+    if (fs::path_dir (filename) != ".") {
+        loc <- fs::path_abs (fs::path_dir (filename))
+        loc_dir <- utils::tail (fs::path_split (loc) [[1]], 1L)
+        if (loc_dir == "R") {
+            loc <- fs::path_dir (loc)
         }
     }
 
-    if (!"DESCRIPTION" %in% list.files (loc)) {
+    if (!"DESCRIPTION" %in% fs::path_file (fs::dir_ls (loc))) {
         stop ("This function must be called within an R package directory")
     }
 
-    filename <- file.path (loc, "R", basename (filename))
+    filename <- fs::path (loc, "R", fs::path_file (filename))
 
-    if (!overwrite & interactive () & file.exists (filename)) {
+    if (!overwrite & interactive () & fs::file_exists (filename)) {
         x <- readline ("Overwrite current file (y/n)? ") # nocov
         if (tolower (substring (x, 1, 1) != "y")) { # nocov
             stop ("Okay, we'll stop there")
