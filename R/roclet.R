@@ -105,7 +105,7 @@ collect_blocks <- function (blocks, base_path) {
         character (1L)
     )
 
-    readme_blocks <- blocks [which (grepl ("^REAMDE", file_dirs))]
+    readme_blocks <- blocks [which (grepl ("^README", file_dirs))]
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
     src_blocks <- blocks [which (file_dirs == "src")]
@@ -269,42 +269,35 @@ print_one_msg_list <- function (msgs) {
 # Collect all messages for one tag
 collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
-    msgs <- std_num <- std_txt <- list ()
+    out <- list (
+        message = list (),
+        std_num = list (),
+        std_txt = list ()
+    )
 
     for (block in blocks$R) {
         res <- parse_one_msg_list (block, tag = tag, fn_name = TRUE)
-        msgs <- c (msgs, res$message)
-        std_txt <- c (std_txt, res$std_txt)
-        std_num <- c (std_num, res$std_num)
+        out$message <- c (out$message, res$message)
+        out$std_txt <- c (out$std_txt, res$std_txt)
+        out$std_num <- c (out$std_num, res$std_num)
     }
 
-    res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$inst, tag = tag, dir = "inst")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
-
-    res <- get_other_tags (blocks$readme, tag = tag, dir = ".")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    list (
-        message = msgs,
-        std_num = std_num,
-        std_txt = std_txt
+    blocks_dirs <- rbind (
+        c ("tests", "tests/testthat"),
+        c ("inst", "inst"),
+        c ("src", "src"),
+        c ("readme", "."),
+        c ("vignettes", "vignettes")
     )
+    res_other <- apply (blocks_dirs, 1, function (b) {
+        get_other_tags (blocks [[b [1]]], tag = tag, dir = b [2])
+    })
+    for (what in c ("message", "std_txt", "std_num")) {
+        this <- unlist (lapply (res_other, function (i) i [[what]]))
+        out [[what]] <- c (out [[what]], this)
+    }
+
+    return (out)
 }
 
 
@@ -387,8 +380,9 @@ process_srrstats_tags <- function (tag = "srrstats", block,
     }
 
     fpath <- fs::path_split (block$file) [[1]]
-    if (dir %in% fpath) {
-        index <- seq (match (dir, fpath), length (fpath))
+    dir_sp <- fs::path_split (dir) [[1]]
+    if (all (dir_sp %in% fpath)) {
+        index <- seq (min (match (dir_sp, fpath)), length (fpath))
         fpath <- do.call (fs::path, as.list (fpath [index]))
 
         msg <- paste0 (
@@ -456,86 +450,15 @@ get_block_backref <- function (block, base_path = NULL) {
     return (block_backref)
 }
 
-get_src_tags <- function (blocks, base_path, tag = "srrstats") {
-
-    n <- vapply (
-        blocks, function (i) {
-            length (roxygen2::block_get_tags (i, tag))
-        },
-        integer (1)
-    )
-    blocks <- blocks [which (n > 0)]
-
-    msgs <- list ()
-
-    src_files <- list.files (file.path (base_path, "src"),
-        pattern = "\\.cpp$|\\.hpp$|.h$",
-        full.names = TRUE
-    )
-    src_files <- src_files [-grep ("RcppExports.cpp", src_files)]
-
-    for (block in blocks) { # usually only 1 block for "RcppExports.R"
-
-        block_tags <- roxygen2::block_get_tags (block, tag)
-
-        for (tag in block_tags) {
-
-            tag_txt <- paste0 (tag$tag, "\\s+", tag$val)
-            tag_txt <- gsub ("\\{", "\\\\{", tag_txt)
-            tag_txt <- gsub ("\\}", "\\\\}", tag_txt)
-            which_file <- vapply (
-                src_files, function (f) {
-                    any (grepl (tag_txt, readLines (f)))
-                },
-                logical (1)
-            )
-            this_src <- src_files [which (which_file)]
-            if (length (this_src) > 1) {
-                this_src <- grep ("\\.cpp", this_src, value = TRUE)
-            }
-
-            src_lines <- readLines (this_src)
-            line_num <- grep (tag_txt, src_lines)
-            roxy_lines <- grep ("\\/\\/\\'", src_lines)
-            index <- cumsum (c (FALSE, diff (roxy_lines) > 1))
-            roxy_lines <- split (roxy_lines, index)
-            this_group <- which (vapply (
-                roxy_lines, function (i) {
-                    line_num %in% i
-                },
-                logical (1)
-            ))
-            roxy_lines <- roxy_lines [[this_group]]
-
-            src_lines <- src_lines [(max (roxy_lines) + 1):length (src_lines)]
-            while (src_lines [1] == "" ||
-                grepl ("Rcpp::export", src_lines [1])) {
-                src_lines <- src_lines [-1]
-            }
-            this_fn <- strsplit (src_lines [1], "\\s") [[1]] [2]
-
-            snum <- extract_standard_numbers (tag$val)
-
-            this_src <- fs::path ("src", basename (this_src))
-            msgs <- c (msgs, paste0 (
-                "[", paste0 (snum, collapse = ", "),
-                "] in function '", this_fn,
-                "()' on line#", line_num, " of file [",
-                fs::path ("src", basename (this_src)),
-                "]"
-            ))
-
-        } # end for tag in block_tags
-    } # end for block in blocks
-
-    return (msgs)
-}
-
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
     msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks) {
+
+        if (dir == ".") {
+            dir <- fs::path_file (block$file)
+        }
 
         res <- parse_one_msg_list (
             block,
