@@ -361,7 +361,7 @@ process_srrstats_tags <- function (tag = "srrstats", block,
 
     standards <- roxygen2::block_get_tags (block, tag)
     standards <- unlist (lapply (standards, function (i) i$val))
-    snum <- extract_standard_numbers (standards)
+    snum <- extract_standard_numbers (standards, block)
 
     standards_txt <- vapply (seq_along (snum), function (i) {
         gsub (paste0 ("^.*", snum [i], "\\}"), "", standards [i])
@@ -405,7 +405,7 @@ process_srrstats_tags <- function (tag = "srrstats", block,
 
 # extract the actual standards numbers from arbitrary text strings, first
 # capturing everything inside first "[...]":
-extract_standard_numbers <- function (standards) {
+extract_standard_numbers <- function (standards, block) {
 
     # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
     # muck up standards ID, so have to be removed here:
@@ -428,7 +428,9 @@ extract_standard_numbers <- function (standards) {
     standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
     standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
     if (length (standards) < 1) {
-        stop ("srrstats tags found but no correctly-formatted standard numbers")
+        cli::cli_abort (
+            "srrstats tags in {block$file} line {block$line} have incorrectly-formatted standard numbers"
+        )
     }
 
     return (standards)
