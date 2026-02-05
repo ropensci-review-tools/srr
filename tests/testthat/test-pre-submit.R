@@ -1,4 +1,4 @@
-test_that ("release", {
+test_that ("pre-submit", {
 
     Sys.setenv ("CLIPR_ALLOW" = TRUE)
     Sys.setenv ("NOCLIPR" = TRUE)
@@ -39,4 +39,9 @@ test_that ("release", {
     expect_true (length (missing_stds_output) > 100L)
     expect_true (length (missing_stds_rep) > 100L)
     expect_equal (length (missing_stds_output), length (missing_stds_rep))
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })

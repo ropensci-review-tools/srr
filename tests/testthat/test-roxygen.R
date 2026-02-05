@@ -3,6 +3,7 @@ test_that ("roxygen standards", {
     # Sys.setenv("CLIPR_ALLOW" = TRUE)
     pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
+
     expect_true (fs::file_exists (fs::path (fs::path_temp (), pkg_name)))
     fp <- fs::path (tempdir (), pkg_name, "DESCRIPTION")
     expect_true (fs::file_exists (fp))
@@ -132,6 +133,11 @@ test_that ("roxygen standards", {
         expect_length (standards_old, 1)
         expect_true (length (standards_new) > 50)
     }
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
 
 test_that ("roclet errors", {
@@ -210,4 +216,9 @@ test_that ("roclet errors", {
         "block with a title of NA_standards"
     )
     expect_true (grepl (txt, out$message))
+
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
