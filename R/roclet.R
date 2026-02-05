@@ -288,7 +288,10 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
     std_num <- c (std_num, res$std_num)
     std_txt <- c (std_txt, res$std_txt)
 
-    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
+    res <- get_other_tags (blocks$src, tag = tag, dir = "src")
+    msgs <- c (msgs, res$message)
+    std_num <- c (std_num, res$std_num)
+    std_txt <- c (std_txt, res$std_txt)
 
     res <- get_other_tags (blocks$readme, tag = tag, dir = ".")
     msgs <- c (msgs, res$message)
@@ -454,81 +457,6 @@ get_block_backref <- function (block, base_path = NULL) {
     }
 
     return (block_backref)
-}
-
-get_src_tags <- function (blocks, base_path, tag = "srrstats") {
-
-    n <- vapply (
-        blocks, function (i) {
-            length (roxygen2::block_get_tags (i, tag))
-        },
-        integer (1)
-    )
-    blocks <- blocks [which (n > 0)]
-
-    msgs <- list ()
-
-    src_files <- list.files (file.path (base_path, "src"),
-        pattern = "\\.cpp$|\\.hpp$|.h$",
-        full.names = TRUE
-    )
-    src_files <- src_files [-grep ("RcppExports.cpp", src_files)]
-
-    for (block in blocks) { # usually only 1 block for "RcppExports.R"
-
-        block_tags <- roxygen2::block_get_tags (block, tag)
-
-        for (tag in block_tags) {
-
-            tag_txt <- paste0 (tag$tag, "\\s+", tag$val)
-            tag_txt <- gsub ("\\{", "\\\\{", tag_txt)
-            tag_txt <- gsub ("\\}", "\\\\}", tag_txt)
-            which_file <- vapply (
-                src_files, function (f) {
-                    any (grepl (tag_txt, readLines (f)))
-                },
-                logical (1)
-            )
-            this_src <- src_files [which (which_file)]
-            if (length (this_src) > 1) {
-                this_src <- grep ("\\.cpp", this_src, value = TRUE)
-            }
-
-            src_lines <- readLines (this_src)
-            line_num <- grep (tag_txt, src_lines)
-            roxy_lines <- grep ("\\/\\/\\'", src_lines)
-            index <- cumsum (c (FALSE, diff (roxy_lines) > 1))
-            roxy_lines <- split (roxy_lines, index)
-            this_group <- which (vapply (
-                roxy_lines, function (i) {
-                    line_num %in% i
-                },
-                logical (1)
-            ))
-            roxy_lines <- roxy_lines [[this_group]]
-
-            src_lines <- src_lines [(max (roxy_lines) + 1):length (src_lines)]
-            while (src_lines [1] == "" ||
-                grepl ("Rcpp::export", src_lines [1])) {
-                src_lines <- src_lines [-1]
-            }
-            this_fn <- strsplit (src_lines [1], "\\s") [[1]] [2]
-
-            snum <- extract_standard_numbers (tag$val)
-
-            this_src <- fs::path ("src", basename (this_src))
-            msgs <- c (msgs, paste0 (
-                "[", paste0 (snum, collapse = ", "),
-                "] in function '", this_fn,
-                "()' on line#", line_num, " of file [",
-                fs::path ("src", basename (this_src)),
-                "]"
-            ))
-
-        } # end for tag in block_tags
-    } # end for block in blocks
-
-    return (msgs)
 }
 
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
