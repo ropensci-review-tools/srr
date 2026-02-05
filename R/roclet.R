@@ -269,45 +269,35 @@ print_one_msg_list <- function (msgs) {
 # Collect all messages for one tag
 collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
-    msgs <- std_num <- std_txt <- list ()
+    out <- list (
+        message = list (),
+        std_num = list (),
+        std_txt = list ()
+    )
 
     for (block in blocks$R) {
         res <- parse_one_msg_list (block, tag = tag, fn_name = TRUE)
-        msgs <- c (msgs, res$message)
-        std_txt <- c (std_txt, res$std_txt)
-        std_num <- c (std_num, res$std_num)
+        out$message <- c (out$message, res$message)
+        out$std_txt <- c (out$std_txt, res$std_txt)
+        out$std_num <- c (out$std_num, res$std_num)
     }
 
-    res <- get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$inst, tag = tag, dir = "inst")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$src, tag = tag, dir = "src")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$readme, tag = tag, dir = ".")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    res <- get_other_tags (blocks$vignettes, tag = tag, dir = "vignettes")
-    msgs <- c (msgs, res$message)
-    std_num <- c (std_num, res$std_num)
-    std_txt <- c (std_txt, res$std_txt)
-
-    list (
-        message = msgs,
-        std_num = std_num,
-        std_txt = std_txt
+    blocks_dirs <- rbind (
+        c ("tests", "tests/testthat"),
+        c ("inst", "inst"),
+        c ("src", "src"),
+        c ("readme", "."),
+        c ("vignettes", "vignettes")
     )
+    res_other <- apply (blocks_dirs, 1, function (b) {
+        get_other_tags (blocks [[b [1]]], tag = tag, dir = b [2])
+    })
+    for (what in c ("message", "std_txt", "std_num")) {
+        this <- unlist (lapply (res_other, function (i) i [[what]]))
+        out [[what]] <- c (out [[what]], this)
+    }
+
+    return (out)
 }
 
 
