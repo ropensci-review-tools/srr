@@ -25,6 +25,7 @@ void rcpp_parse_rs (const std::string filename,
     in_file.seekg (0); 
 
     bool in_cmts = false;
+    bool in_srr = false;
 
     while (getline (in_file, linetxt, '\n')) { 
         
@@ -32,7 +33,21 @@ void rcpp_parse_rs (const std::string filename,
 
         if (rs::is_rs_cmt (linetxt)) {
             in_cmts = true;
-            rs::replace_rs_cmt (linetxt);
+            bool start_srr = rs::is_rs_cmt_with_srr (linetxt);
+            bool line_is_empty = rs::is_empty_rs_cmt (linetxt);
+            if (start_srr) {
+                in_srr = true;
+            }
+            if (in_srr) {
+                if (!line_is_empty) {
+                    rs::replace_rs_cmt (linetxt);
+                } else {
+                    in_srr = false;
+                    linetxt = "#'";
+                }
+            } else {
+                linetxt = "#'";
+            }
             out_file << linetxt << std::endl;
         } else {
             if (in_cmts) {
@@ -50,9 +65,28 @@ void rcpp_parse_rs (const std::string filename,
 
 bool rs::is_rs_cmt (const std::string &line)
 {
-    const std::string rs_cmt_def = "///";
+    const std::string ptn = "///";
 
-    return (line.compare (0, 3, rs_cmt_def) == 0);
+    return (line.compare (0, 3, ptn) == 0);
+}
+
+bool rs::is_empty_rs_cmt (const std::string &line)
+{
+    const std::string ptn = "///";
+
+    if (line.compare (0, 3, ptn) != 0) {
+        return false;
+    }
+
+    return std::all_of(line.begin() + 3, line.end(),
+        [](unsigned char c) { return std::isspace(c); });
+}
+
+bool rs::is_rs_cmt_with_srr (const std::string &line)
+{
+    const std::string ptn = "/// @srrstats";
+
+    return (line.compare (0, 13, ptn) == 0);
 }
 
 void rs::replace_rs_cmt (std::string &line)
