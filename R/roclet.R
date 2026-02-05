@@ -390,8 +390,9 @@ process_srrstats_tags <- function (tag = "srrstats", block,
     }
 
     fpath <- fs::path_split (block$file) [[1]]
-    if (dir %in% fpath) {
-        index <- seq (match (dir, fpath), length (fpath))
+    dir_sp <- fs::path_split (dir) [[1]]
+    if (all (dir_sp %in% fpath)) {
+        index <- seq (min (match (dir_sp, fpath)), length (fpath))
         fpath <- do.call (fs::path, as.list (fpath [index]))
 
         msg <- paste0 (
