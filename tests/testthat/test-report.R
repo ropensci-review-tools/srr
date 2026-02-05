@@ -1,5 +1,3 @@
-skip_on_os ("windows")
-
 test_that ("srr_report with missing standards", {
 
     path <- srr_stats_pkg_skeleton ()
@@ -74,10 +72,8 @@ test_that ("srr_report", {
     expect_true (fs::file_exists (f))
 
     expect_type (r, "character")
-    skip_on_os ("mac")
     expect_true (length (r) > 400L)
 
-    skip_on_os ("windows")
     expect_false (any (grepl ("Missing Standards", r)))
 
     tryCatch (

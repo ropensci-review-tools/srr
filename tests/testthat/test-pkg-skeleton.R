@@ -1,7 +1,5 @@
 test_that ("dummy package", {
 
-    skip_on_os ("windows")
-
     pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
@@ -46,8 +44,6 @@ test_that ("dummy package", {
 })
 
 test_that ("rust code", {
-
-    skip_on_os ("windows")
 
     pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
         collapse = ""
