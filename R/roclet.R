@@ -105,7 +105,7 @@ collect_blocks <- function (blocks, base_path) {
         character (1L)
     )
 
-    readme_blocks <- blocks [which (grepl ("^REAMDE", file_dirs))]
+    readme_blocks <- blocks [which (grepl ("^README", file_dirs))]
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
     src_blocks <- blocks [which (file_dirs == "src")]
@@ -464,6 +464,10 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
     msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks) {
+
+        if (dir == ".") {
+            dir <- fs::path_file (block$file)
+        }
 
         res <- parse_one_msg_list (
             block,
