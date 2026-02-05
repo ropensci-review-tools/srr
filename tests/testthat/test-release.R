@@ -8,8 +8,8 @@ test_that ("release", {
 
     pkgname <- paste0 (sample (letters, 8), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkgname)
-    file.remove (file.path (d, "R", "test.R"))
-    file.remove (file.path (d, "README.Rmd"))
+    fs::file_delete (fs::path (d, "R", "test.R"))
+    fs::file_delete (fs::path (d, "README.Rmd"))
 
     x <- utils::capture.output (
         rep <- srr_stats_pre_submit (d),

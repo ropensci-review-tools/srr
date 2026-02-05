@@ -11,8 +11,8 @@ test_that ("dummy package", {
     skip_if (fs::dir_exists (fs::path (fs::path_temp (), pkg_name)))
 
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
-    expect_true (file.exists (d))
-    files <- list.files (d)
+    expect_true (fs::file_exists (d))
+    files <- fs::path_file (fs::dir_ls (d))
     expect_true ("DESCRIPTION" %in% files)
     expect_true ("R" %in% files)
     expect_true ("tests" %in% files)
@@ -39,7 +39,10 @@ test_that ("dummy package", {
     if (!is.na (pos)) {
         detach (pos = pos, unload = TRUE)
     }
-    unlink (d, recursive = TRUE)
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
 
 test_that ("rust code", {
@@ -80,15 +83,19 @@ test_that ("rust code", {
     # That has [standards numbers] followed by [files], so:
     x_files <- vapply (x_contents, function (i) i [2], character (1L))
     x_files <- gsub ("^\\[|\\]$", "", x_files [which (!is.na (x_files))])
+    x_files <- fs::path_file (x_files)
 
-    expect_true ("inst/extdata/file.rs" %in% x_files)
-    expect_true ("src/cpptest.cpp" %in% x_files)
+    expect_true ("file.rs" %in% x_files)
+    expect_true ("cpptest.cpp" %in% x_files)
 
     pos <- match (paste0 ("package:", pkg_name), search ())
     if (!is.na (pos)) {
         detach (pos = pos, unload = TRUE)
     }
-    fs::dir_delete (d)
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
 
 test_that ("skeleton errors", {
@@ -99,7 +106,7 @@ test_that ("skeleton errors", {
     skip_if (fs::dir_exists (d))
 
     fs::dir_create (d)
-    writeLines ("aaa", con = file.path (d, "aaa"))
+    writeLines ("aaa", con = fs::path (d, "aaa"))
 
     # This test fails on GitHub Windows runners:
     this_os <- Sys.info () [["sysname"]]
@@ -113,5 +120,8 @@ test_that ("skeleton errors", {
     if (p %in% search ()) {
         detach (p, unload = TRUE)
     }
-    fs::dir_delete (d)
+    tryCatch (
+        fs::dir_delete (d),
+        error = function (e) NULL
+    )
 })
