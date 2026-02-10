@@ -216,7 +216,12 @@ get_all_msgs <- function (path = ".") {
 
     # Roxygen method of initialy gathering all blocks in "./R":
     flist <- fs::dir_ls (fs::path (path, "R"))
-    blocks <- lapply (flist, function (i) roxygen2::parse_file (i))
+    blocks <- lapply (flist, function (i) {
+        tryCatch (
+            roxygen2::parse_file (i),
+            error = function (e) NULL
+        )
+    })
     names (blocks) <- flist
     blocks <- collect_blocks (do.call (c, blocks), path)
 
