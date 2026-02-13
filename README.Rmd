@@ -97,6 +97,8 @@ lines:
 ```{r remotes, eval = FALSE}
 remotes::install_github ("ropensci-review-tools/srr")
 pak::pkg_install ("ropensci-review-tools/srr")
+remotes::install_git ("https://codeberg.org/ropensci-review-tools/srr")
+remotes::install_git ("https://codefloe.com/ropensci-review-tools/srr")
 ```
 
 and loaded for use with,
