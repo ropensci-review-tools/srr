@@ -193,7 +193,9 @@ get_extra_blocks <- function (extra_files) {
 
     lens <- vapply (blocks, length, integer (1L))
     blocks <- do.call (c, blocks)
-    names (blocks) <- rep (extra_files, times = lens)
+    if (length (blocks) > 0L) {
+        names (blocks) <- rep (extra_files, times = lens)
+    }
 
     return (blocks)
 }
