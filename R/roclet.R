@@ -112,7 +112,7 @@ collect_blocks <- function (blocks, base_path) {
     vignette_blocks <- blocks [which (file_dirs == "vignettes")]
     inst_blocks <- blocks [which (file_dirs == "inst")]
 
-    blocks <- list (
+    blocks_out <- list (
         R = r_blocks,
         src = src_blocks,
         tests = test_blocks,
@@ -121,7 +121,12 @@ collect_blocks <- function (blocks, base_path) {
         readme = readme_blocks
     )
 
-    return (blocks)
+    manifest_blocks <- which (file_dirs == "..")
+    if (length (manifest_blocks) > 0L) {
+        blocks_out$manifest <- blocks [manifest_blocks]
+    }
+
+    return (blocks_out)
 }
 
 get_extra_files <- function (base_path) {
@@ -133,6 +138,10 @@ get_extra_files <- function (base_path) {
     index <- which (fs::dir_exists (extra_dirs))
     extra_dirs <- extra_dirs [index]
     exts <- exts [index]
+
+    manifest_dirs <- extra_manifest_paths (base_path)
+    extra_dirs <- c (extra_dirs, manifest_dirs)
+    exts <- c (exts, rep (list (src_exts), length (manifest_dirs)))
     flist <- lapply (seq_along (extra_dirs), function (d) {
         f_d <- fs::dir_ls (extra_dirs [d], recurse = TRUE, type = "file")
         # Rm any "vendor" code:

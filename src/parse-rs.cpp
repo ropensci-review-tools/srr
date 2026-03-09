@@ -63,18 +63,22 @@ void rcpp_parse_rs (const std::string filename,
     out_file.close();
 }
 
+bool rs::is_rs_cmt_prefix (const std::string &line)
+{
+    return line.size() >= 3 &&
+           line[0] == '/' &&
+           line[1] == '/' &&
+           (line[2] == '/' || line[2] == '!');
+}
+
 bool rs::is_rs_cmt (const std::string &line)
 {
-    const std::string ptn = "///";
-
-    return (line.compare (0, 3, ptn) == 0);
+    return rs::is_rs_cmt_prefix (line);
 }
 
 bool rs::is_empty_rs_cmt (const std::string &line)
 {
-    const std::string ptn = "///";
-
-    if (line.compare (0, 3, ptn) != 0) {
+    if (!rs::is_rs_cmt_prefix (line)) {
         return false;
     }
 
@@ -84,17 +88,18 @@ bool rs::is_empty_rs_cmt (const std::string &line)
 
 bool rs::is_rs_cmt_with_srr (const std::string &line)
 {
-    const std::string ptn = "/// @srrstats";
-
-    return (line.compare (0, 13, ptn) == 0);
+    if (!rs::is_rs_cmt_prefix (line)) {
+        return false;
+    }
+    const std::string srr = "@srrstats";
+    size_t pos = line.find_first_not_of (" \t", 3);
+    return pos != std::string::npos &&
+           line.compare (pos, 9, srr) == 0;
 }
 
 void rs::replace_rs_cmt (std::string &line)
 {
-    const std::string rs_cmt_def = "///";
-    const std::string r_cmt_def = "#'";
-    
-    if (line.compare (0, 3, rs_cmt_def) == 0) {
-        line = r_cmt_def + line.substr(3);
+    if (rs::is_rs_cmt_prefix (line)) {
+        line = "#'" + line.substr(3);
     }
 }

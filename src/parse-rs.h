@@ -8,6 +8,7 @@
 
 namespace rs {
 
+bool is_rs_cmt_prefix (const std::string &line);
 bool is_rs_cmt (const std::string &line);
 bool is_empty_rs_cmt (const std::string &line);
 bool is_rs_cmt_with_srr (const std::string &line);
