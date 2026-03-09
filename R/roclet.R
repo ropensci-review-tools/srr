@@ -112,7 +112,7 @@ collect_blocks <- function (blocks, base_path) {
     vignette_blocks <- blocks [which (file_dirs == "vignettes")]
     inst_blocks <- blocks [which (file_dirs == "inst")]
 
-    blocks <- list (
+    blocks_out <- list (
         R = r_blocks,
         src = src_blocks,
         tests = test_blocks,
@@ -121,7 +121,12 @@ collect_blocks <- function (blocks, base_path) {
         readme = readme_blocks
     )
 
-    return (blocks)
+    manifest_blocks <- which (file_dirs == "..")
+    if (length (manifest_blocks) > 0L) {
+        blocks_out$manifest <- blocks [manifest_blocks]
+    }
+
+    return (blocks_out)
 }
 
 get_extra_files <- function (base_path) {
@@ -133,8 +138,17 @@ get_extra_files <- function (base_path) {
     index <- which (fs::dir_exists (extra_dirs))
     extra_dirs <- extra_dirs [index]
     exts <- exts [index]
+
+    manifest_dirs <- extra_manifest_paths (base_path)
+    extra_dirs <- c (extra_dirs, manifest_dirs)
+    exts <- c (exts, rep (list (src_exts), length (manifest_dirs)))
     flist <- lapply (seq_along (extra_dirs), function (d) {
         f_d <- fs::dir_ls (extra_dirs [d], recurse = TRUE, type = "file")
+        # Rm any "vendor" code:
+        is_vendored <- vapply (fs::path_split (f_d), function (i) {
+            any (grepl ("^vendor", i, ignore.case = TRUE))
+        }, logical (1L))
+        f_d <- f_d [which (!is_vendored)]
         exts_d <- tolower (fs::path_ext (f_d))
         f_d [which (exts_d %in% exts [[d]])]
     })
@@ -284,16 +298,22 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
         out$std_num <- c (out$std_num, res$std_num)
     }
 
+    blocks$manifest <- lapply (blocks$manifest, function (b) {
+        b$file <- fs::path_rel (b$file, base_path)
+        return (b)
+    })
     blocks_dirs <- rbind (
         c ("tests", "tests/testthat"),
         c ("inst", "inst"),
         c ("src", "src"),
         c ("readme", "."),
-        c ("vignettes", "vignettes")
+        c ("vignettes", "vignettes"),
+        c ("manifest", ".")
     )
     res_other <- apply (blocks_dirs, 1, function (b) {
         get_other_tags (blocks [[b [1]]], tag = tag, dir = b [2])
     })
+
     for (what in c ("message", "std_txt", "std_num")) {
         this <- unlist (lapply (res_other, function (i) i [[what]]))
         out [[what]] <- c (out [[what]], this)
@@ -460,15 +480,20 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
     for (block in blocks) {
 
-        if (dir == ".") {
-            dir <- fs::path_file (block$file)
+        if (dir != ".") {
+            this_dir <- dir
+        } else if (fs::path_split (block$file) [[1]] [1] == "..") {
+            # Manifest directories that lie elsewhere, so give full path
+            this_dir <- block$file
+        } else {
+            this_dir <- fs::path_file (block$file)
         }
 
         res <- parse_one_msg_list (
             block,
             tag = tag,
             fn_name = FALSE,
-            dir = dir
+            dir = this_dir
         )
         msgs <- c (msgs, res$message)
         std_num <- c (std_num, res$std_num)
