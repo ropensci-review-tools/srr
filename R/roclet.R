@@ -298,16 +298,22 @@ collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
         out$std_num <- c (out$std_num, res$std_num)
     }
 
+    blocks$manifest <- lapply (blocks$manifest, function (b) {
+        b$file <- fs::path_rel (b$file, base_path)
+        return (b)
+    })
     blocks_dirs <- rbind (
         c ("tests", "tests/testthat"),
         c ("inst", "inst"),
         c ("src", "src"),
         c ("readme", "."),
-        c ("vignettes", "vignettes")
+        c ("vignettes", "vignettes"),
+        c ("manifest", ".")
     )
     res_other <- apply (blocks_dirs, 1, function (b) {
         get_other_tags (blocks [[b [1]]], tag = tag, dir = b [2])
     })
+
     for (what in c ("message", "std_txt", "std_num")) {
         this <- unlist (lapply (res_other, function (i) i [[what]]))
         out [[what]] <- c (out [[what]], this)
@@ -474,15 +480,20 @@ get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
     for (block in blocks) {
 
-        if (dir == ".") {
-            dir <- fs::path_file (block$file)
+        if (dir != ".") {
+            this_dir <- dir
+        } else if (fs::path_split (block$file) [[1]] [1] == "..") {
+            # Manifest directories that lie elsewhere, so give full path
+            this_dir <- block$file
+        } else {
+            this_dir <- fs::path_file (block$file)
         }
 
         res <- parse_one_msg_list (
             block,
             tag = tag,
             fn_name = FALSE,
-            dir = dir
+            dir = this_dir
         )
         msgs <- c (msgs, res$message)
         std_num <- c (std_num, res$std_num)
