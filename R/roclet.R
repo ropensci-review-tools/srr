@@ -135,6 +135,11 @@ get_extra_files <- function (base_path) {
     exts <- exts [index]
     flist <- lapply (seq_along (extra_dirs), function (d) {
         f_d <- fs::dir_ls (extra_dirs [d], recurse = TRUE, type = "file")
+        # Rm any "vendor" code:
+        is_vendored <- vapply (fs::path_split (f_d), function (i) {
+            any (grepl ("^vendor", i, ignore.case = TRUE))
+        }, logical (1L))
+        f_d <- f_d [which (!is_vendored)]
         exts_d <- tolower (fs::path_ext (f_d))
         f_d [which (exts_d %in% exts [[d]])]
     })
