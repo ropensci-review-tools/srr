@@ -42,7 +42,10 @@ srr_report <- function (path = ".", branch = "",
         path <- here::here ()
     }
     path <- fs::path_abs (fs::path_expand (path))
-    path_root <- rprojroot::find_root (rprojroot::is_git_root, path = path)
+    path_root <- tryCatch (
+        rprojroot::find_root (rprojroot::is_git_root, path = path),
+        error = function (e) path
+    )
     pkg_in_subdir <- path_root != path
 
     remote <- get_git_remote (path)
