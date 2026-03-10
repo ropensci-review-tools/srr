@@ -42,6 +42,8 @@ srr_report <- function (path = ".", branch = "",
         path <- here::here ()
     }
     path <- fs::path_abs (fs::path_expand (path))
+    path_root <- rprojroot::find_root (rprojroot::is_git_root, path = path)
+    pkg_in_subdir <- path_root != path
 
     remote <- get_git_remote (path)
     branch <- get_git_branch (path, branch)
@@ -49,6 +51,9 @@ srr_report <- function (path = ".", branch = "",
     msgs <- get_all_msgs (path)
     if (all (vapply (msgs, length, integer (1L)) == 0L)) {
         return ("This is not an 'srr' package")
+    }
+    if (pkg_in_subdir) {
+        msgs <- update_msg_paths (msgs, path, path_root)
     }
     std_txt <- get_stds_txt (msgs)
 
@@ -92,21 +97,30 @@ srr_report <- function (path = ".", branch = "",
             remote,
             tag,
             branch,
-            std_txt
+            std_txt,
+            path_root,
+            path
         )
         if (length (res) > 0) {
 
             dirs <- attr (res, "dirs")
             dirs [dirs == "."] <- "root"
+            dirs [dirs == ".."] <- "source manifest"
 
             md <- res
             res <- NULL
             for (d in unique (dirs)) {
 
+                dtxt <- ifelse (
+                    d == "source manifest",
+                    "directories",
+                    "directory"
+                )
+
                 res <- c (
                     res,
                     "",
-                    paste0 ("### ", d, " directory"),
+                    paste0 ("### ", d, " ", dtxt),
                     "",
                     unlist (md [which (dirs == d)])
                 )
@@ -299,14 +313,29 @@ get_stds_txt <- function (msgs) {
 #' lines
 #' @param m List of all messages, divided into the 3 categories of tags
 #' @param std_txt Result of 'get_stds_txt' function
+#' @param path_root Git root of repository
+#' @param path Directory of R package. This and the preceding `path_root`
+#' parameter are only needed for packages in sub-directories which include
+#' standards in other locations specified by "source_manifest" files. The
+#' actual "msgs" passed as `m` here then have all paths relative to the Git
+#' root, so that hyperlinks in report work. But the markdown versions of tags
+#' produced here have to be grouped by "dirs" relative to the R package
+#' directory. Those two parameters are only used to diagnose these cases, and
+#' update paths relative to R package, just so that grouping by directories
+#' works as expected.
+#'
 #' @noRd
-one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
+one_tag_to_markdown <- function (m, remote, tag, branch, std_txt, path_root, path) {
 
     i <- match (tag, c ("srrstats", "srrstatsNA", "srrstatsTODO"))
     tag <- c ("msgs", "msgs_na", "msgs_todo") [i]
     m <- m [[tag]]
 
     files <- gsub ("^.*of file\\s\\[|\\]$", "", unlist (m))
+    if (path_root != path) {
+        files_full <- fs::path (path_root, files)
+        files <- fs::path_rel (files_full, path)
+    }
     dirs <- vapply (
         fs::path_split (files),
         function (i) i [1],
@@ -514,4 +543,20 @@ stds_threshold_report <- function (path) {
     }
 
     return (ret)
+}
+
+update_msg_paths <- function (msgs, path, path_root) {
+
+    path_rel <- fs::path_rel (path, path_root)
+    msg_types <- grep ("^msgs", names (msgs), value = TRUE)
+    for (type in msg_types) {
+        msgs [[type]] <- lapply (msgs [[type]], function (m) {
+            g <- gregexpr ("file\\s+\\[.*\\]$", m)
+            file_name <- gsub ("file\\s+\\[|\\]$", "", regmatches (m, g) [[1]])
+            file_name_abs <- fs::path_abs (fs::path (path, file_name))
+            file_name_rel <- fs::path_rel (file_name_abs, path_root)
+            gsub (file_name, file_name_rel, m, fixed = TRUE)
+        })
+    }
+    return (msgs)
 }
