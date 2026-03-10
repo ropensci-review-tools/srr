@@ -218,7 +218,7 @@ get_all_msgs <- function (path = ".") {
     flist <- fs::dir_ls (fs::path (path, "R"))
     blocks <- lapply (flist, function (i) {
         tryCatch (
-            roxygen2::parse_file (i),
+            roxygen2::parse_file (i, env = NULL),
             error = function (e) NULL
         )
     })
