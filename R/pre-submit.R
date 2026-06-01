@@ -40,17 +40,20 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
 
     cat_check <- check_num_categories (stds_in_code$stds) # in report.R
     if (nzchar (cat_check)) {
-        return (cat_check)
+        msg <- sub (":[^:]+:\\s*", "", cat_check)
+        if (!quiet) {
+            cli::cli_alert_danger (msg)
+        }
     }
 
     if (any (grepl ("todo", stds_in_code$std_type))) {
 
-        msg <- paste0 (
+        msg <- c (msg, paste0 (
             "This package still has TODO ",
             "standards and can not be submitted"
-        )
+        ))
         if (!quiet) {
-            cli::cli_alert_warning (msg)
+            cli::cli_alert_danger (msg [length (msg)])
         }
     }
 

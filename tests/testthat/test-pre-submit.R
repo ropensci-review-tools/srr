@@ -15,7 +15,7 @@ test_that ("pre-submit", {
     expect_true (length (x) > 100) # > 100 standards are missing
 
     errs_output <- grep ("^\\!", x)
-    expect_length (errs_output, 4L)
+    expect_length (errs_output, 3L)
     # Report has error text only, no symbols or exclamations:
     errs_rep <- grep ("^\\!", rep)
     expect_length (errs_rep, 0L)
