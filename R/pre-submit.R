@@ -30,8 +30,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (msg)
     }
 
-    no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
-    if (no_stds) {
+    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
         msg_none <- "This package has no 'srr' standards"
         if (!quiet) {
             cli::cli_alert_warning (msg_none)
@@ -39,7 +38,7 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (invisible ())
     }
 
-    cat_check <- check_num_categories (unlist (stds_in_code)) # in report.R
+    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
     if (nzchar (cat_check)) {
         return (cat_check)
     }
