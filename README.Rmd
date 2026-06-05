@@ -10,7 +10,7 @@ output:
 
 <!-- badges: start -->
 [![R build status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
-[![codecov](https://codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci-review-tools/srr)
+[![codecov](https://app.codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
 [![Project Status:
 Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
@@ -74,7 +74,7 @@ book](https://stats-devguide.ropensci.org/standards.html)
 ## Installation
 
 The easiest way to install this package is via the associated
-[`r-universe`](https://ropensci-review-tools.r-universe.dev/ui#builds). As
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/). As
 shown there, simply enable the universe with
 
 ```{r options, eval = FALSE}
@@ -150,7 +150,7 @@ describes how to link your package with `srr` in order to use these roclets.
    category:
 
     ```{r available}
-    srr_stats_categories ()$title
+srr_stats_categories ()$title
     ```
     That function also returns links to the full descriptions of each category
     in the [main project
@@ -160,7 +160,7 @@ describes how to link your package with `srr` in order to use these roclets.
 3. Enable your package to use the `srr_stats` roclets by modifying the
    package's `DESCRIPTION` file so that the `Roxygen` line looks like this:
     ```{r roxygen, eval = FALSE}
-    Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
+Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
     ```
     That will load the ["roclet"](https://roxygen2.r-lib.org) used by this
     package to process the documentation of statistical standards within your
@@ -173,12 +173,12 @@ describes how to link your package with `srr` in order to use these roclets.
    This will by default create a new file called by default
    `R/srr_stats_standards.R`, the first few lines of which will look like this:
     ```{r srr_stats_roxygen, echo = FALSE, message = FALSE}
-    f <- "./R/srr-stats-standards.R"
-    if (!file.exists (f)) {
-        srr_stats_roxygen ()
-    }
-    rso <- readLines (f)
-    head (rso)
+f <- "./R/srr-stats-standards.R"
+if (!file.exists (f)) {
+    srr_stats_roxygen ()
+}
+rso <- readLines (f)
+head (rso)
     ```
     The file will contain a list of all standards from your nominated
     categories. This file may be renamed, and the individual items moved to
@@ -268,7 +268,7 @@ where each standard is addressed, it is not possible to insert `roxygen2` tags
 in every type of file. In general, standards may be inserted in any `.R` or
 `.Rmd` file, and most types of files in `src` or `inst/include` directories, as
 long as they are used with a package able to convert documentation to
-a corresponding R file (such as [`Rcpp`](http://www.rcpp.org/)'s generation of
+a corresponding R file (such as [`Rcpp`](https://www.rcpp.org/)'s generation of
 `RcppExports.R` files which include the C++ documentation).
 
 Tags may generally not be placed in any other kinds of files, including `.md`
@@ -291,7 +291,7 @@ project, you agree to abide by its terms.
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
-All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropenscilabs/allcontributors) following the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
+All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropensci/allcontributors) following the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
 
 ### Code
 

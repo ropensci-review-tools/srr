@@ -2,7 +2,7 @@
 
 [![R build
 status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
-[![codecov](https://codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci-review-tools/srr)
+[![codecov](https://app.codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
 [![Project Status:
 Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
 <!-- badges: end -->
@@ -67,8 +67,8 @@ referred to as the “SSR Book”).
 ## Installation
 
 The easiest way to install this package is via the associated
-[`r-universe`](https://ropensci-review-tools.r-universe.dev/ui#builds).
-As shown there, simply enable the universe with
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/). As shown
+there, simply enable the universe with
 
 ``` r
 options (repos = c (
@@ -289,7 +289,7 @@ possible to insert `roxygen2` tags in every type of file. In general,
 standards may be inserted in any `.R` or `.Rmd` file, and most types of
 files in `src` or `inst/include` directories, as long as they are used
 with a package able to convert documentation to a corresponding R file
-(such as [`Rcpp`](http://www.rcpp.org/)’s generation of `RcppExports.R`
+(such as [`Rcpp`](https://www.rcpp.org/)’s generation of `RcppExports.R`
 files which include the C++ documentation).
 
 Tags may generally not be placed in any other kinds of files, including
@@ -314,10 +314,9 @@ project, you agree to abide by its terms.
 <!-- markdownlint-disable -->
 
 All contributions to this project are gratefully acknowledged using the
-[`allcontributors`
-package](https://github.com/ropenscilabs/allcontributors) following the
-[all-contributors](https://allcontributors.org) specification.
-Contributions of any kind are welcome!
+[`allcontributors` package](https://github.com/ropensci/allcontributors)
+following the [all-contributors](https://allcontributors.org)
+specification. Contributions of any kind are welcome!
 
 ### Code
 
