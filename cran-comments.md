@@ -1,6 +1,6 @@
 # CRAN notes for srr_1.0.0 submission
 
-This is an initial submission.
+This is an initial submission. Note that all exported functions have examples, but many lines are wrapped in either `dontrun` or `donttest`, because they download external files.
 
 ## Test environments
 

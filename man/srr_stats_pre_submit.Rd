@@ -22,7 +22,9 @@ Check that all standards are present in code, and listed either as
 d <- srr_stats_pkg_skeleton ()
 # The skeleton has 'TODO' standards, and also has only a few from the full
 # list expected for the categories specified there.
+\donttest{
 srr_stats_pre_submit (d)
+}
 }
 \seealso{
 Other helper:

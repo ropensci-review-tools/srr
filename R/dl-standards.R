@@ -237,12 +237,12 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @return Nothing
 #' @family roxygen
 #' @examples
-#' \dontrun{
 #' path <- srr_stats_pkg_skeleton ()
 #' # contains a few standards; insert all with:
 #' f <- file.path (path, "R", "srr-stats-standards.R")
 #' file.exists (f)
 #' length (readLines (f)) # only 14 lines
+#' \dontrun{
 #' srr_stats_roxygen (
 #'     category = "regression",
 #'     file = f,

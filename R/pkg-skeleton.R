@@ -226,7 +226,9 @@ write_test_files <- function (d, pkg_name) {
 #' @examples
 #' d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 #' # (capture.output of initial compliation messages)
+#' \donttest{
 #' x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
+#' }
 #' @export
 srr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 

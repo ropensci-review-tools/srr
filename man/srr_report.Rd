@@ -31,8 +31,8 @@ document.
 Generate report from \code{ssr} tags.
 }
 \examples{
-\dontrun{
 path <- srr_stats_pkg_skeleton ()
+\dontrun{
 srr_report (path)
 }
 }

@@ -6,8 +6,8 @@
 #' markdown document in `.md` format, not `.Rmd` or anything else.
 #' @family helper
 #' @examples
-#' \dontrun{
 #' f <- tempfile (fileext = ".md")
+#' \donttest{
 #' srr_stats_checklist (category = "regression", filename = f)
 #' chk <- srr_stats_checklist_check (f)
 #' }

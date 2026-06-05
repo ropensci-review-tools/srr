@@ -14,8 +14,8 @@ markdown document in \code{.md} format, not \code{.Rmd} or anything else.}
 Correct any potential formatting issues in a completed standards checklist
 }
 \examples{
-\dontrun{
 f <- tempfile (fileext = ".md")
+\donttest{
 srr_stats_checklist (category = "regression", filename = f)
 chk <- srr_stats_checklist_check (f)
 }
