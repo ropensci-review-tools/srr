@@ -1,15 +1,18 @@
 citHeader("To cite 'srr' in publications use:")
 
-citEntry(entry = "Manual",
+bibEntry(entry = "Article",
          title        = {"srr"},
-         author       = {personList(as.person("Mark Padgham"))},
-         year         = {"2021"},
-         note         = {"R package version 0.0.1"},
+         author       = c(person(
+            given = "Mark Padgham",
+            email = "mark@ropensci.org",
+            comment = c(ORCID = "0000-0003-2172-5265")
+         )),
+         year         = {"2026"},
+         note         = {"R package version 1.0.0"},
          url          = {"https://github.com/ropensci-review-tools/srr"},
-
          textVersion  =
-         paste("Mark Padgham (2021).",
+         paste("Mark Padgham (2026).",
              "'srr'",
-             "R package version 0.0.1.",
+             "R package version 1.0.0.",
              "URL: https://github.com/ropensci-review-tools/srr")
         )
