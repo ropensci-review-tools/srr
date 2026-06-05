@@ -28,10 +28,10 @@ d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
 }
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist}()},
-\code{\link{srr_stats_checklist_check}()},
-\code{\link{srr_stats_pre_submit}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist]{srr_stats_checklist()}},
+\code{\link[=srr_stats_checklist_check]{srr_stats_checklist_check()}},
+\code{\link[=srr_stats_pre_submit]{srr_stats_pre_submit()}}
 }
 \concept{helper}

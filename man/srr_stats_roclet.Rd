@@ -21,7 +21,7 @@ documentation.
 srr_stats_roclet ()
 }
 \seealso{
-Other roxygen: 
-\code{\link{srr_stats_roxygen}()}
+Other roxygen:
+\code{\link[=srr_stats_roxygen]{srr_stats_roxygen()}}
 }
 \concept{roxygen}

@@ -45,7 +45,7 @@ length (readLines (f)) # now much longer
 }
 }
 \seealso{
-Other roxygen: 
-\code{\link{srr_stats_roclet}()}
+Other roxygen:
+\code{\link[=srr_stats_roclet]{srr_stats_roclet()}}
 }
 \concept{roxygen}

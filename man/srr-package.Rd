@@ -20,5 +20,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Mark Padgham \email{mark@ropensci.org} (\href{https://orcid.org/0000-0003-2172-5265}{ORCID})
 
+Authors:
+\itemize{
+  \item Mark Padgham \email{mark@ropensci.org} (\href{https://orcid.org/0000-0003-2172-5265}{ORCID})
+}
+
 }
 \keyword{internal}

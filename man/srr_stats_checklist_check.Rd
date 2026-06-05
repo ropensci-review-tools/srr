@@ -21,10 +21,10 @@ chk <- srr_stats_checklist_check (f)
 }
 }
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist}()},
-\code{\link{srr_stats_pkg_skeleton}()},
-\code{\link{srr_stats_pre_submit}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist]{srr_stats_checklist()}},
+\code{\link[=srr_stats_pkg_skeleton]{srr_stats_pkg_skeleton()}},
+\code{\link[=srr_stats_pre_submit]{srr_stats_pre_submit()}}
 }
 \concept{helper}

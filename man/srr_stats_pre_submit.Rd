@@ -25,10 +25,10 @@ d <- srr_stats_pkg_skeleton ()
 srr_stats_pre_submit (d)
 }
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist}()},
-\code{\link{srr_stats_checklist_check}()},
-\code{\link{srr_stats_pkg_skeleton}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist]{srr_stats_checklist()}},
+\code{\link[=srr_stats_checklist_check]{srr_stats_checklist_check()}},
+\code{\link[=srr_stats_pkg_skeleton]{srr_stats_pkg_skeleton()}}
 }
 \concept{helper}
