@@ -43,6 +43,7 @@ srr_stats_roxygen (
 )
 length (readLines (f)) # now much longer
 }
+unlink (path, recursive = TRUE)
 }
 \seealso{
 Other roxygen:

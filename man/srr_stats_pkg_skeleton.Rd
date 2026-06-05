@@ -28,6 +28,7 @@ d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 \donttest{
 x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
 }
+unlink (d, recursive = TRUE)
 }
 \seealso{
 Other helper:

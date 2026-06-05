@@ -21,6 +21,7 @@
 #' \dontrun{
 #' srr_report (path)
 #' }
+#' unlink (path, recursive = TRUE)
 srr_report <- function (path = ".", branch = "",
                         view = TRUE, roxygenise = TRUE) {
 

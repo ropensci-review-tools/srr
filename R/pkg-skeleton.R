@@ -229,6 +229,7 @@ write_test_files <- function (d, pkg_name) {
 #' \donttest{
 #' x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
 #' }
+#' unlink (d, recursive = TRUE)
 #' @export
 srr_stats_pkg_skeleton <- function (base_dir = tempdir (), pkg_name = "demo") {
 

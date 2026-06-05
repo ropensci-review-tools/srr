@@ -25,6 +25,7 @@ d <- srr_stats_pkg_skeleton ()
 \donttest{
 srr_stats_pre_submit (d)
 }
+unlink (d, recursive = TRUE)
 }
 \seealso{
 Other helper:

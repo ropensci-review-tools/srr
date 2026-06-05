@@ -250,6 +250,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' )
 #' length (readLines (f)) # now much longer
 #' }
+#' unlink (path, recursive = TRUE)
 #' @export
 srr_stats_roxygen <- function (category = NULL,
                                filename = "srr-stats-standards.R",

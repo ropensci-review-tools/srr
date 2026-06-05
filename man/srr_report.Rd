@@ -35,5 +35,6 @@ path <- srr_stats_pkg_skeleton ()
 \dontrun{
 srr_report (path)
 }
+unlink (path, recursive = TRUE)
 }
 \concept{report}
