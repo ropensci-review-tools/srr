@@ -4,9 +4,9 @@
 \name{srr-package}
 \alias{srr}
 \alias{srr-package}
-\title{srr: rOpenSci Software Review Roclets}
+\title{srr: 'rOpenSci' Software Review 'Roclets'}
 \description{
-Companion package to rOpenSci statistical software review project (rOpenSci authors, 2021; \doi{10.5281/zenodo.5556756}), to facilitate documenting software compliance with statistical standards using 'Roxygen2' "roclets".
+Companion package to 'rOpenSci' statistical software review project ('rOpenSci' authors, 2021; \doi{10.5281/zenodo.5556756}), to facilitate documenting software compliance with statistical standards using 'Roxygen2' 'roclets'.
 }
 \seealso{
 Useful links:

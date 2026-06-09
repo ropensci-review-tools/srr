@@ -15,7 +15,7 @@ Correct any potential formatting issues in a completed standards checklist
 }
 \examples{
 f <- tempfile (fileext = ".md")
-\donttest{
+\dontrun{
 srr_stats_checklist (category = "regression", filename = f)
 chk <- srr_stats_checklist_check (f)
 }
