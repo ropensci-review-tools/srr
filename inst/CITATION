@@ -1,6 +1,6 @@
 citHeader("To cite 'srr' in publications use:")
 
-bibEntry(entry = "Article",
+bibentry(entry = "Article",
          title        = {"srr"},
          author       = c(person(
             given = "Mark Padgham",
