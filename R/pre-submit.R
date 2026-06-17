@@ -33,33 +33,11 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (msg)
     }
 
-    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
-        msg_none <- "This package has no 'srr' standards"
-        if (!quiet) {
-            cli::cli_alert_warning (msg_none)
-        }
+    if (pre_sub_no_stds (stds_in_code, quiet)) {
         return (invisible ())
     }
 
-    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
-    if (nzchar (cat_check)) {
-        msg <- sub (":[^:]+:\\s*", "", cat_check)
-        if (!quiet) {
-            cli::cli_alert_danger (msg)
-        }
-    }
-
-    if (any (grepl ("todo", stds_in_code$std_type))) {
-
-        msg <- c (msg, paste0 (
-            "This package still has TODO ",
-            "standards and can not be submitted"
-        ))
-        if (!quiet) {
-            cli::cli_alert_danger (msg [length (msg)])
-        }
-    }
-
+    msg <- c (msg, pre_sub_category_msgs (stds_in_code, quiet = quiet))
     msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
     msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
 
@@ -325,6 +303,46 @@ check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
                 ratio_pc,
                 what = "category-specific"
             ))
+        }
+    }
+
+    return (msg)
+}
+
+pre_sub_no_stds <- function (stds_in_code, quiet = FALSE) {
+
+    ret <- FALSE
+    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
+        msg_none <- "This package has no 'srr' standards"
+        if (!quiet) {
+            cli::cli_alert_warning (msg_none)
+        }
+        ret <- TRUE
+    }
+    return (ret)
+}
+
+pre_sub_category_msgs <- function (stds_in_code, quiet) {
+
+    msg <- ""
+    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
+
+    if (nzchar (cat_check)) {
+        this_msg <- sub (":[^:]+:\\s*", "", cat_check)
+        if (!quiet) {
+            cli::cli_alert_danger (this_msg)
+        }
+        msg <- c (msg, this_msg)
+    }
+
+    if (any (grepl ("todo", stds_in_code$std_type))) {
+
+        msg <- c (msg, paste0 (
+            "This package still has TODO ",
+            "standards and can not be submitted"
+        ))
+        if (!quiet) {
+            cli::cli_alert_danger (msg [length (msg)])
         }
     }
 

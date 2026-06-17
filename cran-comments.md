@@ -1,6 +1,10 @@
 # CRAN notes for srr_1.0.0 submission
 
-This is an initial submission. Note that all exported functions have examples, but many lines are wrapped in either `dontrun` or `donttest`, because they download external files, and some also write to local clipboard.
+This is an initial submission, updated in response to CRAN feedback in the following ways:
+
+- All functions now document return examples.
+- All examples except one now use '\donttest{}' instead of '\dontrun{}'. The one remaining '\dontrun{}' is needed because that example otherwise triggers a NOTE on CRAN win-builder machines that it takes > 5 seconds.
+- Use of 'installed.packages()' now removed, and replaced with 'find.package()'.
 
 ## Test environments
 
