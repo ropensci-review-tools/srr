@@ -4,6 +4,8 @@
 #'
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
+#' @return (Invisibly) A character vector of markdown-formatted lines
+#' containing the entire checklist of the specified file.
 #' @family helper
 #' @examples
 #' f <- tempfile (fileext = ".md")

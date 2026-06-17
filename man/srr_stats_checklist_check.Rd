@@ -10,6 +10,10 @@ srr_stats_checklist_check(file)
 \item{file}{Name of local file containing a completed checklist. Must be a
 markdown document in \code{.md} format, not \code{.Rmd} or anything else.}
 }
+\value{
+(Invisibly) A character vector of markdown-formatted lines
+containing the entire checklist of the specified file.
+}
 \description{
 Correct any potential formatting issues in a completed standards checklist
 }
