@@ -198,7 +198,7 @@ category_titles_urls <- function (category) {
 #' @family helper
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' x <- srr_stats_checklist (category = "regression")
 #' # or write to specified file:
 #' f <- tempfile (fileext = ".md")
@@ -242,7 +242,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' f <- file.path (path, "R", "srr-stats-standards.R")
 #' file.exists (f)
 #' length (readLines (f)) # only 14 lines
-#' \dontrun{
+#' \donttest{
 #' srr_stats_roxygen (
 #'     category = "regression",
 #'     file = f,
