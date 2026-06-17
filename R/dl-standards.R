@@ -232,8 +232,8 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @inheritParams srr_stats_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
-#' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
-#' will ask whether file should be overwritten.
+#' @param overwrite If `FALSE` (default) and `filename` already exists, a
+#' dialogue will ask whether file should be overwritten.
 #' @return Nothing
 #' @family roxygen
 #' @examples

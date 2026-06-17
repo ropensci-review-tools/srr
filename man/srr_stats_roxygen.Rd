@@ -18,8 +18,8 @@ each of which is ultimately formatted into a sub-section of the standards.}
 \item{filename}{Name of 'R' source file in which to write
 \pkg{roxygen2}-formatted lists of standards.}
 
-\item{overwrite}{If \code{FALSE} (default) and \code{filename} already exists, a dialog
-will ask whether file should be overwritten.}
+\item{overwrite}{If \code{FALSE} (default) and \code{filename} already exists, a
+dialogue will ask whether file should be overwritten.}
 }
 \value{
 Nothing
