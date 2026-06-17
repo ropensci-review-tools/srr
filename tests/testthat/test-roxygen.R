@@ -21,17 +21,21 @@ test_that ("roxygen standards", {
         type = "message"
     )
 
-    expect_true (length (x) > 10)
-    expect_true (length (grep ("Re-compiling", x)) == 1)
+    expect_gt (length (x), 10)
+    expect_length (grep ("Re-compiling", x), 1L)
     txt <- "rOpenSci Statistical Software Standards"
-    expect_true (length (grep (txt, x)) == 1)
-    expect_true (length (grep ("@srrstats standards \\(", x)) == 1)
-    expect_true (length (grep ("@srrstatsNA standards \\(", x)) == 1)
-    expect_true (length (grep ("@srrstatsTODO standards \\(", x)) == 1)
-    expect_true (grep ("@srrstatsTODO standards \\(", x) >
-        grep ("@srrstatsNA standards \\(", x))
-    expect_true (grep ("@srrstatsNA standards \\(", x) >
-        grep ("@srrstats standards \\(", x))
+    expect_length (grep (txt, x), 1L)
+    expect_length (grep ("@srrstats standards \\(", x), 1L)
+    expect_length (grep ("@srrstatsNA standards \\(", x), 1L)
+    expect_length (grep ("@srrstatsTODO standards \\(", x), 1L)
+    expect_gt (
+        grep ("@srrstatsTODO standards \\(", x),
+        grep ("@srrstatsNA standards \\(", x)
+    )
+    expect_gt (
+        grep ("@srrstatsNA standards \\(", x),
+        grep ("@srrstats standards \\(", x)
+    )
 
     filename <- fs::path (d, "R", "srr-stats-standards.R")
     # remove DESC file from directory should error
@@ -97,22 +101,22 @@ test_that ("roxygen standards", {
         i1 <- grep ("@srrstatsTODO", x) + 1L
         i2 <- grep ("^[[:punct:]]", x)
         expect_length (i1, 1L)
-        expect_true (length (i2) > 1L)
+        expect_gt (length (i2), 1L)
         index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_old <- x [index]
 
         i1 <- grep ("@srrstatsTODO", x2) + 1L
         i2 <- grep ("^[[:punct:]]", x2)
         expect_length (i1, 1L)
-        expect_true (length (i2) > 1L)
+        expect_gt (length (i2), 1L)
         index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_new <- x2 [index]
 
-        expect_true (length (todo_old) >= 2L)
-        expect_true (length (todo_new) >= 2L)
+        expect_gte (length (todo_old), 2L)
+        expect_gte (length (todo_new), 2L)
         n_old <- nchar (paste0 (todo_old, collapse = " "))
         n_new <- nchar (paste0 (todo_new, collapse = " "))
-        expect_true (n_new / n_old > 2)
+        expect_gt (n_new / n_old, 2)
 
         # get only those from the srr-stats-standards.R file:
         todo_old <- grep ("srr-stats-standards\\.R",
@@ -126,12 +130,12 @@ test_that ("roxygen standards", {
 
         expect_length (todo_old, 1L)
         expect_length (todo_new, 1L)
-        expect_true (nchar (todo_new) > nchar (todo_old))
+        expect_gt (nchar (todo_new), nchar (todo_old))
         ptn <- "[A-Z]+[0-9]+\\.[0-9]"
         standards_old <- gregexpr (ptn, todo_old) [[1]]
         standards_new <- gregexpr (ptn, todo_new) [[1]]
         expect_length (standards_old, 1)
-        expect_true (length (standards_new) > 50)
+        expect_gt (length (standards_new), 50)
     }
 
     tryCatch (
@@ -179,7 +183,7 @@ test_that ("roclet errors", {
         roxygen2::roxygenise (d),
         type = "message"
     )
-    expect_true (length (x) > 5) # output is verbose
+    expect_gt (length (x), 5) # output is verbose
     writeLines (x0, f)
 
     # ------3. @srrstatsVerbose value must be logical

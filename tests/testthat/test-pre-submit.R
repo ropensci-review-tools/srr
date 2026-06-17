@@ -12,7 +12,7 @@ test_that ("pre-submit", {
         rep <- srr_stats_pre_submit (d),
         type = "message"
     )
-    expect_true (length (x) > 100) # > 100 standards are missing
+    expect_gt (length (x), 100) # > 100 standards are missing
 
     errs_output <- grep ("^\\!", x)
     expect_length (errs_output, 3L)
@@ -35,10 +35,10 @@ test_that ("pre-submit", {
     expect_length (grep (msg, rep), 1L)
 
     missing_stds_output <- grep ("^[0-9]+", x)
-    missing_stds_rep <- grep ("[A-Z][0-9]+\\.[0-9]", rep, value = T)
-    expect_true (length (missing_stds_output) > 100L)
-    expect_true (length (missing_stds_rep) > 100L)
-    expect_equal (length (missing_stds_output), length (missing_stds_rep))
+    missing_stds_rep <- grep ("[A-Z][0-9]+\\.[0-9]", rep, value = TRUE)
+    expect_gt (length (missing_stds_output), 100L)
+    expect_gt (length (missing_stds_rep), 100L)
+    expect_length (missing_stds_output, length (missing_stds_rep))
 
     tryCatch (
         fs::dir_delete (d),

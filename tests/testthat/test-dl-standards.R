@@ -13,7 +13,7 @@ test_that ("download standards", {
     expect_true (fs::file_exists (filename))
 
     expect_type (s, "character")
-    expect_true (length (s) > 100)
+    expect_gt (length (s), 100)
     expect_true (grepl ("General Standards", s [1]))
     txt <- "Regression and Supervised Learning Standards"
     expect_true (any (grepl (txt, s)))
