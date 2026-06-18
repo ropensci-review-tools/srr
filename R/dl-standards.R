@@ -55,7 +55,7 @@ stds_version <- function () {
     d <- data.frame (read.dcf (tmp))
 
     version <- d$Version
-    if (length (gregexpr ("\\.", version) [[1]]) > 2) {
+    if (length (gregexpr (".", version, fixed = TRUE) [[1]]) > 2) {
         version <- gsub ("\\.\\d{3}$", "", version, perl = TRUE)
     }
 
@@ -95,7 +95,7 @@ format_standards <- function (s) {
 
     s <- vapply (
         seq_along (index1), function (i) {
-            paste0 (s [index1 [i]:index2 [i]], collapse = " ")
+            paste (s [index1 [i]:index2 [i]], collapse = " ")
         },
         character (1)
     )
@@ -216,7 +216,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
         writeLines (text = s, con = filename)
     }
 
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
+    if (Sys.getenv ("NOCLIPR") != "TRUE") { # used to turn off clipr in tests
         clipr::write_clip (s)
     }
 
@@ -232,8 +232,8 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @inheritParams srr_stats_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
-#' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
-#' will ask whether file should be overwritten.
+#' @param overwrite If `FALSE` (default) and `filename` already exists, a
+#' dialogue will ask whether file should be overwritten.
 #' @return Nothing
 #' @family roxygen
 #' @examples
@@ -242,7 +242,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' f <- file.path (path, "R", "srr-stats-standards.R")
 #' file.exists (f)
 #' length (readLines (f)) # only 14 lines
-#' \dontrun{
+#' \donttest{
 #' srr_stats_roxygen (
 #'     category = "regression",
 #'     file = f,

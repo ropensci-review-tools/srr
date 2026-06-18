@@ -10,12 +10,14 @@ make_pkg_path <- function (base_dir = tempdir (), pkg_name = "demo") {
 
 get_roxygen_version <- function () {
 
-    ip <- as.data.frame (utils::installed.packages ())
-    if (!"roxygen2" %in% ip$Package) {
+    fp <- tryCatch (
+        find.package ("roxygen2"),
+        error = function (e) NULL
+    )
+    if (is.null (fp)) {
         return (NULL)
-    } # nocov
-
-    return (ip$Version [ip$Package == "roxygen2"])
+    }
+    return (utils::packageVersion ("roxygen2"))
 }
 
 write_desc <- function (d, pkg_name) {

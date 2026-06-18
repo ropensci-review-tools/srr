@@ -1,7 +1,7 @@
 test_that ("roxygen standards", {
 
     # Sys.setenv("CLIPR_ALLOW" = TRUE)
-    pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+    pkg_name <- paste (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
 
     expect_true (fs::file_exists (fs::path (fs::path_temp (), pkg_name)))
@@ -21,17 +21,21 @@ test_that ("roxygen standards", {
         type = "message"
     )
 
-    expect_true (length (x) > 10)
-    expect_true (length (grep ("Re-compiling", x)) == 1)
+    expect_gt (length (x), 10)
+    expect_length (grep ("Re-compiling", x, fixed = TRUE), 1L)
     txt <- "rOpenSci Statistical Software Standards"
-    expect_true (length (grep (txt, x)) == 1)
-    expect_true (length (grep ("@srrstats standards \\(", x)) == 1)
-    expect_true (length (grep ("@srrstatsNA standards \\(", x)) == 1)
-    expect_true (length (grep ("@srrstatsTODO standards \\(", x)) == 1)
-    expect_true (grep ("@srrstatsTODO standards \\(", x) >
-        grep ("@srrstatsNA standards \\(", x))
-    expect_true (grep ("@srrstatsNA standards \\(", x) >
-        grep ("@srrstats standards \\(", x))
+    expect_length (grep (txt, x, fixed = TRUE), 1L)
+    expect_length (grep ("@srrstats\\sstandards\\s\\(", x), 1L)
+    expect_length (grep ("@srrstatsNA\\sstandards\\s\\(", x), 1L)
+    expect_length (grep ("@srrstatsTODO\\sstandards\\s\\(", x), 1L)
+    expect_gt (
+        grep ("@srrstatsTODO\\sstandards\\s\\(", x),
+        grep ("@srrstatsNA\\sstandards\\s\\(", x)
+    )
+    expect_gt (
+        grep ("@srrstatsNA\\sstandards\\s\\(", x),
+        grep ("@srrstats\\sstandards\\s\\(", x)
+    )
 
     filename <- fs::path (d, "R", "srr-stats-standards.R")
     # remove DESC file from directory should error
@@ -74,7 +78,8 @@ test_that ("roxygen standards", {
         )
         f <- fs::path (d, "src", "cpptest.cpp")
         if (fs::file_exists (f)) {
-            cpptest <- gsub ("srrstats", "srrstatsTODO", readLines (f))
+            cpptest <-
+                gsub ("srrstats", "srrstatsTODO", readLines (f), fixed = TRUE)
             writeLines (cpptest, con = f)
         }
         # After fixing that and removing the file with duplicated
@@ -94,44 +99,48 @@ test_that ("roxygen standards", {
         )
 
         # -1 at end because they finish with a cli::rule line
-        i1 <- grep ("@srrstatsTODO", x) + 1L
+        i1 <- grep ("@srrstatsTODO", x, fixed = TRUE) + 1L
         i2 <- grep ("^[[:punct:]]", x)
         expect_length (i1, 1L)
-        expect_true (length (i2) > 1L)
+        expect_gt (length (i2), 1L)
         index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_old <- x [index]
 
-        i1 <- grep ("@srrstatsTODO", x2) + 1L
+        i1 <- grep ("@srrstatsTODO", x2, fixed = TRUE) + 1L
         i2 <- grep ("^[[:punct:]]", x2)
         expect_length (i1, 1L)
-        expect_true (length (i2) > 1L)
+        expect_gt (length (i2), 1L)
         index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_new <- x2 [index]
 
-        expect_true (length (todo_old) >= 2L)
-        expect_true (length (todo_new) >= 2L)
-        n_old <- nchar (paste0 (todo_old, collapse = " "))
-        n_new <- nchar (paste0 (todo_new, collapse = " "))
-        expect_true (n_new / n_old > 2)
+        expect_gte (length (todo_old), 2L)
+        expect_gte (length (todo_new), 2L)
+        n_old <- nchar (paste (todo_old, collapse = " "))
+        n_new <- nchar (paste (todo_new, collapse = " "))
+        expect_gt (n_new / n_old, 2)
 
         # get only those from the srr-stats-standards.R file:
-        todo_old <- grep ("srr-stats-standards\\.R",
+        todo_old <- grep (
+            "srr-stats-standards.R",
             todo_old,
-            value = TRUE
+            value = TRUE,
+            fixed = TRUE
         )
-        todo_new <- grep ("srr-stats-standards\\.R",
+        todo_new <- grep (
+            "srr-stats-standards.R",
             todo_new,
-            value = TRUE
+            value = TRUE,
+            fixed = TRUE
         )
 
         expect_length (todo_old, 1L)
         expect_length (todo_new, 1L)
-        expect_true (nchar (todo_new) > nchar (todo_old))
+        expect_gt (nchar (todo_new), nchar (todo_old))
         ptn <- "[A-Z]+[0-9]+\\.[0-9]"
         standards_old <- gregexpr (ptn, todo_old) [[1]]
         standards_new <- gregexpr (ptn, todo_new) [[1]]
         expect_length (standards_old, 1)
-        expect_true (length (standards_new) > 50)
+        expect_gt (length (standards_new), 50)
     }
 
     tryCatch (
@@ -142,7 +151,7 @@ test_that ("roxygen standards", {
 
 test_that ("roclet errors", {
 
-    nm <- paste0 (sample (letters, size = 7), collapse = "")
+    nm <- paste (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = nm)
 
     # ------1. Adding extract @srrstatsVerbose tag should error:
@@ -172,20 +181,20 @@ test_that ("roclet errors", {
     f <- fs::path (d, "R", "srr-stats-standards.R")
     if (fs::file_exists (f)) {
         x0 <- readLines (f)
-        x <- x0 [-grep ("@srrstatsVerbose", x0)]
+        x <- x0 [-grep ("@srrstatsVerbose", x0, fixed = TRUE)]
         writeLines (x, f)
     }
     x <- utils::capture.output (
         roxygen2::roxygenise (d),
         type = "message"
     )
-    expect_true (length (x) > 5) # output is verbose
+    expect_gt (length (x), 5) # output is verbose
     writeLines (x0, f)
 
     # ------3. @srrstatsVerbose value must be logical
-    i <- grep ("@srrstatsVerbose", x0)
+    i <- grep ("@srrstatsVerbose", x0, fixed = TRUE)
     x <- x0
-    x [i] <- gsub ("TRUE", "junk", x0 [i])
+    x [i] <- gsub ("TRUE", "junk", x0 [i], fixed = TRUE)
     writeLines (x, f)
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
@@ -203,18 +212,17 @@ test_that ("roclet errors", {
     f <- fs::path (d, "R", "srr-stats-standards.R")
     if (fs::file_exists (f)) {
         x <- x0 <- readLines (f)
-        i <- grep ("NA\\_standards", x)
+        i <- grep ("NA_standards", x, fixed = TRUE)
         x [i] <- "#' not_NA_standards"
         writeLines (x, con = f)
     }
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
     )
-    expect_s3_class (out, "simpleError")
-    txt <- paste0 (
-        "@srrstatsNA tags should only appear in a ",
-        "block with a title of NA_standards"
-    )
+    expect_s3_class (out, "rlang_error")
+    txt <- "@srrstatsNA tags should only appear in"
+    expect_true (grepl (txt, out$message))
+    txt <- "a block with a title of NA_standards"
     expect_true (grepl (txt, out$message))
 
     tryCatch (

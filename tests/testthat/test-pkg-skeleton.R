@@ -1,6 +1,6 @@
 test_that ("dummy package", {
 
-    pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
+    pkg_name <- paste (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
 
@@ -17,25 +17,29 @@ test_that ("dummy package", {
 
     x <- utils::capture.output (roxygen2::roxygenise (d), type = "message")
 
-    expect_true (any (grepl ("@srrstats standards \\(", x)))
+    expect_true (any (grepl ("@srrstats standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[G1\\.1,", x)))
 
-    expect_true (any (grepl ("@srrstatsNA standards \\(", x)))
+    expect_true (any (grepl ("@srrstatsNA standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[RE3\\.3\\]", x)))
     # S3.3 is an @srrstatsNA tag
-    expect_true (grep ("\\s\\*\\s\\[RE3\\.3\\]", x) [1] >
-        grep ("@srrstatsNA standards \\(", x) [1])
+    expect_gt (
+        grep ("\\s\\*\\s\\[RE3\\.3\\]", x) [1],
+        grep ("@srrstatsNA standards (", x, fixed = TRUE) [1]
+    )
 
-    expect_true (any (grepl ("@srrstatsTODO standards \\(", x)))
+    expect_true (any (grepl ("@srrstatsTODO standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[RE4\\.4\\]", x)))
-    expect_true (grep ("\\s\\*\\s\\[RE4\\.4\\]", x) [1] >
-        grep ("@srrstatsTODO standards \\(", x) [1])
+    expect_gt (
+        grep ("\\s\\*\\s\\[RE4\\.4\\]", x) [1],
+        grep ("@srrstatsTODO standards (", x, fixed = TRUE) [1]
+    )
 
     # detach is critical here, because testthat uses `utils::sessionInfo()`,
     # which checks namespaces and tries to load DESC file from pkg location.
     pos <- match (paste0 ("package:", pkg_name), search ())
     if (!is.na (pos)) {
-        detach (pos = pos, unload = TRUE)
+        detach (pos = pos, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),
@@ -45,7 +49,7 @@ test_that ("dummy package", {
 
 test_that ("rust code", {
 
-    pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
+    pkg_name <- paste (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
     # If directories can not be unlinked on any test systems, this test must be
@@ -86,7 +90,7 @@ test_that ("rust code", {
 
     pos <- match (paste0 ("package:", pkg_name), search ())
     if (!is.na (pos)) {
-        detach (pos = pos, unload = TRUE)
+        detach (pos = pos, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),
@@ -96,7 +100,7 @@ test_that ("rust code", {
 
 test_that ("skeleton errors", {
 
-    pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+    pkg_name <- paste (sample (letters, size = 7), collapse = "")
     d <- fs::path (fs::path_temp (), pkg_name)
 
     skip_if (fs::dir_exists (d))
@@ -114,7 +118,7 @@ test_that ("skeleton errors", {
     }
     p <- paste0 ("package:", pkg_name)
     if (p %in% search ()) {
-        detach (p, unload = TRUE)
+        detach (p, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),

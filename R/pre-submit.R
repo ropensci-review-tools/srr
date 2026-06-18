@@ -33,33 +33,11 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (msg)
     }
 
-    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
-        msg_none <- "This package has no 'srr' standards"
-        if (!quiet) {
-            cli::cli_alert_warning (msg_none)
-        }
+    if (pre_sub_no_stds (stds_in_code, quiet)) {
         return (invisible ())
     }
 
-    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
-    if (nzchar (cat_check)) {
-        msg <- sub (":[^:]+:\\s*", "", cat_check)
-        if (!quiet) {
-            cli::cli_alert_danger (msg)
-        }
-    }
-
-    if (any (grepl ("todo", stds_in_code$std_type))) {
-
-        msg <- c (msg, paste0 (
-            "This package still has TODO ",
-            "standards and can not be submitted"
-        ))
-        if (!quiet) {
-            cli::cli_alert_danger (msg [length (msg)])
-        }
-    }
-
+    msg <- c (msg, pre_sub_category_msgs (stds_in_code, quiet = quiet))
     msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
     msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
 
@@ -118,15 +96,15 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
             as.integer (gsub ("^\\#", "", lnum))
         )
 
-        i <- strsplit (i, "\\]") [[1]] [1]
-        i <- strsplit (i, "\\[") [[1]] [2]
+        i <- strsplit (i, "]", fixed = TRUE) [[1]] [1]
+        i <- strsplit (i, "[", fixed = TRUE) [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
         chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
-        if (any (!chk)) {
+        if (!all (chk)) {
             stop (
                 "Standard references [",
-                paste0 (i [which (!chk)], collapse = ", "),
+                paste (i [which (!chk)], collapse = ","),
                 "] are not in proper format."
             )
         }
@@ -231,7 +209,7 @@ check_missing_standards <- function (stds_in_code, quiet = FALSE) {
             not_a_std, "]"
         )
 
-    } else if (!any (grepl ("todo", stds_in_code$stds))) {
+    } else if (!any (grepl ("todo", stds_in_code$stds, fixed = TRUE))) {
 
         msg <- paste0 (
             "All applicable standards [v",
@@ -312,7 +290,8 @@ check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
                 compliance_fail [compliance_fail$category == "total", ]
             compliance_pc <- round (compliance_tot$ratio * 100)
             msg <- compliance_msg (threshold_pc, compliance_pc, what = "all")
-            compliance_fail <- compliance_fail [which (!compliance_fail$category == "total"), ]
+            compliance_fail <-
+                compliance_fail [which (compliance_fail$category != "total"), ]
         }
     }
     # Category-specific messages:
@@ -325,6 +304,46 @@ check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
                 ratio_pc,
                 what = "category-specific"
             ))
+        }
+    }
+
+    return (msg)
+}
+
+pre_sub_no_stds <- function (stds_in_code, quiet = FALSE) {
+
+    ret <- FALSE
+    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
+        msg_none <- "This package has no 'srr' standards"
+        if (!quiet) {
+            cli::cli_alert_warning (msg_none)
+        }
+        ret <- TRUE
+    }
+    return (ret)
+}
+
+pre_sub_category_msgs <- function (stds_in_code, quiet) {
+
+    msg <- ""
+    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
+
+    if (nzchar (cat_check)) {
+        this_msg <- sub (":[^:]+:\\s*", "", cat_check)
+        if (!quiet) {
+            cli::cli_alert_danger (this_msg)
+        }
+        msg <- c (msg, this_msg)
+    }
+
+    if (any (grepl ("todo", stds_in_code$std_type, fixed = TRUE))) {
+
+        msg <- c (msg, paste0 (
+            "This package still has TODO ",
+            "standards and can not be submitted"
+        ))
+        if (!quiet) {
+            cli::cli_alert_danger (msg [length (msg)])
         }
     }
 

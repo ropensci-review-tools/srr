@@ -14,7 +14,7 @@ test_that ("srr_report with missing standards", {
     msg <- "must comply with at least 50% of category-specific standards"
     expect_length (grep (msg, r), 1L)
 
-    expect_true (any (grepl ("Missing Standards", r)))
+    expect_true (any (grepl ("Missing Standards", r, fixed = TRUE)))
 
     tryCatch (
         fs::dir_delete (path),
@@ -68,13 +68,13 @@ test_that ("srr_report", {
     expect_length (errs, 3L)
 
     f <- attr (r, "file")
-    expect_equal (tools::file_ext (f), "html")
+    expect_identical (tools::file_ext (f), "html")
     expect_true (fs::file_exists (f))
 
     expect_type (r, "character")
-    expect_true (length (r) > 400L)
+    expect_gt (length (r), 400L)
 
-    expect_false (any (grepl ("Missing Standards", r)))
+    expect_false (any (grepl ("Missing Standards", r, fixed = TRUE)))
 
     tryCatch (
         fs::dir_delete (path),

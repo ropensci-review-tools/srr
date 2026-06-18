@@ -2,19 +2,19 @@
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "srr",
-  "description": "Companion package to 'rOpenSci' statistical software review project.",
-  "name": "srr: 'rOpenSci' Review Roclets",
+  "description": "Companion package to 'rOpenSci' statistical software review project ('rOpenSci' authors, 2021; <doi:10.5281/zenodo.5556756>), to facilitate documenting software compliance with statistical standards using 'Roxygen2' 'roclets'.",
+  "name": "srr: 'rOpenSci' Software Review 'Roclets'",
   "relatedLink": "https://docs.ropensci.org/srr/",
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.4.066",
+  "version": "0.1.5.013",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.4.3 (2025-02-28)",
+  "runtimePlatform": "R version 4.6.0 (2026-04-24)",
   "author": [
     {
       "@type": "Person",
@@ -34,6 +34,18 @@
     }
   ],
   "softwareSuggestions": [
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "jsonlite",
+      "name": "jsonlite",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=jsonlite"
+    },
     {
       "@type": "SoftwareApplication",
       "identifier": "knitr",
@@ -82,6 +94,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "toml",
+      "name": "toml",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=toml"
     }
   ],
   "softwareRequirements": {
@@ -174,29 +198,25 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
     },
+    "9": {
+      "@type": "SoftwareApplication",
+      "identifier": "rprojroot",
+      "name": "rprojroot",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rprojroot"
+    },
     "SystemRequirements": {}
   },
-  "fileSize": "1375.502KB",
-  "citation": [
-    {
-      "@type": "SoftwareSourceCode",
-      "datePublished": "2021",
-      "author": [
-        {
-          "@type": "Person",
-          "givenName": "Mark",
-          "familyName": "Padgham"
-        }
-      ],
-      "name": "srr",
-      "url": "https://github.com/ropensci-review-tools/srr",
-      "description": "R package version 0.0.1"
-    }
-  ],
+  "fileSize": "2490.964KB",
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
   "contIntegration": [
     "https://github.com/ropensci-review-tools/srr/actions",
-    "https://codecov.io/gh/ropensci-review-tools/srr"
+    "https://app.codecov.io/gh/ropensci-review-tools/srr"
   ],
   "developmentStatus": "https://www.repostatus.org/#concept",
   "keywords": [

@@ -4,6 +4,8 @@
 #'
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
+#' @return (Invisibly) A character vector of markdown-formatted lines
+#' containing the entire checklist of the specified file.
 #' @family helper
 #' @examples
 #' f <- tempfile (fileext = ".md")
@@ -16,10 +18,13 @@ srr_stats_checklist_check <- function (file) {
 
     x <- checklist_check_intern (file)
 
-    if (interactive () && !Sys.getenv ("NOCLIPR") == "TRUE") {
+    if (interactive () && Sys.getenv ("NOCLIPR") != "TRUE") {
         # These lines still run i nexamples, so need 'allow_' in actual call.
         cli::cli_alert_info ("Checklist copied to clipboard")
-        clipr::write_clip (x, allow_non_interactive = TRUE)
+        tryCatch (
+            clipr::write_clip (x, allow_non_interactive = TRUE),
+            error = function (e) NULL
+        )
     }
 
     invisible (x)
@@ -31,7 +36,7 @@ checklist_check_intern <- function (file) {
         stop ("File [", file, "] does not exist")
     }
 
-    if (!tools::file_ext (file) == "md") {
+    if (tools::file_ext (file) != "md") {
         stop ("file must be in '.md' format")
     }
 
@@ -42,14 +47,14 @@ checklist_check_intern <- function (file) {
     x <- fix_nas (x, sym = "*")
     x <- fix_nas (x, sym = "_")
 
-    if (!identical (x0, x)) {
+    if (identical (x0, x)) {
+        cli::cli_alert_success ("No formatting issues found in file")
+    } else {
         cli::cli_alert (paste0 (
             "file contained incorrect ",
             "formatting and has been modified"
         ))
         writeLines (x, file)
-    } else {
-        cli::cli_alert_success ("No formatting issues found in file")
     }
 
     return (x)

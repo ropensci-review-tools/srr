@@ -27,7 +27,7 @@ srr_report <- function (path = ".", branch = "",
 
     if (roxygenise) {
         o <- utils::capture.output (
-            chk <- tryCatch (
+            chk <- tryCatch ( # nolint
                 roxygen2::roxygenise (path, load_code = FALSE),
                 error = function (e) e
             )
@@ -130,7 +130,7 @@ srr_report <- function (path = ".", branch = "",
                 )
             }
 
-            txt <- tolower (gsub ("srrstats", "", tag))
+            txt <- tolower (gsub ("srrstats", "", tag, fixed = TRUE))
             if (!nzchar (txt)) {
                 txt <- "srr"
             }
@@ -243,9 +243,12 @@ get_all_msgs <- function (path = ".") {
     names (blocks) <- flist
     blocks <- collect_blocks (do.call (c, blocks), path)
 
-    failing <- flist [sapply (blocks, inherits, "try-error")]
+    index <- vapply (blocks, function (b) {
+        inherits (b, "try-error")
+    }, logical (1L))
+    failing <- flist [which (index)]
     if (length (failing) > 0L) {
-        stop ("parsing problem in: ", paste (failing, collapse = ", "))
+        stop ("parsing problem in: ", paste (failing, collapse = ","))
     }
 
     tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
@@ -298,7 +301,7 @@ get_stds_txt <- function (msgs) {
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
-    g <- regexpr ("\\*\\*", s)
+    g <- regexpr ("**", s, fixed = TRUE)
     std_nums <- substring (s, 1, g - 1)
     std_txt <- gsub (
         "^\\*|\\*$", "",
@@ -370,7 +373,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     g <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", m)
 
     stds <- regmatches (m, g) [[1]]
-    stds_g <- sort (stds [grep ("^G", stds)])
+    stds_g <- sort (grep ("^G", stds, value = TRUE))
     stds_other <- sort (stds [!stds %in% stds_g])
     stds <- c (stds_g, stds_other)
 
@@ -391,7 +394,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
     if (!is.null (remote)) {
 
-        remote_file <- paste0 (remote, "/blob/", branch, "/", file_name)
+        remote_file <- file.path (remote, "blob", branch, file_name)
         if (!is.na (line_num)) {
             remote_file <- paste0 (remote_file, "#L", line_num)
         }
@@ -423,7 +426,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     }
     msg <- paste0 (msg, ":")
 
-    return (paste0 (c (msg, stds), collapse = "\n"))
+    return (paste (c (msg, stds), collapse = "\n"))
 }
 
 #' Find any missing standards, first by getting all non-missing standards
@@ -456,7 +459,7 @@ add_missing_stds <- function (md_lines, std_txt) {
         )
 
         cats <- get_categories (missing_stds)
-        for (i in seq (nrow (cats))) {
+        for (i in seq_len (nrow (cats))) {
 
             stds_i <- grep (
                 paste0 ("^", cats$std_prefix [i]),
@@ -472,7 +475,7 @@ add_missing_stds <- function (md_lines, std_txt) {
                     " standards:"
                 ),
                 "",
-                paste0 (stds_i, collapse = ", "),
+                paste (stds_i, collapse = ","),
                 ""
             )
         }
@@ -499,15 +502,15 @@ check_num_categories <- function (std_codes) {
     if (length (std_cats) < 2) {
 
         ret <- ":heavy_multiplication_x: Error: "
-        if (!"G" %in% std_cats) {
-            ret <- paste0 (ret, "No general standards have been documented.")
-        } else {
+        if ("G" %in% std_cats) {
             ret <- paste0 (
                 ret,
                 "Package documents compliance only with general standards. ",
                 "Statistical packages must document compliance with at least ",
                 "one set of category-specific standards as well."
             )
+        } else {
+            ret <- paste0 (ret, "No general standards have been documented.")
         }
     }
 
