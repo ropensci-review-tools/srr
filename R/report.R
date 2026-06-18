@@ -243,7 +243,10 @@ get_all_msgs <- function (path = ".") {
     names (blocks) <- flist
     blocks <- collect_blocks (do.call (c, blocks), path)
 
-    failing <- flist [sapply (blocks, inherits, "try-error")]
+    index <- vapply (blocks, function (b) {
+        inherits (b, "try-error")
+    }, logical (1L))
+    failing <- flist [which (index)]
     if (length (failing) > 0L) {
         stop ("parsing problem in: ", paste (failing, collapse = ", "))
     }
