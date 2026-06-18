@@ -22,19 +22,19 @@ test_that ("roxygen standards", {
     )
 
     expect_gt (length (x), 10)
-    expect_length (grep ("Re-compiling", x), 1L)
+    expect_length (grep ("Re-compiling", x, fixed = TRUE), 1L)
     txt <- "rOpenSci Statistical Software Standards"
-    expect_length (grep (txt, x), 1L)
-    expect_length (grep ("@srrstats standards \\(", x), 1L)
-    expect_length (grep ("@srrstatsNA standards \\(", x), 1L)
-    expect_length (grep ("@srrstatsTODO standards \\(", x), 1L)
+    expect_length (grep (txt, x, fixed = TRUE), 1L)
+    expect_length (grep ("@srrstats\\sstandards\\s\\(", x), 1L)
+    expect_length (grep ("@srrstatsNA\\sstandards\\s\\(", x), 1L)
+    expect_length (grep ("@srrstatsTODO\\sstandards\\s\\(", x), 1L)
     expect_gt (
-        grep ("@srrstatsTODO standards \\(", x),
-        grep ("@srrstatsNA standards \\(", x)
+        grep ("@srrstatsTODO\\sstandards\\s\\(", x),
+        grep ("@srrstatsNA\\sstandards\\s\\(", x)
     )
     expect_gt (
-        grep ("@srrstatsNA standards \\(", x),
-        grep ("@srrstats standards \\(", x)
+        grep ("@srrstatsNA\\sstandards\\s\\(", x),
+        grep ("@srrstats\\sstandards\\s\\(", x)
     )
 
     filename <- fs::path (d, "R", "srr-stats-standards.R")
@@ -78,7 +78,8 @@ test_that ("roxygen standards", {
         )
         f <- fs::path (d, "src", "cpptest.cpp")
         if (fs::file_exists (f)) {
-            cpptest <- gsub ("srrstats", "srrstatsTODO", readLines (f))
+            cpptest <-
+                gsub ("srrstats", "srrstatsTODO", readLines (f), fixed = TRUE)
             writeLines (cpptest, con = f)
         }
         # After fixing that and removing the file with duplicated
@@ -98,14 +99,14 @@ test_that ("roxygen standards", {
         )
 
         # -1 at end because they finish with a cli::rule line
-        i1 <- grep ("@srrstatsTODO", x) + 1L
+        i1 <- grep ("@srrstatsTODO", x, fixed = TRUE) + 1L
         i2 <- grep ("^[[:punct:]]", x)
         expect_length (i1, 1L)
         expect_gt (length (i2), 1L)
         index <- seq (i1, i2 [which (i2 > i1) [1]] - 1L)
         todo_old <- x [index]
 
-        i1 <- grep ("@srrstatsTODO", x2) + 1L
+        i1 <- grep ("@srrstatsTODO", x2, fixed = TRUE) + 1L
         i2 <- grep ("^[[:punct:]]", x2)
         expect_length (i1, 1L)
         expect_gt (length (i2), 1L)
@@ -119,13 +120,17 @@ test_that ("roxygen standards", {
         expect_gt (n_new / n_old, 2)
 
         # get only those from the srr-stats-standards.R file:
-        todo_old <- grep ("srr-stats-standards\\.R",
+        todo_old <- grep (
+            "srr-stats-standards.R",
             todo_old,
-            value = TRUE
+            value = TRUE,
+            fixed = TRUE
         )
-        todo_new <- grep ("srr-stats-standards\\.R",
+        todo_new <- grep (
+            "srr-stats-standards.R",
             todo_new,
-            value = TRUE
+            value = TRUE,
+            fixed = TRUE
         )
 
         expect_length (todo_old, 1L)
@@ -176,7 +181,7 @@ test_that ("roclet errors", {
     f <- fs::path (d, "R", "srr-stats-standards.R")
     if (fs::file_exists (f)) {
         x0 <- readLines (f)
-        x <- x0 [-grep ("@srrstatsVerbose", x0)]
+        x <- x0 [-grep ("@srrstatsVerbose", x0, fixed = TRUE)]
         writeLines (x, f)
     }
     x <- utils::capture.output (
@@ -187,9 +192,9 @@ test_that ("roclet errors", {
     writeLines (x0, f)
 
     # ------3. @srrstatsVerbose value must be logical
-    i <- grep ("@srrstatsVerbose", x0)
+    i <- grep ("@srrstatsVerbose", x0, fixed = TRUE)
     x <- x0
-    x [i] <- gsub ("TRUE", "junk", x0 [i])
+    x [i] <- gsub ("TRUE", "junk", x0 [i], fixed = TRUE)
     writeLines (x, f)
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
@@ -207,7 +212,7 @@ test_that ("roclet errors", {
     f <- fs::path (d, "R", "srr-stats-standards.R")
     if (fs::file_exists (f)) {
         x <- x0 <- readLines (f)
-        i <- grep ("NA\\_standards", x)
+        i <- grep ("NA_standards", x, fixed = TRUE)
         x [i] <- "#' not_NA_standards"
         writeLines (x, con = f)
     }

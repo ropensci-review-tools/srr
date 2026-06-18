@@ -67,7 +67,11 @@ std_txt_change <- function (msgs, std_txt_src) {
         std_txt <- std_txt [which (!is.na (index))]
         index <- index [which (!is.na (index))]
         std_txt_src$comment [index] <- std_txt
-        tag_ext <- ifelse (nzchar (i), gsub ("\\_", "", toupper (i)), i)
+        tag_ext <- ifelse (
+            nzchar (i),
+            gsub ("_", "", toupper (i), fixed = TRUE),
+            i
+        )
         std_txt_src$tag [index] <- paste0 ("srrstats", tag_ext)
     }
 

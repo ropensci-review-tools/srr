@@ -17,22 +17,22 @@ test_that ("dummy package", {
 
     x <- utils::capture.output (roxygen2::roxygenise (d), type = "message")
 
-    expect_true (any (grepl ("@srrstats standards \\(", x)))
+    expect_true (any (grepl ("@srrstats standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[G1\\.1,", x)))
 
-    expect_true (any (grepl ("@srrstatsNA standards \\(", x)))
+    expect_true (any (grepl ("@srrstatsNA standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[RE3\\.3\\]", x)))
     # S3.3 is an @srrstatsNA tag
     expect_gt (
         grep ("\\s\\*\\s\\[RE3\\.3\\]", x) [1],
-        grep ("@srrstatsNA standards \\(", x) [1]
+        grep ("@srrstatsNA standards (", x, fixed = TRUE) [1]
     )
 
-    expect_true (any (grepl ("@srrstatsTODO standards \\(", x)))
+    expect_true (any (grepl ("@srrstatsTODO standards (", x, fixed = TRUE)))
     expect_true (any (grepl ("\\s\\*\\s\\[RE4\\.4\\]", x)))
     expect_gt (
         grep ("\\s\\*\\s\\[RE4\\.4\\]", x) [1],
-        grep ("@srrstatsTODO standards \\(", x) [1]
+        grep ("@srrstatsTODO standards (", x, fixed = TRUE) [1]
     )
 
     # detach is critical here, because testthat uses `utils::sessionInfo()`,

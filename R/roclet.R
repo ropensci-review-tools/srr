@@ -105,7 +105,7 @@ collect_blocks <- function (blocks, base_path) {
         character (1L)
     )
 
-    readme_blocks <- blocks [which (grepl ("^README", file_dirs))]
+    readme_blocks <- blocks [grep ("^README", file_dirs)]
     test_blocks <- blocks [which (file_dirs == "tests")]
     r_blocks <- blocks [which (file_dirs == "R")]
     src_blocks <- blocks [which (file_dirs == "src")]
@@ -338,7 +338,7 @@ check_block_title <- function (block, tag) {
             "An NA_standards block should only contain\\
             '@srrstatsNA' tags, and no '@{tag}' tags."
         )
-    } else if (tag == "srrstatsNA" & !block_title == "NA_standards") {
+    } else if (tag == "srrstatsNA" & block_title != "NA_standards") {
         cli::cli_abort (
             "@srrstatsNA tags should only appear in \\
             a block with a title of NA_standards"
@@ -434,8 +434,8 @@ extract_standard_numbers <- function (standards, block) {
     m <- lapply (regmatches (standards, g), function (i) {
         res <- paste0 (i, collapse = "|")
         res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
-        res <- gsub ("\\{", "\\\\{", res)
-        return (gsub ("\\}", "\\\\}", res))
+        res <- gsub ("{", "\\{", res, fixed = TRUE)
+        return (gsub ("}", "\\}", res, fixed = TRUE))
     })
     for (i in seq_along (m)) {
         standards [i] <- gsub (m [[i]], "", standards [i])

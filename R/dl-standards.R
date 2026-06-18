@@ -55,7 +55,7 @@ stds_version <- function () {
     d <- data.frame (read.dcf (tmp))
 
     version <- d$Version
-    if (length (gregexpr ("\\.", version) [[1]]) > 2) {
+    if (length (gregexpr (".", version, fixed = TRUE) [[1]]) > 2) {
         version <- gsub ("\\.\\d{3}$", "", version, perl = TRUE)
     }
 
@@ -216,7 +216,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
         writeLines (text = s, con = filename)
     }
 
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
+    if (Sys.getenv ("NOCLIPR") != "TRUE") { # used to turn off clipr in tests
         clipr::write_clip (s)
     }
 

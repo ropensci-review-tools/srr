@@ -27,14 +27,14 @@ get_git_remote <- function (path = ".") {
         r <- strsplit (d$URL, ",?\\s+?") [[1]]
         r <- grep ("^https", r, value = TRUE)
         if (length (r) > 1) {
-            r <- grep ("git", r, value = TRUE)
+            r <- grep ("git", r, value = TRUE, fixed = TRUE)
         }
         if (length (r) > 1) {
-            r <- r [which (!grepl ("\\.io", r))]
+            r <- r [which (!grepl (".io", r, fixed = TRUE))]
         }
-        if (grepl ("\\.io", r) && "BugReports" %in% names (d)) {
+        if (grepl (".io", r, fixed = TRUE) && "BugReports" %in% names (d)) {
             r <- strsplit (d$BugReports, ",?\\s+?") [[1]]
-            r <- grep ("github\\.com", r, value = TRUE)
+            r <- grep ("github.com", r, value = TRUE, fixed = TRUE)
             r <- gsub ("\\/issues$", "", r)
         }
 

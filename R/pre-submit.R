@@ -96,8 +96,8 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
             as.integer (gsub ("^\\#", "", lnum))
         )
 
-        i <- strsplit (i, "\\]") [[1]] [1]
-        i <- strsplit (i, "\\[") [[1]] [2]
+        i <- strsplit (i, "]", fixed = TRUE) [[1]] [1]
+        i <- strsplit (i, "[", fixed = TRUE) [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
         chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
@@ -209,7 +209,7 @@ check_missing_standards <- function (stds_in_code, quiet = FALSE) {
             not_a_std, "]"
         )
 
-    } else if (!any (grepl ("todo", stds_in_code$stds))) {
+    } else if (!any (grepl ("todo", stds_in_code$stds, fixed = TRUE))) {
 
         msg <- paste0 (
             "All applicable standards [v",
@@ -290,7 +290,8 @@ check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
                 compliance_fail [compliance_fail$category == "total", ]
             compliance_pc <- round (compliance_tot$ratio * 100)
             msg <- compliance_msg (threshold_pc, compliance_pc, what = "all")
-            compliance_fail <- compliance_fail [which (!compliance_fail$category == "total"), ]
+            compliance_fail <-
+                compliance_fail [which (compliance_fail$category != "total"), ]
         }
     }
     # Category-specific messages:
@@ -335,7 +336,7 @@ pre_sub_category_msgs <- function (stds_in_code, quiet) {
         msg <- c (msg, this_msg)
     }
 
-    if (any (grepl ("todo", stds_in_code$std_type))) {
+    if (any (grepl ("todo", stds_in_code$std_type, fixed = TRUE))) {
 
         msg <- c (msg, paste0 (
             "This package still has TODO ",

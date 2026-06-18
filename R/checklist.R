@@ -18,7 +18,7 @@ srr_stats_checklist_check <- function (file) {
 
     x <- checklist_check_intern (file)
 
-    if (interactive () && !Sys.getenv ("NOCLIPR") == "TRUE") {
+    if (interactive () && Sys.getenv ("NOCLIPR") != "TRUE") {
         # These lines still run i nexamples, so need 'allow_' in actual call.
         cli::cli_alert_info ("Checklist copied to clipboard")
         clipr::write_clip (x, allow_non_interactive = TRUE)
@@ -33,7 +33,7 @@ checklist_check_intern <- function (file) {
         stop ("File [", file, "] does not exist")
     }
 
-    if (!tools::file_ext (file) == "md") {
+    if (tools::file_ext (file) != "md") {
         stop ("file must be in '.md' format")
     }
 

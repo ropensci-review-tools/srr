@@ -130,7 +130,7 @@ srr_report <- function (path = ".", branch = "",
                 )
             }
 
-            txt <- tolower (gsub ("srrstats", "", tag))
+            txt <- tolower (gsub ("srrstats", "", tag, fixed = TRUE))
             if (!nzchar (txt)) {
                 txt <- "srr"
             }
@@ -301,7 +301,7 @@ get_stds_txt <- function (msgs) {
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
-    g <- regexpr ("\\*\\*", s)
+    g <- regexpr ("**", s, fixed = TRUE)
     std_nums <- substring (s, 1, g - 1)
     std_txt <- gsub (
         "^\\*|\\*$", "",
@@ -373,7 +373,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     g <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", m)
 
     stds <- regmatches (m, g) [[1]]
-    stds_g <- sort (stds [grep ("^G", stds)])
+    stds_g <- sort (grep ("^G", stds, value = TRUE))
     stds_other <- sort (stds [!stds %in% stds_g])
     stds <- c (stds_g, stds_other)
 
