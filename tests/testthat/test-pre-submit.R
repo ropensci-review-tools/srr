@@ -3,7 +3,7 @@ test_that ("pre-submit", {
     Sys.setenv ("CLIPR_ALLOW" = TRUE)
     Sys.setenv ("NOCLIPR" = TRUE)
 
-    pkgname <- paste0 (sample (letters, 8), collapse = "")
+    pkgname <- paste (sample (letters, 8), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkgname)
     fs::file_delete (fs::path (d, "R", "test.R"))
     fs::file_delete (fs::path (d, "README.Rmd"))

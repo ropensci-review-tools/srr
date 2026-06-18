@@ -426,7 +426,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     }
     msg <- paste0 (msg, ":")
 
-    return (paste0 (c (msg, stds), collapse = "\n"))
+    return (paste (c (msg, stds), collapse = "\n"))
 }
 
 #' Find any missing standards, first by getting all non-missing standards

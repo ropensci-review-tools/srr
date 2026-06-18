@@ -13,9 +13,7 @@
 srr_stats_categories <- function () {
 
     cats <- std_prefixes ()
-    cat_full <- unlist (lapply (cats$category, function (i) {
-        category_titles_urls (i)
-    }))
+    cat_full <- unlist (lapply (cats$category, category_titles_urls))
 
     version <- stds_version ()
 
@@ -25,8 +23,7 @@ srr_stats_categories <- function () {
         category = cats$category,
         std_prefix = cats$prefix,
         title = cat_full [index - 1],
-        url = cat_full [index],
-        stringsAsFactors = FALSE
+        url = cat_full [index]
     )
 
     attr (res, "stds_version") <- version
@@ -126,7 +123,6 @@ std_prefixes <- function () {
 
     return (data.frame (
         category = cats,
-        prefix = prefixes,
-        stringsAsFactors = FALSE
+        prefix = prefixes
     ))
 }

@@ -1,7 +1,7 @@
 test_that ("roxygen standards", {
 
     # Sys.setenv("CLIPR_ALLOW" = TRUE)
-    pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+    pkg_name <- paste (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = pkg_name)
 
     expect_true (fs::file_exists (fs::path (fs::path_temp (), pkg_name)))
@@ -115,8 +115,8 @@ test_that ("roxygen standards", {
 
         expect_gte (length (todo_old), 2L)
         expect_gte (length (todo_new), 2L)
-        n_old <- nchar (paste0 (todo_old, collapse = " "))
-        n_new <- nchar (paste0 (todo_new, collapse = " "))
+        n_old <- nchar (paste (todo_old, collapse = " "))
+        n_new <- nchar (paste (todo_new, collapse = " "))
         expect_gt (n_new / n_old, 2)
 
         # get only those from the srr-stats-standards.R file:
@@ -151,7 +151,7 @@ test_that ("roxygen standards", {
 
 test_that ("roclet errors", {
 
-    nm <- paste0 (sample (letters, size = 7), collapse = "")
+    nm <- paste (sample (letters, size = 7), collapse = "")
     d <- srr_stats_pkg_skeleton (pkg_name = nm)
 
     # ------1. Adding extract @srrstatsVerbose tag should error:

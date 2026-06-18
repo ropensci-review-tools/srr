@@ -1,6 +1,6 @@
 test_that ("dummy package", {
 
-    pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
+    pkg_name <- paste (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
 
@@ -49,7 +49,7 @@ test_that ("dummy package", {
 
 test_that ("rust code", {
 
-    pkg_name <- paste0 (sample (c (letters, LETTERS), size = 8),
+    pkg_name <- paste (sample (c (letters, LETTERS), size = 8),
         collapse = ""
     )
     # If directories can not be unlinked on any test systems, this test must be
@@ -100,7 +100,7 @@ test_that ("rust code", {
 
 test_that ("skeleton errors", {
 
-    pkg_name <- paste0 (sample (letters, size = 7), collapse = "")
+    pkg_name <- paste (sample (letters, size = 7), collapse = "")
     d <- fs::path (fs::path_temp (), pkg_name)
 
     skip_if (fs::dir_exists (d))

@@ -392,7 +392,7 @@ process_srrstats_tags <- function (tag = "srrstats", block,
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
+    msg <- paste0 ("[", paste (snum, collapse = ", "), "]")
     if (fn_name) {
         func_name <- get_fn_name_from_block (block)
         if (!is.null (func_name)) {
@@ -432,7 +432,7 @@ extract_standard_numbers <- function (standards, block) {
     # muck up standards ID, so have to be removed here:
     g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
     m <- lapply (regmatches (standards, g), function (i) {
-        res <- paste0 (i, collapse = "|")
+        res <- paste (i, collapse = "|")
         res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
         res <- gsub ("{", "\\{", res, fixed = TRUE)
         return (gsub ("}", "\\}", res, fixed = TRUE))
