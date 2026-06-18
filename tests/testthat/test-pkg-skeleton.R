@@ -39,7 +39,7 @@ test_that ("dummy package", {
     # which checks namespaces and tries to load DESC file from pkg location.
     pos <- match (paste0 ("package:", pkg_name), search ())
     if (!is.na (pos)) {
-        detach (pos = pos, unload = TRUE)
+        detach (pos = pos, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),
@@ -90,7 +90,7 @@ test_that ("rust code", {
 
     pos <- match (paste0 ("package:", pkg_name), search ())
     if (!is.na (pos)) {
-        detach (pos = pos, unload = TRUE)
+        detach (pos = pos, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),
@@ -118,7 +118,7 @@ test_that ("skeleton errors", {
     }
     p <- paste0 ("package:", pkg_name)
     if (p %in% search ()) {
-        detach (p, unload = TRUE)
+        detach (p, unload = TRUE) # nolint
     }
     tryCatch (
         fs::dir_delete (d),

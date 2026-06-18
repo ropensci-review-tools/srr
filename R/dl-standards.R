@@ -95,7 +95,7 @@ format_standards <- function (s) {
 
     s <- vapply (
         seq_along (index1), function (i) {
-            paste0 (s [index1 [i]:index2 [i]], collapse = " ")
+            paste (s [index1 [i]:index2 [i]], collapse = " ")
         },
         character (1)
     )

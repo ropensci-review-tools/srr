@@ -101,10 +101,10 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
         i <- strsplit (i, ",\\s?") [[1]]
 
         chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
-        if (any (!chk)) {
+        if (!all (chk)) {
             stop (
                 "Standard references [",
-                paste0 (i [which (!chk)], collapse = ", "),
+                paste (i [which (!chk)], collapse = ","),
                 "] are not in proper format."
             )
         }

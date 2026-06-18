@@ -74,10 +74,10 @@ get_categories <- function (stds) {
     ))
 
     all_cats <- srr_stats_categories ()
-    if (any (!categories %in% all_cats$std_prefix)) {
+    if (!all (categories %in% all_cats$std_prefix)) {
         stop ("There are no standards with prefix [",
-            paste0 (categories [which (!categories %in% all_cats$std_prefix)],
-                collapse = ", "
+            paste (categories [which (!categories %in% all_cats$std_prefix)],
+                collapse = ","
             ),
             "]",
             call. = FALSE
