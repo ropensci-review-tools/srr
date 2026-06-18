@@ -21,7 +21,10 @@ srr_stats_checklist_check <- function (file) {
     if (interactive () && Sys.getenv ("NOCLIPR") != "TRUE") {
         # These lines still run i nexamples, so need 'allow_' in actual call.
         cli::cli_alert_info ("Checklist copied to clipboard")
-        clipr::write_clip (x, allow_non_interactive = TRUE)
+        tryCatch (
+            clipr::write_clip (x, allow_non_interactive = TRUE),
+            error = function (e) NULL
+        )
     }
 
     invisible (x)
