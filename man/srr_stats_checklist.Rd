@@ -24,7 +24,7 @@ category-specific standards, as a checklist, and store the result in the
 local clipboard ready to paste.
 }
 \examples{
-\donttest{
+\dontrun{
 x <- srr_stats_checklist (category = "regression")
 # or write to specified file:
 f <- tempfile (fileext = ".md")

@@ -198,7 +198,7 @@ category_titles_urls <- function (category) {
 #' @family helper
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' x <- srr_stats_checklist (category = "regression")
 #' # or write to specified file:
 #' f <- tempfile (fileext = ".md")
