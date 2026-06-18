@@ -459,7 +459,7 @@ add_missing_stds <- function (md_lines, std_txt) {
         )
 
         cats <- get_categories (missing_stds)
-        for (i in seq (nrow (cats))) {
+        for (i in seq_len (nrow (cats))) {
 
             stds_i <- grep (
                 paste0 ("^", cats$std_prefix [i]),

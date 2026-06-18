@@ -214,11 +214,10 @@ test_that ("roclet errors", {
     out <- tryCatch (roxygen2::roxygenise (d),
         error = function (e) e
     )
-    expect_s3_class (out, "simpleError")
-    txt <- paste0 (
-        "@srrstatsNA tags should only appear in a ",
-        "block with a title of NA_standards"
-    )
+    expect_s3_class (out, "rlang_error")
+    txt <- "@srrstatsNA tags should only appear in"
+    expect_true (grepl (txt, out$message))
+    txt <- "a block with a title of NA_standards"
     expect_true (grepl (txt, out$message))
 
     tryCatch (

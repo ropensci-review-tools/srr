@@ -334,15 +334,14 @@ check_block_title <- function (block, tag) {
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (is.null (block_title), "", block_title)
     if (tag != "srrstatsNA" && grepl ("^NA\\_st", block_title)) {
-        stop (paste0 (
-            "An NA_standards block should only contain ",
-            "'@srrstatsNA' tags, and no '@",
-            tag, "' tags."
-        ))
+        cli::cli_abort (
+            "An NA_standards block should only contain\\
+            '@srrstatsNA' tags, and no '@{tag}' tags."
+        )
     } else if (tag == "srrstatsNA" & !block_title == "NA_standards") {
-        stop (
-            "@srrstatsNA tags should only appear in ",
-            "a block with a title of NA_standards"
+        cli::cli_abort (
+            "@srrstatsNA tags should only appear in \\
+            a block with a title of NA_standards"
         )
     }
 }
