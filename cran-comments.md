@@ -3,7 +3,9 @@
 This is an initial submission, updated in response to CRAN feedback in the following ways:
 
 - All functions now document return examples.
-- All examples except one now use '\donttest{}' instead of '\dontrun{}'. The one remaining '\dontrun{}' is needed because that example otherwise triggers a NOTE on CRAN win-builder machines that it takes > 5 seconds.
+- All examples except two now use '\donttest{}' instead of '\dontrun{}', except:
+    - One '\dontrun{}' to avoid a NOTE on CRAN win-builder machines that it takes > 5 seconds.
+    - One '\dontrun{}' on a very short function which only writes to clipboard. The `clipr` package has a flag to switch off writing in non-interactive environments, but this fails when running examples on win-builder machines. The problem therefore lies in `clipr`, and not here, and that makes '\dontrun{}' necessary here.
 - Use of 'installed.packages()' now removed, and replaced with 'find.package()'.
 
 ## Test environments
