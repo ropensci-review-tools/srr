@@ -8,13 +8,19 @@
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.1.5.013",
+  "version": "1.0.0",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
   "runtimePlatform": "R version 4.6.0 (2026-04-24)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -210,18 +216,11 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rprojroot"
     },
-    "SystemRequirements": {}
+    "SystemRequirements": null
   },
-  "fileSize": "2490.964KB",
+  "fileSize": "2491.796KB",
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
-    "https://app.codecov.io/gh/ropensci-review-tools/srr"
-  ],
+  "contIntegration": ["https://github.com/ropensci-review-tools/srr/actions", "https://app.codecov.io/gh/ropensci-review-tools/srr"],
   "developmentStatus": "https://www.repostatus.org/#concept",
-  "keywords": [
-    "compliance-automation",
-    "r",
-    "statistical-software"
-  ]
+  "keywords": ["compliance-automation", "r", "statistical-software"]
 }
