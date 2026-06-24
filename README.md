@@ -4,7 +4,10 @@
 status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
 [![codecov](https://app.codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
 [![Project Status:
-Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
+Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/srr)](https://cran.r-project.org/package=srr/)
+[![CRAN
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/srr?color=orange)](https://cran.r-project.org/package=srr)
 <!-- badges: end -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -66,9 +69,16 @@ referred to as the “SSR Book”).
 
 ## Installation
 
-The easiest way to install this package is via the associated
-[`r-universe`](https://ropensci-review-tools.r-universe.dev/). As shown
-there, simply enable the universe with
+The package is [on CRAN](https://cran.r-project.org/package=srr), and
+can be installed with,
+
+``` r
+install.packages ("srr")
+```
+
+The latest development version can be installed from
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/) by
+setting,
 
 ``` r
 options (repos = c (
@@ -77,14 +87,8 @@ options (repos = c (
 ))
 ```
 
-And then install the usual way with,
-
-``` r
-install.packages ("srr")
-```
-
-Alternatively, the package can be installed by running one of the
-following lines:
+And then installing as above. Alternatively, the development version can
+be installed by running any one of the following lines:
 
 ``` r
 remotes::install_github ("ropensci-review-tools/srr")
@@ -93,7 +97,7 @@ remotes::install_git ("https://codeberg.org/ropensci-review-tools/srr")
 remotes::install_git ("https://codefloe.com/ropensci-review-tools/srr")
 ```
 
-and loaded for use with,
+Once installed, the package can be loaded for use with,
 
 ``` r
 library (srr)
@@ -307,96 +311,121 @@ project, you agree to abide by its terms.
 
 ## Contributors
 
-
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
 <!-- prettier-ignore-start -->
+
 <!-- markdownlint-disable -->
 
-All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropensci/allcontributors) following the [allcontributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
+All contributions to this project are gratefully acknowledged using the
+[`allcontributors` package](https://github.com/ropensci/allcontributors)
+following the [allcontributors](https://allcontributors.org)
+specification. Contributions of any kind are welcome!
 
 ### Code
 
 <table>
 
 <tr>
+
 <td align="center">
+
 <a href="https://github.com/mpadge">
 <img src="https://avatars.githubusercontent.com/u/6697851?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=mpadge">mpadge</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/maelle">
 <img src="https://avatars.githubusercontent.com/u/8360597?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=maelle">maelle</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/christophsax">
 <img src="https://avatars.githubusercontent.com/u/1390827?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=christophsax">christophsax</a>
 </td>
+
 </tr>
 
 </table>
-
 
 ### Issue Authors
 
 <table>
 
 <tr>
+
 <td align="center">
+
 <a href="https://github.com/santikka">
 <img src="https://avatars.githubusercontent.com/u/8639149?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Asantikka">santikka</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/schneiderpy">
 <img src="https://avatars.githubusercontent.com/u/77991319?u=4242d4c5942fced6368dd5c68221e6618092cbf8&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Aschneiderpy">schneiderpy</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/abigailkeller">
 <img src="https://avatars.githubusercontent.com/u/62615943?u=440761884585e76dd048ea1ccf96a78e2df0be5f&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Aabigailkeller">abigailkeller</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/noamross">
 <img src="https://avatars.githubusercontent.com/u/571752?u=49b086850e1716aa25615cea39250c51e085a5d8&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Anoamross">noamross</a>
 </td>
+
 </tr>
 
 </table>
-
 
 ### Issue Contributors
 
 <table>
 
 <tr>
+
 <td align="center">
+
 <a href="https://github.com/jeroen">
 <img src="https://avatars.githubusercontent.com/u/216319?u=4825a007eee4f78466b5f833b9728547c74067b5&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+commenter%3Ajeroen">jeroen</a>
 </td>
+
 <td align="center">
+
 <a href="https://github.com/s3alfisc">
 <img src="https://avatars.githubusercontent.com/u/19531450?u=c8eeb926eb3de9d4d7ebb8a1f642bbd3cb2ad036&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+commenter%3As3alfisc">s3alfisc</a>
 </td>
+
 </tr>
 
 </table>
 
 <!-- markdownlint-enable -->
+
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->

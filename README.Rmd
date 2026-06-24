@@ -11,8 +11,9 @@ output:
 <!-- badges: start -->
 [![R build status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
 [![codecov](https://app.codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
-[![Project Status:
-Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
+[![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/srr)](https://cran.r-project.org/package=srr/) 
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/grand-total/srr?color=orange)](https://cran.r-project.org/package=srr)
 <!-- badges: end -->
 
 
@@ -73,9 +74,15 @@ book](https://stats-devguide.ropensci.org/standards.html)
 
 ## Installation
 
-The easiest way to install this package is via the associated
-[`r-universe`](https://ropensci-review-tools.r-universe.dev/). As
-shown there, simply enable the universe with
+The package is [on CRAN](https://cran.r-project.org/package=srr), and can be
+installed with,
+
+```{r install, eval = FALSE}
+install.packages ("srr")
+```
+
+The latest development version can be installed from
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/) by setting,
 
 ```{r options, eval = FALSE}
 options (repos = c (
@@ -84,15 +91,8 @@ options (repos = c (
 ))
 ```
 
-And then install the usual way with,
-
-```{r install, eval = FALSE}
-install.packages ("srr")
-```
-
-Alternatively, the package can be installed by running one of the following
-lines:
-
+And then installing as above. Alternatively, the development version can be
+installed by running any one of the following lines:
 
 ```{r remotes, eval = FALSE}
 remotes::install_github ("ropensci-review-tools/srr")
@@ -101,12 +101,9 @@ remotes::install_git ("https://codeberg.org/ropensci-review-tools/srr")
 remotes::install_git ("https://codefloe.com/ropensci-review-tools/srr")
 ```
 
-and loaded for use with,
-```{r lib-fakey, eval = FALSE}
+Once installed, the package can be loaded for use with,
+```{r lib-fakey, eval = TRUE}
 library (srr)
-```
-```{r lib, echo = FALSE, message = FALSE}
-devtools::load_all (".", export_all = FALSE)
 ```
 
 ## Overview
