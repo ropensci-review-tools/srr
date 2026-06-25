@@ -1,8 +1,8 @@
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions?query=workflow%3AR-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci-review-tools/srr)
+[![R-CMD-check](https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/ropensci-review-tools/srr/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
 [![Project Status:
 Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/srr)](https://cran.r-project.org/package=srr/)
