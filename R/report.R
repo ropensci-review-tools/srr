@@ -560,6 +560,14 @@ update_msg_paths <- function (msgs, path, path_root) {
         msgs [[type]] <- lapply (msgs [[type]], function (m) {
             g <- gregexpr ("file\\s+\\[.*\\]$", m)
             file_name <- gsub ("file\\s+\\[|\\]$", "", regmatches (m, g) [[1]])
+            # Messages with no "file [...]" suffix (package-level messages,
+            # or standards flagged as missing / TODO) yield a zero-length
+            # `file_name`, and `gsub (character (0), ...)` below then errors
+            # with "invalid 'pattern' argument". There is no path to rewrite
+            # in that case, so return the message unchanged.
+            if (length (file_name) != 1L || !nzchar (file_name)) {
+                return (m)
+            }
             file_name_abs <- fs::path_abs (fs::path (path, file_name))
             file_name_rel <- fs::path_rel (file_name_abs, path_root)
             gsub (file_name, file_name_rel, m, fixed = TRUE)
