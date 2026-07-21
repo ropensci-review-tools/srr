@@ -81,3 +81,18 @@ test_that ("srr_report", {
         error = function (e) NULL
     )
 })
+
+test_that ("update_msg_paths guards messages with no file suffix", {
+
+    path <- fs::path_temp ("pkg")
+    path_root <- fs::path_temp ()
+
+    msgs <- list (msgs_missing = list ("Standard 'G1.0' is missing"))
+    out <- update_msg_paths (msgs, path, path_root)
+    expect_identical (out$msgs_missing [[1]], "Standard 'G1.0' is missing")
+
+    msgs2 <- list (msgs_line = list ("'G2.0' on line 3 of file [R/x.R]"))
+    out2 <- update_msg_paths (msgs2, path, path_root)
+    expect_match (out2$msgs_line [[1]], "pkg/R/x\\.R")
+    expect_false (grepl ("[R/x.R]", out2$msgs_line [[1]], fixed = TRUE))
+})
