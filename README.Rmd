@@ -285,6 +285,7 @@ project, you agree to abide by its terms.
 
 
 
+
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
@@ -313,6 +314,12 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <img src="https://avatars.githubusercontent.com/u/1390827?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=christophsax">christophsax</a>
+</td>
+<td align="center">
+<a href="https://github.com/rootcoder007">
+<img src="https://avatars.githubusercontent.com/u/278967282?v=4" width="100px;" alt=""/>
+</a><br>
+<a href="https://github.com/ropensci-review-tools/srr/commits?author=rootcoder007">rootcoder007</a>
 </td>
 </tr>
 
