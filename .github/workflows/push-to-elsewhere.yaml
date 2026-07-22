@@ -11,6 +11,13 @@
 
 name: push-to-elsewhere
 
+# Mirror pushes must run one-at-a-time: two near-simultaneous pushes to
+# main race each other and the loser fails with "cannot lock ref
+# refs/heads/main" on the mirror remote (seen 2026-07-21).
+concurrency:
+  group: push-to-elsewhere
+  cancel-in-progress: false
+
 on:
   push:
     branches:
@@ -23,13 +30,13 @@ jobs:
   push-to-elsehwere:
     runs-on: ubuntu-latest
 
-    # will only push *from* main
-    if: ${{ github.ref == 'refs/heads/main' }}
-
     steps:
     - uses: actions/checkout@v4
 
-    - name: Git setup
+    # will only push *from* main; on PRs the job completes as a no-op
+    # so the check reads green instead of skipped
+    - name: Mirror main
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       run: |
           git config --global user.name "ropensci"
           git config --global user.email "noreply@ropensci.org"
