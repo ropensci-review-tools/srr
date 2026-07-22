@@ -30,13 +30,13 @@ jobs:
   push-to-elsehwere:
     runs-on: ubuntu-latest
 
-    # will only push *from* main
-    if: ${{ github.ref == 'refs/heads/main' }}
-
     steps:
     - uses: actions/checkout@v4
 
-    - name: Git setup
+    # will only push *from* main; on PRs the job completes as a no-op
+    # so the check reads green instead of skipped
+    - name: Mirror main
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       run: |
           git config --global user.name "ropensci"
           git config --global user.email "noreply@ropensci.org"
