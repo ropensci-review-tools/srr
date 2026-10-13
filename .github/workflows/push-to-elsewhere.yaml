@@ -30,7 +30,7 @@ on:
       - main
 
 jobs:
-  push-to-elsehwere:
+  push-to-elsewhere:
     runs-on: ubuntu-latest
 
     steps:
@@ -38,7 +38,7 @@ jobs:
     # so the check reads green instead of skipped
     - name: Mirror main
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
-      uses: ropensci-review-tools/actions/push-to-elsewhere@v2
+      uses: ropensci-review-tools/actions/push-to-elsewhere@v3
       with:
         mirrors: |
           codeberg=https://${{ secrets.UNAME }}:${{ secrets.CODEBERG }}@codeberg.org/ropensci-review-tools/srr.git
