@@ -101,7 +101,7 @@ get_standard_nums <- function (category) {
     # remove first checkbox bits:
     s <- gsub ("^\\-\\s+\\[\\s\\]\\s\\*\\*", "", s)
     # then extract standard numbers only
-    m <- gregexpr ("^[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", s)
+    m <- gregexpr (paste0 ("^", stds_regex ("id")), s)
     s <- unlist (regmatches (s, m))
 
     return (s)

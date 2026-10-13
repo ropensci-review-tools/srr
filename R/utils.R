@@ -43,3 +43,36 @@ parse_manifest_json <- function (f) {
     requireNamespace ("jsonlite", quietly = TRUE)
     jsonlite::read_json (f)
 }
+
+#' Regular expressions for matching the format of standards in the
+#' `statistical-software-review-book/standards/*.Rmd` files.
+#'
+#' All patterns which grep text of standards, or of text derived from standards,
+#' are defined here, so that any change in the format of the standards need only
+#' be reflected in this one function. Patterns are deliberately minimal, with
+#' anchors, brackets, and other context to be added by the calling code.
+#'
+#' @param type Name of pattern to return, one of:
+#' \itemize{
+#' \item "id": Standard identifier, such as "G1.0" or "BS2.15a".
+#' \item "id_strong": Identifier wrapped in curly braces and preceded by
+#'   roxygen2's `\\strong` or `\\emph` markup.
+#' \item "rmd_anchor": Hyperlink anchor following the identifier in the
+#'   original Rmd files, "]{#G1_0}".
+#' }
+#' @return A single regular expression as character string.
+#' @noRd
+stds_regex <- function (type = c (
+                            "id",
+                            "id_strong",
+                            "rmd_anchor"
+                        )) {
+
+    type <- match.arg (type)
+
+    switch (type,
+        "id" = "[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+        "id_strong" = "\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}",
+        "rmd_anchor" = "\\]\\{#[A-Z]+[0-9]+\\_[0-9]+([a-z]?)\\}"
+    )
+}

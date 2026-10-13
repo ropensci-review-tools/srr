@@ -100,7 +100,7 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
         i <- strsplit (i, "[", fixed = TRUE) [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
-        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
+        chk <- grepl (stds_regex ("id"), stds)
         if (!all (chk)) {
             stop (
                 "Standard references [",

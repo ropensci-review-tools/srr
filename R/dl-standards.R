@@ -100,7 +100,7 @@ format_standards <- function (s) {
         character (1)
     )
     # rm hyperlink of standards
-    r <- regexpr ("\\]\\{#[A-Z]+[0-9]+\\_[0-9]+([a-z]?)\\}", s)
+    r <- regexpr (stds_regex ("rmd_anchor"), s)
     regmatches (s, r) <- ""
     # convert dot points to checklist items:
     s <- gsub ("\\s*\\-\\s+\\[\\*\\*", "- \\[ \\] **", s)
@@ -286,7 +286,7 @@ srr_stats_roxygen <- function (category = NULL,
     s <- gsub ("^\\s?\\-\\s+\\[\\s\\]\\s+", "", s)
     # replace bold/italic formatting characters with curly braces.
     # This uses regexpr so only first match is modified
-    gptn <- "\\*\\*[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?\\*\\*"
+    gptn <- paste0 ("\\*\\*", stds_regex ("id"), "\\*\\*")
     g <- regexpr (gptn, s)
     s_end <- substring (s, g + attr (g, "match.length"), nchar (s))
     m <- regmatches (s, g)
