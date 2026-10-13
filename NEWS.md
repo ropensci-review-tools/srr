@@ -3,6 +3,7 @@
 ## Minor Changes
 
 - Added generic `stds_regex()` fn for regex patterns for all stds from stats-devguide.
+- Use ropensci-review-tools/actions/push-to-elsewhere generic workflow
 
 ---
 
