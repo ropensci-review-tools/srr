@@ -1,10 +1,13 @@
 <!-- badges: start -->
 
-[![R build
-status](https://github.com/ropensci-review-tools/srr/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci-review-tools/srr/actions)
-[![codecov](https://codecov.io/gh/ropensci-review-tools/srr/branch/main/graph/badge.svg)](https://codecov.io/gh/ropensci-review-tools/srr)
+[![R-CMD-check](https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/ropensci-review-tools/srr/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/srr)
 [![Project Status:
-Concept](https://www.repostatus.org/badges/latest/concept.svg)](https://www.repostatus.org/#concept)
+Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/srr)](https://cran.r-project.org/package=srr/)
+[![CRAN
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/srr?color=orange)](https://cran.r-project.org/package=srr)
 <!-- badges: end -->
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -20,10 +23,10 @@ Standards](https://stats-devguide.ropensci.org/standards.html). Before
 proceeding, the answer to an important question: **[What is a
 “roclet”](https://github.com/r-lib/roxygen2/issues/1086)?**
 
--   A roclet is an object used by the
-    [`roxygen2`](https://roxygen2.r-lib.org) package to convert
-    [`roxygen2`](https://roxygen2.r-lib.org)-style documentation lines
-    into some desired form of output.
+- A roclet is an object used by the
+  [`roxygen2`](https://roxygen2.r-lib.org) package to convert
+  [`roxygen2`](https://roxygen2.r-lib.org)-style documentation lines
+  into some desired form of output.
 
 ## Why then?
 
@@ -52,7 +55,8 @@ with different kinds of tags. The
 [`roxygen2`](https://roxygen2.r-lib.org) package includes roclets to
 process a number of tags; the `srr` package implements custom roclets to
 process several additional tags for use with
-[rOpenSci](https://ropensci.org)’s software review systems.
+[rOpenSci](https://ropensci.org)’s software review systems, and to
+process tags in locations other than just the `R/` directory.
 
 At present, the package only contains roclets and associated functions
 to help those developing and reviewing packages submitted to rOpenSci’s
@@ -65,31 +69,35 @@ referred to as the “SSR Book”).
 
 ## Installation
 
-The easiest way to install this package is via the associated
-[`r-universe`](https://ropensci-review-tools.r-universe.dev/ui#builds).
-As shown there, simply enable the universe with
+The package is [on CRAN](https://cran.r-project.org/package=srr), and
+can be installed with,
 
 ``` r
-options(repos = c(
+install.packages ("srr")
+```
+
+The latest development version can be installed from
+[`r-universe`](https://ropensci-review-tools.r-universe.dev/) by
+setting,
+
+``` r
+options (repos = c (
     ropenscireviewtools = "https://ropensci-review-tools.r-universe.dev",
-    CRAN = "https://cloud.r-project.org"))
+    CRAN = "https://cloud.r-project.org"
+))
 ```
 
-And then install the usual way with,
-
-``` r
-install.packages("srr")
-```
-
-Alternatively, the package can be installed by running one of the
-following lines:
+And then installing as above. Alternatively, the development version can
+be installed by running any one of the following lines:
 
 ``` r
 remotes::install_github ("ropensci-review-tools/srr")
 pak::pkg_install ("ropensci-review-tools/srr")
+remotes::install_git ("https://codeberg.org/ropensci-review-tools/srr")
+remotes::install_git ("https://codefloe.com/ropensci-review-tools/srr")
 ```
 
-and loaded for use with,
+Once installed, the package can be loaded for use with,
 
 ``` r
 library (srr)
@@ -151,6 +159,7 @@ roclets.
         ## [6] "Spatial"                                                        
         ## [7] "Time Series"                                                    
         ## [8] "Dimensionality Reduction, Clustering, and Unsupervised Learning"
+        ## [9] "Probability Distributions"
 
     That function also returns links to the full descriptions of each
     category in the [main project
@@ -163,7 +172,7 @@ roclets.
     this:
 
     ``` r
-    Roxygen: list(markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
+    Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
     ```
 
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
@@ -233,6 +242,15 @@ roclets.
     [`roxygen2::roxygenise()`](https://roxygen2.r-lib.org/reference/roxygenize.html),
     the roclet will scan your package’s documentation for the state of
     standards, and will generate a summary of the result on your screen.
+    Note, however, that the `roxygen2` package [only scans files in the
+    R
+    directory](https://github.com/r-lib/roxygen2/blob/9652d15221109917d46768e836eaf55e33c21633/R/package_files.R#L1-L10),
+    and so this screen output will only summarise standards documented
+    there. Standards documented in other locations such as test files or
+    vignettes will be recognised and processed by the `srr` package,
+    even through they will not be recognised by the
+    `document()/roxygenise()` functions, and so will not appear in their
+    output.
 
 To help developers understand how to use these roclets, this package
 includes a function,
@@ -275,7 +293,7 @@ possible to insert `roxygen2` tags in every type of file. In general,
 standards may be inserted in any `.R` or `.Rmd` file, and most types of
 files in `src` or `inst/include` directories, as long as they are used
 with a package able to convert documentation to a corresponding R file
-(such as [`Rcpp`](http://www.rcpp.org/)’s generation of `RcppExports.R`
+(such as [`Rcpp`](https://www.rcpp.org/)’s generation of `RcppExports.R`
 files which include the C++ documentation).
 
 Tags may generally not be placed in any other kinds of files, including
@@ -298,7 +316,7 @@ project, you agree to abide by its terms.
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 
-All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropenscilabs/allcontributors) following the [all-contributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
+All contributions to this project are gratefully acknowledged using the [`allcontributors` package](https://github.com/ropensci/allcontributors) following the [allcontributors](https://allcontributors.org) specification. Contributions of any kind are welcome!
 
 ### Code
 
@@ -312,16 +330,22 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=mpadge">mpadge</a>
 </td>
 <td align="center">
+<a href="https://github.com/maelle">
+<img src="https://avatars.githubusercontent.com/u/8360597?v=4" width="100px;" alt=""/>
+</a><br>
+<a href="https://github.com/ropensci-review-tools/srr/commits?author=maelle">maelle</a>
+</td>
+<td align="center">
 <a href="https://github.com/christophsax">
 <img src="https://avatars.githubusercontent.com/u/1390827?v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/commits?author=christophsax">christophsax</a>
 </td>
 <td align="center">
-<a href="https://github.com/maelle">
-<img src="https://avatars.githubusercontent.com/u/8360597?v=4" width="100px;" alt=""/>
+<a href="https://github.com/rootcoder007">
+<img src="https://avatars.githubusercontent.com/u/278967282?v=4" width="100px;" alt=""/>
 </a><br>
-<a href="https://github.com/ropensci-review-tools/srr/commits?author=maelle">maelle</a>
+<a href="https://github.com/ropensci-review-tools/srr/commits?author=rootcoder007">rootcoder007</a>
 </td>
 </tr>
 
@@ -345,6 +369,18 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Aschneiderpy">schneiderpy</a>
 </td>
+<td align="center">
+<a href="https://github.com/abigailkeller">
+<img src="https://avatars.githubusercontent.com/u/62615943?u=440761884585e76dd048ea1ccf96a78e2df0be5f&v=4" width="100px;" alt=""/>
+</a><br>
+<a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Aabigailkeller">abigailkeller</a>
+</td>
+<td align="center">
+<a href="https://github.com/noamross">
+<img src="https://avatars.githubusercontent.com/u/571752?u=49b086850e1716aa25615cea39250c51e085a5d8&v=4" width="100px;" alt=""/>
+</a><br>
+<a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+author%3Anoamross">noamross</a>
+</td>
 </tr>
 
 </table>
@@ -357,9 +393,15 @@ All contributions to this project are gratefully acknowledged using the [`allcon
 <tr>
 <td align="center">
 <a href="https://github.com/jeroen">
-<img src="https://avatars.githubusercontent.com/u/216319?u=bfe086cade8ccec09d43f3f2e1bb3b6304dc7ec6&v=4" width="100px;" alt=""/>
+<img src="https://avatars.githubusercontent.com/u/216319?u=4825a007eee4f78466b5f833b9728547c74067b5&v=4" width="100px;" alt=""/>
 </a><br>
 <a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+commenter%3Ajeroen">jeroen</a>
+</td>
+<td align="center">
+<a href="https://github.com/s3alfisc">
+<img src="https://avatars.githubusercontent.com/u/19531450?u=c8eeb926eb3de9d4d7ebb8a1f642bbd3cb2ad036&v=4" width="100px;" alt=""/>
+</a><br>
+<a href="https://github.com/ropensci-review-tools/srr/issues?q=is%3Aissue+commenter%3As3alfisc">s3alfisc</a>
 </td>
 </tr>
 

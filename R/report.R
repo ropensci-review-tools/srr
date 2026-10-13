@@ -1,4 +1,3 @@
-
 #' Generate report from `ssr` tags.
 #'
 #' @param path Path to package for which report is to be generated
@@ -8,32 +7,47 @@
 #' @param branch By default a report will be generated from the current branch
 #' as set on the local git repository; this parameter can be used to specify any
 #' alternative branch.
+#' @param roxygenise If `TRUE` (default), documentation will first be updated
+#' with the \pkg{roxygen2} package. This requires local installation of the
+#' package, which may take some time if the package has not previously been
+#' installed. If this parameter is `FALSE`, the `roxygen2` package is not used,
+#' documentation is not updated, and reports are generally generated faster.
 #' @return (invisibly) Markdown-formatted lines used to generate the final html
 #' document.
 #' @family report
 #' @export
 #' @examples
-#' \dontrun{
 #' path <- srr_stats_pkg_skeleton ()
+#' \dontrun{
 #' srr_report (path)
 #' }
-srr_report <- function (path = ".", branch = "", view = TRUE) {
+#' unlink (path, recursive = TRUE)
+srr_report <- function (path = ".", branch = "",
+                        view = TRUE, roxygenise = TRUE) {
 
-    o <- utils::capture.output (
-        chk <- tryCatch (
-            roxygen2::roxygenise (path),
-            error = function (e) e
+    if (roxygenise) {
+        o <- utils::capture.output (
+            chk <- tryCatch ( # nolint
+                roxygen2::roxygenise (path, load_code = FALSE),
+                error = function (e) e
+            )
         )
-    )
-    if (methods::is (chk, "simpleError")) {
-        stop (chk$message)
+        if (methods::is (chk, "simpleError")) {
+            stop (chk$message)
+        }
     }
 
-    requireNamespace ("rmarkdown")
+    requireNamespace ("rmarkdown", quietly = TRUE)
 
     if (path == ".") {
         path <- here::here ()
     }
+    path <- fs::path_abs (fs::path_expand (path))
+    path_root <- tryCatch (
+        rprojroot::find_root (rprojroot::is_git_root, path = path),
+        error = function (e) path
+    )
+    pkg_in_subdir <- path_root != path
 
     remote <- get_git_remote (path)
     branch <- get_git_branch (path, branch)
@@ -41,6 +55,9 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     msgs <- get_all_msgs (path)
     if (all (vapply (msgs, length, integer (1L)) == 0L)) {
         return ("This is not an 'srr' package")
+    }
+    if (pkg_in_subdir) {
+        msgs <- update_msg_paths (msgs, path, path_root)
     }
     std_txt <- get_stds_txt (msgs)
 
@@ -84,27 +101,36 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
             remote,
             tag,
             branch,
-            std_txt
+            std_txt,
+            path_root,
+            path
         )
         if (length (res) > 0) {
 
             dirs <- attr (res, "dirs")
             dirs [dirs == "."] <- "root"
+            dirs [dirs == ".."] <- "source manifest"
 
             md <- res
             res <- NULL
             for (d in unique (dirs)) {
 
+                dtxt <- ifelse (
+                    d == "source manifest",
+                    "directories",
+                    "directory"
+                )
+
                 res <- c (
                     res,
                     "",
-                    paste0 ("### ", d, " directory"),
+                    paste0 ("### ", d, " ", dtxt),
                     "",
                     unlist (md [which (dirs == d)])
                 )
             }
 
-            txt <- tolower (gsub ("srrstats", "", tag))
+            txt <- tolower (gsub ("srrstats", "", tag, fixed = TRUE))
             if (!nzchar (txt)) {
                 txt <- "srr"
             }
@@ -149,7 +175,7 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
     })
     md_lines <- unlist (md_lines)
 
-    desc <- data.frame (read.dcf (file.path (path, "DESCRIPTION")))
+    desc <- data.frame (read.dcf (fs::path (path, "DESCRIPTION")))
     pkg <- desc$Package
 
     if (is.null (remote)) {
@@ -173,23 +199,24 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
         ),
         "",
         cat_check,
+        stds_threshold_report (path),
+        std_txt_change_report (msgs, std_txt),
         "",
         add_missing_stds (md_lines, std_txt),
         md_lines
     )
 
-    f <- tempfile (fileext = ".Rmd")
+    f <- fs::file_temp (ext = "Rmd")
     # need explicit line break to html render
     writeLines (paste0 (md_lines, "\n"), con = f)
     out <- paste0 (tools::file_path_sans_ext (f), ".html")
     rmarkdown::render (input = f, output_file = out)
-    if (nzchar (cat_check)) {
+
+    err_sym <- "\\:heavy\\_multiplication\\_x\\:"
+    has_errs <- any (grepl (err_sym, md_lines))
+    if (has_errs) {
         # sub markdown fail X for cat_check with HTML
-        md <- gsub (
-            "\\:heavy\\_multiplication\\_x\\:",
-            "&#10060;",
-            readLines (out)
-        )
+        md <- gsub (err_sym, "&#10060;", readLines (out))
         writeLines (md, out)
     }
 
@@ -205,39 +232,50 @@ srr_report <- function (path = ".", branch = "", view = TRUE) {
 
 get_all_msgs <- function (path = ".") {
 
-    flist <- normalizePath (list.files (file.path (path, "R"),
-        full.names = TRUE,
-        pattern = "\\.(r|R|q|s|S)$"
-    ))
-
-    pkg_name <- paste0 ("package:", pkg_name_from_desc (path))
-    if (!pkg_name %in% search ()) {
-        pkgload::load_all (path)
-    }
-    pkg_env <- as.environment (pkg_name)
-
+    # Roxygen method of initialy gathering all blocks in "./R":
+    flist <- fs::dir_ls (fs::path (path, "R"))
     blocks <- lapply (flist, function (i) {
-        try (roxygen2::parse_file (i, env = pkg_env))
+        tryCatch (
+            roxygen2::parse_file (i, env = NULL),
+            error = function (e) NULL
+        )
     })
+    names (blocks) <- flist
+    blocks <- collect_blocks (do.call (c, blocks), path)
 
-    failing <- flist [sapply (blocks, inherits, "try-error")]
+    index <- vapply (blocks, function (b) {
+        inherits (b, "try-error")
+    }, logical (1L))
+    failing <- flist [which (index)]
     if (length (failing) > 0L) {
-        stop ("parsing problem in: ", paste (failing, collapse = ", "))
+        stop ("parsing problem in: ", paste (failing, collapse = ","))
     }
 
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-
-    blocks <- collect_blocks (blocks, path)
-
-    msgs <- collect_one_tag (path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (path, blocks, tag = i)
+    )
+    msgs <- res [[1]]$message
+    std_num <- res [[1]]$std_num
+    std_txt <- res [[1]]$std_txt
+    msgs_na <- res [[2]]$message
+    std_num_na <- res [[2]]$std_num
+    std_txt_na <- res [[2]]$std_txt
+    msgs_todo <- res [[3]]$message
+    std_num_todo <- res [[3]]$std_num
+    std_txt_todo <- res [[3]]$std_txt
 
     list (
         msgs = msgs,
         msgs_na = msgs_na,
-        msgs_todo = msgs_todo
+        msgs_todo = msgs_todo,
+        std_num = std_num,
+        std_txt = std_txt,
+        std_num_na = std_num_na,
+        std_txt_na = std_txt_na,
+        std_num_todo = std_num_todo,
+        std_txt_todo = std_txt_todo
     )
 }
 
@@ -263,7 +301,7 @@ get_stds_txt <- function (msgs) {
     s <- get_standards_checklists (cats)
     ptn <- "^\\s?\\-\\s\\[\\s\\]\\s\\*\\*"
     s <- gsub (ptn, "", grep (ptn, s, value = TRUE))
-    g <- regexpr ("\\*\\*", s)
+    g <- regexpr ("**", s, fixed = TRUE)
     std_nums <- substring (s, 1, g - 1)
     std_txt <- gsub (
         "^\\*|\\*$", "",
@@ -282,16 +320,31 @@ get_stds_txt <- function (msgs) {
 #' lines
 #' @param m List of all messages, divided into the 3 categories of tags
 #' @param std_txt Result of 'get_stds_txt' function
+#' @param path_root Git root of repository
+#' @param path Directory of R package. This and the preceding `path_root`
+#' parameter are only needed for packages in sub-directories which include
+#' standards in other locations specified by "source_manifest" files. The
+#' actual "msgs" passed as `m` here then have all paths relative to the Git
+#' root, so that hyperlinks in report work. But the markdown versions of tags
+#' produced here have to be grouped by "dirs" relative to the R package
+#' directory. Those two parameters are only used to diagnose these cases, and
+#' update paths relative to R package, just so that grouping by directories
+#' works as expected.
+#'
 #' @noRd
-one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
+one_tag_to_markdown <- function (m, remote, tag, branch, std_txt, path_root, path) {
 
     i <- match (tag, c ("srrstats", "srrstatsNA", "srrstatsTODO"))
     tag <- c ("msgs", "msgs_na", "msgs_todo") [i]
     m <- m [[tag]]
 
     files <- gsub ("^.*of file\\s\\[|\\]$", "", unlist (m))
+    if (path_root != path) {
+        files_full <- fs::path (path_root, files)
+        files <- fs::path_rel (files_full, path)
+    }
     dirs <- vapply (
-        strsplit (files, .Platform$file.sep),
+        fs::path_split (files),
         function (i) i [1],
         character (1)
     )
@@ -317,10 +370,10 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt) {
 #' @noRd
 one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
-    g <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", m)
+    g <- gregexpr (stds_regex ("id"), m)
 
     stds <- regmatches (m, g) [[1]]
-    stds_g <- sort (stds [grep ("^G", stds)])
+    stds_g <- sort (grep ("^G", stds, value = TRUE))
     stds_other <- sort (stds [!stds %in% stds_g])
     stds <- c (stds_g, stds_other)
 
@@ -333,7 +386,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     fn <- NA_character_
     if (grepl ("\\sfunction\\s", m)) {
         g <- gregexpr ("\\sfunction\\s+\\'.*\\'", m)
-        fn <- gsub ("^\\sfunction\\s+\\'|\\'$", "", regmatches (m, g) [[1]])
+        fn <- gsub ("^\\sfunction\\s+\\'|\\'$", " ", regmatches (m, g) [[1]])
     }
 
     g <- gregexpr ("file\\s+\\[.*\\]$", m)
@@ -341,7 +394,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
     if (!is.null (remote)) {
 
-        remote_file <- paste0 (remote, "/blob/", branch, "/", file_name)
+        remote_file <- file.path (remote, "blob", branch, file_name)
         if (!is.na (line_num)) {
             remote_file <- paste0 (remote_file, "#L", line_num)
         }
@@ -360,12 +413,12 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
         br_close <- "]"
     }
 
-    msg <- paste0 ("Standards in ")
+    msg <- paste0 ("Standards ")
     if (!is.na (fn)) {
-        msg <- paste0 (msg, "function '", fn, "'")
+        msg <- paste0 (msg, "in function '", fn, "'")
     }
     if (!is.na (line_num)) {
-        msg <- paste0 (msg, " on line#", line_num)
+        msg <- paste0 (msg, "on line#", line_num)
     }
     msg <- paste0 (msg, " of file ", br_open, file_name, br_close)
     if (!is.null (remote)) {
@@ -373,7 +426,7 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
     }
     msg <- paste0 (msg, ":")
 
-    return (paste0 (c (msg, stds), collapse = "\n"))
+    return (paste (c (msg, stds), collapse = "\n"))
 }
 
 #' Find any missing standards, first by getting all non-missing standards
@@ -388,11 +441,11 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 add_missing_stds <- function (md_lines, std_txt) {
 
     md_stds <- grep (
-        "^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+        paste0 ("^\\-\\s+", stds_regex ("id")),
         md_lines,
         value = TRUE
     )
-    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", md_stds)
+    g <- regexpr (paste0 ("^\\-\\s+", stds_regex ("id")), md_stds)
     md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
     missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
 
@@ -406,7 +459,7 @@ add_missing_stds <- function (md_lines, std_txt) {
         )
 
         cats <- get_categories (missing_stds)
-        for (i in seq (nrow (cats))) {
+        for (i in seq_len (nrow (cats))) {
 
             stds_i <- grep (
                 paste0 ("^", cats$std_prefix [i]),
@@ -422,7 +475,7 @@ add_missing_stds <- function (md_lines, std_txt) {
                     " standards:"
                 ),
                 "",
-                paste0 (stds_i, collapse = ", "),
+                paste (stds_i, collapse = ","),
                 ""
             )
         }
@@ -448,17 +501,72 @@ check_num_categories <- function (std_codes) {
 
     if (length (std_cats) < 2) {
 
-        if (!"G" %in% std_cats) {
-            ret <- "Error: No general standards have been documented."
-        } else {
+        ret <- ":heavy_multiplication_x: Error: "
+        if ("G" %in% std_cats) {
             ret <- paste0 (
-                ":heavy_multiplication_x: Error: ",
-                "Package documents compliance only with general standards.",
+                ret,
+                "Package documents compliance only with general standards. ",
                 "Statistical packages must document compliance with at least ",
                 "one set of category-specific standards as well."
             )
+        } else {
+            ret <- paste0 (ret, "No general standards have been documented.")
         }
     }
 
     return (ret)
+}
+
+std_txt_change_report <- function (msgs, std_txt_src,
+                                   change_threshold = 0.5) {
+
+    ret <- NULL
+    txt_change <- std_txt_change (msgs, std_txt_src) # in R/roclet-checks.R
+    if (txt_change > change_threshold) {
+        ret <- paste0 (
+            ":heavy_multiplication_x: Error: ",
+            "Text of standards should document how package ",
+            "complies, not just copy original standards text."
+        )
+    }
+    return (ret)
+}
+
+stds_threshold_report <- function (path) {
+
+    stds_in_code <- tryCatch (
+        get_stds_from_code (path),
+        error = function (e) e
+    )
+    if (methods::is (stds_in_code, "error")) {
+        return (NULL) # Error handling for that in pre_submit fn()
+    }
+
+    ret <- NULL
+    compliance_statement <- check_stds_threshold (stds_in_code)
+    sym <- ":heavy_multiplication_x: Error: "
+    if (length (compliance_statement) > 0L) {
+        ret <- paste0 (sym, compliance_statement)
+    }
+
+    return (ret)
+}
+
+update_msg_paths <- function (msgs, path, path_root) {
+
+    path_rel <- fs::path_rel (path, path_root)
+    msg_types <- grep ("^msgs", names (msgs), value = TRUE)
+    for (type in msg_types) {
+        msgs [[type]] <- lapply (msgs [[type]], function (m) {
+            g <- gregexpr ("file\\s+\\[.*\\]$", m)
+            file_name <- gsub ("file\\s+\\[|\\]$", "", regmatches (m, g) [[1]])
+            if (length (file_name) != 1L || !nzchar (file_name)) {
+                return (m)
+            }
+            file_name_abs <- fs::path_abs (fs::path (path, file_name))
+            file_name_rel <- fs::path_rel (file_name_abs, path_root)
+            gsub (file_name, file_name_rel, m, fixed = TRUE)
+        })
+    }
+    return (msgs)
 }

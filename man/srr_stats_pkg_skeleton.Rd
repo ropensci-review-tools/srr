@@ -25,13 +25,16 @@ of the \verb{@srrstats} tags within the code as identified by running those line
 \examples{
 d <- srr_stats_pkg_skeleton (pkg_name = "mystatspkg")
 # (capture.output of initial compliation messages)
+\donttest{
 x <- utils::capture.output (roxygen2::roxygenise (d), type = "output")
 }
+unlink (d, recursive = TRUE)
+}
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist_check}()},
-\code{\link{srr_stats_checklist}()},
-\code{\link{srr_stats_pre_submit}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist]{srr_stats_checklist()}},
+\code{\link[=srr_stats_checklist_check]{srr_stats_checklist_check()}},
+\code{\link[=srr_stats_pre_submit]{srr_stats_pre_submit()}}
 }
 \concept{helper}

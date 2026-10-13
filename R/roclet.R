@@ -1,4 +1,3 @@
-
 #' srr_stats_roclet
 #'
 #' Get values of all `srrstats` tags in function documentation
@@ -30,11 +29,14 @@ roclet_process.roclet_srr_stats <- function (x, blocks, env, base_path) { # noli
     blocks <- collect_blocks (blocks, base_path)
 
     # ------ @srrstats tags:
-    msgs <- collect_one_tag (base_path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (base_path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (base_path, blocks,
-        tag = "srrstatsTODO"
+    tags <- c ("srrstats", "srrstatsNA", "srrstatsTODO")
+    res <- lapply (
+        tags,
+        function (i) collect_one_tag (base_path, blocks, tag = i)
     )
+    msgs <- res [[1]]$message
+    msgs_na <- res [[2]]$message
+    msgs_todo <- res [[3]]$message
 
     num_stds <- function (m) {
         stds <- regmatches (m, gregexpr ("\\[(.*?)\\]", m))
@@ -90,17 +92,132 @@ collect_blocks <- function (blocks, base_path) {
     )
     rcpp_blocks <- blocks [which (rcpp)]
     blocks <- blocks [which (!rcpp)]
-    test_blocks <- get_test_blocks (base_path)
-    readme_blocks <- get_readme_blocks (base_path)
 
-    blocks <- list (
-        R = blocks,
-        src = rcpp_blocks,
+    extra_files <- get_extra_files (base_path)
+    blocks <- c (blocks, get_extra_blocks (extra_files))
+
+    file_paths <- vapply (blocks, function (i) {
+        fs::path_rel (i$file, base_path)
+    }, character (1), USE.NAMES = FALSE)
+    file_dirs <- vapply (
+        fs::path_split (file_paths),
+        function (f) f [1],
+        character (1L)
+    )
+
+    readme_blocks <- blocks [grep ("^README", file_dirs)]
+    test_blocks <- blocks [which (file_dirs == "tests")]
+    r_blocks <- blocks [which (file_dirs == "R")]
+    src_blocks <- blocks [which (file_dirs == "src")]
+    vignette_blocks <- blocks [which (file_dirs == "vignettes")]
+    inst_blocks <- blocks [which (file_dirs == "inst")]
+
+    blocks_out <- list (
+        R = r_blocks,
+        src = src_blocks,
         tests = test_blocks,
+        inst = inst_blocks,
+        vignettes = vignette_blocks,
         readme = readme_blocks
     )
 
+    manifest_blocks <- which (file_dirs == "..")
+    if (length (manifest_blocks) > 0L) {
+        blocks_out$manifest <- blocks [manifest_blocks]
+    }
+
+    return (blocks_out)
+}
+
+get_extra_files <- function (base_path) {
+
+    extra_dirs <- fs::path (base_path, c ("inst", "src", "tests", "vignettes"))
+    src_exts <- c ("c", "h", "hpp", "cpp", "rs")
+    r_exts <- c ("r", "rmd", "qmd")
+    exts <- list (c (src_exts, r_exts), src_exts, r_exts, c ("rmd", "qmd"))
+    index <- which (fs::dir_exists (extra_dirs))
+    extra_dirs <- extra_dirs [index]
+    exts <- exts [index]
+
+    manifest_dirs <- extra_manifest_paths (base_path)
+    extra_dirs <- c (extra_dirs, manifest_dirs)
+    exts <- c (exts, rep (list (src_exts), length (manifest_dirs)))
+    flist <- lapply (seq_along (extra_dirs), function (d) {
+        f_d <- fs::dir_ls (extra_dirs [d], recurse = TRUE, type = "file")
+        # Rm any "vendor" code:
+        is_vendored <- vapply (fs::path_split (f_d), function (i) {
+            any (grepl ("^vendor", i, ignore.case = TRUE))
+        }, logical (1L))
+        f_d <- f_d [which (!is_vendored)]
+        exts_d <- tolower (fs::path_ext (f_d))
+        f_d [which (exts_d %in% exts [[d]])]
+    })
+
+    readmes <- fs::dir_ls (
+        base_path,
+        regexp = "README\\.",
+        type = "file",
+        recurse = FALSE
+    )
+    if (length (readmes) > 1L) {
+        exts <- tolower (fs::path_ext (readmes))
+        readmes <- readmes [which (exts %in% c ("rmd", "qmd"))]
+    }
+
+    unname (unlist (c (flist, readmes)))
+}
+
+get_extra_blocks <- function (extra_files) {
+
+    blocks <- lapply (extra_files, function (f) {
+
+        this_file <- f
+        this_ext <- tolower (fs::path_ext (f))
+
+        do_parse <- TRUE
+        res <- NULL
+
+        if (this_ext != "r") {
+            if (this_ext %in% c ("c", "h", "hpp", "cpp")) {
+                this_ext <- "c"
+            }
+            parse_fn <- paste0 ("rcpp_parse_", this_ext)
+            do_parse <- parse_fn_exists (parse_fn)
+            if (do_parse) {
+                fout <- fs::file_temp ()
+                do.call (parse_fn, list (f, fout))
+                this_file <- fout
+            }
+        }
+
+        if (do_parse) {
+            res <- tryCatch (
+                roxygen2::parse_file (this_file, env = NULL),
+                error = function (e) NULL # ignore errors and do not parse
+            )
+            if (f != this_file) {
+                res <- lapply (res, function (i) {
+                    i$file <- f
+                    return (i)
+                })
+            }
+        }
+        return (res)
+    })
+
+    lens <- vapply (blocks, length, integer (1L))
+    blocks <- do.call (c, blocks)
+    if (length (blocks) > 0L) {
+        names (blocks) <- rep (extra_files, times = lens)
+    }
+
     return (blocks)
+}
+
+parse_fn_exists <- function (parse_fn) {
+
+    all_fns <- ls (asNamespace ("srr"), all.names = TRUE)
+    parse_fn %in% all_fns
 }
 
 get_verbose_flag <- function (blocks) {
@@ -135,59 +252,27 @@ get_verbose_flag <- function (blocks) {
     return (as.logical (flag))
 }
 
-get_readme_blocks <- function (base_path) {
+parse_one_msg_list <- function (block, tag, fn_name = TRUE, dir = "R") {
 
-    blocks <- NULL
-
-    f <- list.files (
-        base_path,
-        pattern = "readme\\.rmd$",
-        ignore.case = TRUE,
-        full.names = TRUE
-    )
-    if (length (f) != 1L) {
-        return (blocks)
-    }
-
-    if (file.exists (f)) {
-        f <- normalizePath (f)
-        fout <- tempfile ()
-        rcpp_parse_rmd (f, fout)
-        blocks <- tryCatch (
-            roxygen2::parse_file (fout, env = NULL),
-            error = function (e) e
-        )
-
-        if (methods::is (blocks, "error")) {
-
-            blocks <- NULL
-
-        } else {
-
-            blocks <- lapply (blocks, function (i) {
-                i$file <- f
-                return (i)    })
-        }
-    }
-
-    return (blocks)
-}
-
-parse_one_msg_list <- function (msgs, block, tag, fn_name = TRUE, dir = "R") {
+    msgs <- std_num <- std_txt <- list ()
 
     if (length (roxygen2::block_get_tags (block, tag)) > 0L) {
-        call_fn <- paste0 ("process_", tag, "_tags")
-        msgs <- c (
-            msgs,
-            do.call (call_fn, list (
-                block = block,
-                fn_name = fn_name,
-                dir = dir
-            ))
+        res <- process_srrstats_tags (
+            tag = tag,
+            block = block,
+            fn_name = fn_name,
+            dir = dir
         )
+        msgs <- res$message
+        std_num <- res$std_num
+        std_txt <- res$std_txt
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 print_one_msg_list <- function (msgs) {
@@ -198,21 +283,43 @@ print_one_msg_list <- function (msgs) {
 }
 
 # Collect all messages for one tag
-collect_one_tag <- function (base_path, blocks, test_blocks, rcpp_blocks,
-                             tag = "srrstats") {
+collect_one_tag <- function (base_path, blocks, tag = "srrstats") {
 
-    msgs <- list ()
-    for (block in blocks$R) {
-        msgs <- parse_one_msg_list (msgs, block, tag = tag, fn_name = TRUE)
-    }
-    msgs <- c (
-        msgs,
-        get_other_tags (blocks$tests, tag = tag, dir = "tests/testthat")
+    out <- list (
+        message = list (),
+        std_num = list (),
+        std_txt = list ()
     )
-    msgs <- c (msgs, get_src_tags (blocks$src, base_path, tag = tag))
-    msgs <- c (msgs, get_other_tags (blocks$readme, tag = tag, dir = "."))
 
-    return (msgs)
+    for (block in blocks$R) {
+        res <- parse_one_msg_list (block, tag = tag, fn_name = TRUE)
+        out$message <- c (out$message, res$message)
+        out$std_txt <- c (out$std_txt, res$std_txt)
+        out$std_num <- c (out$std_num, res$std_num)
+    }
+
+    blocks$manifest <- lapply (blocks$manifest, function (b) {
+        b$file <- fs::path_rel (b$file, base_path)
+        return (b)
+    })
+    blocks_dirs <- rbind (
+        c ("tests", "tests/testthat"),
+        c ("inst", "inst"),
+        c ("src", "src"),
+        c ("readme", "."),
+        c ("vignettes", "vignettes"),
+        c ("manifest", ".")
+    )
+    res_other <- apply (blocks_dirs, 1, function (b) {
+        get_other_tags (blocks [[b [1]]], tag = tag, dir = b [2])
+    })
+
+    for (what in c ("message", "std_txt", "std_num")) {
+        this <- unlist (lapply (res_other, function (i) i [[what]]))
+        out [[what]] <- c (out [[what]], this)
+    }
+
+    return (out)
 }
 
 
@@ -226,62 +333,109 @@ check_block_title <- function (block, tag) {
 
     block_title <- roxygen2::block_get_tag_value (block, "title")
     block_title <- ifelse (is.null (block_title), "", block_title)
-    if (grepl ("^NA\\_st", block_title)) {
-        stop (paste0 (
-            "An NA_standards block should only contain ",
-            "'@srrstatsNA' tags, and no '@",
-            tag, "' tags."
-        ))
+    if (tag != "srrstatsNA" && grepl ("^NA\\_st", block_title)) {
+        cli::cli_abort (
+            "An NA_standards block should only contain\\
+            '@srrstatsNA' tags, and no '@{tag}' tags."
+        )
+    } else if (tag == "srrstatsNA" & block_title != "NA_standards") {
+        cli::cli_abort (
+            "@srrstatsNA tags should only appear in \\
+            a block with a title of NA_standards"
+        )
+    }
+}
+
+get_fn_name_from_block <- function (block) {
+    func_name <- block$object$alias
+    if (is.null (func_name)) {
+        pd <- tryCatch (
+            utils::getParseData (parse (text = deparse (block$call))),
+            error = function (e) NULL
+        )
+        if (!is.null (pd)) {
+            if (nrow (pd) > 0L) {
+
+                pd <- pd [-(which (pd$token == "expr")), ]
+                if (nrow (pd) >= 3L) {
+                    if (pd$token [1] == "SYMBOL" &&
+                        pd$token [2] == "LEFT_ASSIGN" &&
+                        pd$token [3] == "FUNCTION") {
+                        func_name <- pd$text [1]
+                    }
+                }
+            }
+        }
     }
 
+    return (func_name)
 }
 
 #' process_srrstats_tags
 #'
 #' @param fn_name Include name of calling function in message?
 #' @noRd
-process_srrstats_tags <- function (block, fn_name = TRUE, dir = "R") {
+process_srrstats_tags <- function (tag = "srrstats", block,
+                                   fn_name = TRUE, dir = "R") {
 
-    func_name <- block$object$alias
+    check_block_title (block, tag)
 
-    check_block_title (block, "srrstats")
-
-    standards <- roxygen2::block_get_tags (block, "srrstats")
+    standards <- roxygen2::block_get_tags (block, tag)
     standards <- unlist (lapply (standards, function (i) i$val))
+    snum <- extract_standard_numbers (standards, block)
 
-    snum <- extract_standard_numbers (standards)
-    if (length (snum) < 1) {
-        stop ("srrstats tags found but no correctly-formatted standard numbers")
-    }
+    standards_txt <- vapply (seq_along (snum), function (i) {
+        gsub (paste0 ("^.*", snum [i], "\\}"), "", standards [i])
+    }, character (1L))
+    standards_txt <- gsub ("^\\s+", "", standards_txt)
 
     block_backref <- get_block_backref (block)
     block_line <- block$line
 
-    msg <- paste0 ("[", paste0 (snum, collapse = ", "), "]")
-    if (fn_name && !is.null (func_name)) {
-        msg <- paste0 (msg, " in function '", func_name, "()'")
+    msg <- paste0 ("[", paste (snum, collapse = ", "), "]")
+    if (fn_name) {
+        func_name <- get_fn_name_from_block (block)
+        if (!is.null (func_name)) {
+            msg <- paste0 (msg, " in function '", func_name, "()'")
+        }
     }
-    msg <- paste0 (
-        msg, " on line#", block_line,
-        " of file [",
-        file.path (dir, basename (block_backref)), "]"
+
+    fpath <- fs::path_split (block$file) [[1]]
+    dir_sp <- fs::path_split (dir) [[1]]
+    if (all (dir_sp %in% fpath)) {
+        index <- seq (min (match (dir_sp, fpath)), length (fpath))
+        fpath <- do.call (fs::path, as.list (fpath [index]))
+
+        msg <- paste0 (
+            msg, " on line#", block_line,
+            " of file [",
+            fpath,
+            "]"
+        )
+    }
+
+    res <- list (
+        message = msg,
+        std_num = snum,
+        std_txt = standards_txt
     )
 
-    return (msg)
+    return (res)
 }
+
 
 # extract the actual standards numbers from arbitrary text strings, first
 # capturing everything inside first "[...]":
-extract_standard_numbers <- function (standards) {
+extract_standard_numbers <- function (standards, block) {
 
     # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
     # muck up standards ID, so have to be removed here:
-    g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
+    g <- gregexpr (stds_regex ("id_strong"), standards)
     m <- lapply (regmatches (standards, g), function (i) {
-        res <- paste0 (i, collapse = "|")
+        res <- paste (i, collapse = "|")
         res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
-        res <- gsub ("\\{", "\\\\{", res)
-        return (gsub ("\\}", "\\\\}", res))
+        res <- gsub ("{", "\\{", res, fixed = TRUE)
+        return (gsub ("}", "\\}", res, fixed = TRUE))
     })
     for (i in seq_along (m)) {
         standards [i] <- gsub (m [[i]], "", standards [i])
@@ -289,72 +443,18 @@ extract_standard_numbers <- function (standards) {
 
     # These use regexpr and not gregexpr to only match first '{...}' while
     # ignoring all subsequent ones
-    g_open <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", standards)
-    g_close <- regexpr ("[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
+    g_open <- regexpr (paste0 ("\\{", stds_regex ("id")), standards)
+    g_close <- regexpr (paste0 (stds_regex ("id"), "\\}"), standards)
     g_close <- g_close + attr (g_close, "match.length") - 1
     standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
     standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))
-
-    return (standards)
-}
-
-#' process_srrstats_NA_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsNA_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    block_title <- roxygen2::block_get_tag_value (block, "title")
-    block_title <- ifelse (length (block_title) == 0L, "", block_title)
-    if (!block_title == "NA_standards") {
-        stop (
-            "@srrstatsNA tags should only appear in ",
-            "a block with a title of NA_standards"
+    if (length (standards) < 1) {
+        cli::cli_abort (
+            "srrstats tags in {block$file} line {block$line} have incorrectly-formatted standard numbers"
         )
     }
 
-    standards <- roxygen2::block_get_tags (block, "srrstatsNA")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    snum <- extract_standard_numbers (standards)
-    # standards <- gsub ("\\s.*$", "", standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        file.path (dir, basename (block_backref)), "]"
-    )
-
-    return (msg)
-}
-
-#' process_srrstats_TODO_tags
-#'
-#' @param fn_name Just a dummy here to allow do.call
-#' @noRd
-process_srrstatsTODO_tags <- function (block, fn_name = TRUE, dir = "R") { # nolint
-
-    check_block_title (block, "srrstatsTODO")
-
-    standards <- roxygen2::block_get_tags (block, "srrstatsTODO")
-    standards <- unlist (lapply (standards, function (i) i$val))
-    # standards <- gsub ("\\s.*$", "", standards)
-    snum <- extract_standard_numbers (standards)
-
-    block_backref <- get_block_backref (block)
-    block_line <- block$line
-
-    msg <- paste0 (
-        "[", paste0 (snum, collapse = ", "),
-        "] on line#", block_line,
-        " of file [",
-        file.path (dir, basename (block_backref)), "]"
-    )
-
-    return (msg)
+    return (standards)
 }
 
 get_block_backref <- function (block, base_path = NULL) {
@@ -373,114 +473,37 @@ get_block_backref <- function (block, base_path = NULL) {
     return (block_backref)
 }
 
-get_src_tags <- function (blocks, base_path, tag = "srrstats") {
-
-    n <- vapply (
-        blocks, function (i) {
-            length (roxygen2::block_get_tags (i, tag))
-        },
-        integer (1)
-    )
-    blocks <- blocks [which (n > 0)]
-
-    msgs <- list ()
-
-    src_files <- list.files (file.path (base_path, "src"),
-        pattern = "\\.cpp$|\\.hpp$|.h$",
-        full.names = TRUE
-    )
-    src_files <- src_files [-grep ("RcppExports.cpp", src_files)]
-
-    for (block in blocks) { # usually only 1 block for "RcppExports.R"
-
-        block_tags <- roxygen2::block_get_tags (block, tag)
-
-        for (tag in block_tags) {
-
-            tag_txt <- paste0 (tag$tag, "\\s+", tag$val)
-            tag_txt <- gsub ("\\{", "\\\\{", tag_txt)
-            tag_txt <- gsub ("\\}", "\\\\}", tag_txt)
-            which_file <- vapply (
-                src_files, function (f) {
-                    any (grepl (tag_txt, readLines (f)))
-                },
-                logical (1)
-            )
-            this_src <- src_files [which (which_file)]
-            if (length (this_src) > 1) {
-                this_src <- grep ("\\.cpp", this_src, value = TRUE)
-            }
-
-            src_lines <- readLines (this_src)
-            line_num <- grep (tag_txt, src_lines)
-            roxy_lines <- grep ("\\/\\/\\'", src_lines)
-            index <- cumsum (c (FALSE, diff (roxy_lines) > 1))
-            roxy_lines <- split (roxy_lines, index)
-            this_group <- which (vapply (
-                roxy_lines, function (i) {
-                    line_num %in% i
-                },
-                logical (1)
-            ))
-            roxy_lines <- roxy_lines [[this_group]]
-
-            src_lines <- src_lines [(max (roxy_lines) + 1):length (src_lines)]
-            while (src_lines [1] == "" ||
-                grepl ("Rcpp::export", src_lines [1])) {
-                src_lines <- src_lines [-1]
-            }
-            this_fn <- strsplit (src_lines [1], "\\s") [[1]] [2]
-
-            snum <- extract_standard_numbers (tag$val)
-
-            this_src <- file.path ("src", basename (this_src))
-            msgs <- c (msgs, paste0 (
-                "[", paste0 (snum, collapse = ", "),
-                "] in function '", this_fn,
-                "()' on line#", line_num, " of file [",
-                file.path ("src", basename (this_src)),
-                "]"
-            ))
-
-        } # end for tag in block_tags
-    } # end for block in blocks
-
-    return (msgs)
-}
-
-get_test_blocks <- function (base_path) {
-
-
-    flist <- list.files (file.path (base_path, "tests"),
-        pattern = "\\.R$",
-        recursive = TRUE,
-        full.names = TRUE
-    )
-
-    blocks <- lapply (flist, function (i) roxygen2::parse_file (i, env = NULL))
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-
-    return (blocks)
-}
-
 get_other_tags <- function (blocks, tag = "srrstats", dir = "tests") {
 
-    msgs <- list ()
+    msgs <- std_num <- std_txt <- list ()
 
     for (block in blocks) {
 
-        msgs <- parse_one_msg_list (
-            msgs,
+        if (dir != ".") {
+            this_dir <- dir
+        } else if (fs::path_split (block$file) [[1]] [1] == "..") {
+            # Manifest directories that lie elsewhere, so give full path
+            this_dir <- block$file
+        } else {
+            this_dir <- fs::path_file (block$file)
+        }
+
+        res <- parse_one_msg_list (
             block,
             tag = tag,
             fn_name = FALSE,
-            dir = dir
+            dir = this_dir
         )
-
+        msgs <- c (msgs, res$message)
+        std_num <- c (std_num, res$std_num)
+        std_txt <- c (std_txt, res$std_txt)
     }
 
-    return (msgs)
+    list (
+        message = msgs,
+        std_num = std_num,
+        std_txt = std_txt
+    )
 }
 
 #' @importFrom roxygen2 roclet_output

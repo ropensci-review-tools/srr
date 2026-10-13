@@ -1,20 +1,29 @@
 {
-  "@context": [
-    "https://doi.org/10.5063/schema/codemeta-2.0",
-    "http://schema.org"
-  ],
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
   "identifier": "srr",
-  "description": "Companion package to 'rOpenSci' statistical software review\n    project.",
-  "name": "srr: 'rOpenSci' Review Roclets",
+  "description": "Companion package to 'rOpenSci' statistical software review project ('rOpenSci' authors, 2021; <doi:10.5281/zenodo.5556756>), to facilitate documenting software compliance with statistical standards using 'Roxygen2' 'roclets'.",
+  "name": "srr: 'rOpenSci' Software Review 'Roclets'",
+  "relatedLink": [
+    "https://docs.ropensci.org/srr/",
+    "https://CRAN.R-project.org/package=srr"
+  ],
+  "codeRepository": "https://github.com/ropensci-review-tools/srr",
+  "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.1.192",
+  "version": "1.0.0.008",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.1.2 (2021-11-01)",
+  "runtimePlatform": "R version 4.6.1 (2026-06-24)",
+  "provider": {
+    "@id": "https://cran.r-project.org",
+    "@type": "Organization",
+    "name": "Comprehensive R Archive Network (CRAN)",
+    "url": "https://cran.r-project.org"
+  },
   "author": [
     {
       "@type": "Person",
@@ -24,9 +33,6 @@
       "@id": "https://orcid.org/0000-0003-2172-5265"
     }
   ],
-  "contributor": {},
-  "copyrightHolder": {},
-  "funder": {},
   "maintainer": [
     {
       "@type": "Person",
@@ -39,15 +45,15 @@
   "softwareSuggestions": [
     {
       "@type": "SoftwareApplication",
-      "identifier": "fs",
-      "name": "fs",
+      "identifier": "jsonlite",
+      "name": "jsonlite",
       "provider": {
         "@id": "https://cran.r-project.org",
         "@type": "Organization",
         "name": "Comprehensive R Archive Network (CRAN)",
         "url": "https://cran.r-project.org"
       },
-      "sameAs": "https://CRAN.R-project.org/package=fs"
+      "sameAs": "https://CRAN.R-project.org/package=jsonlite"
     },
     {
       "@type": "SoftwareApplication",
@@ -97,10 +103,22 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "toml",
+      "name": "toml",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=toml"
     }
   ],
-  "softwareRequirements": [
-    {
+  "softwareRequirements": {
+    "1": {
       "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
@@ -112,7 +130,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=cli"
     },
-    {
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "clipr",
       "name": "clipr",
@@ -124,7 +142,19 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=clipr"
     },
-    {
+    "3": {
+      "@type": "SoftwareApplication",
+      "identifier": "fs",
+      "name": "fs",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=fs"
+    },
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "gert",
       "name": "gert",
@@ -136,7 +166,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=gert"
     },
-    {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "here",
       "name": "here",
@@ -148,24 +178,12 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=here"
     },
-    {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "methods",
       "name": "methods"
     },
-    {
-      "@type": "SoftwareApplication",
-      "identifier": "pkgload",
-      "name": "pkgload",
-      "provider": {
-        "@id": "https://cran.r-project.org",
-        "@type": "Organization",
-        "name": "Comprehensive R Archive Network (CRAN)",
-        "url": "https://cran.r-project.org"
-      },
-      "sameAs": "https://CRAN.R-project.org/package=pkgload"
-    },
-    {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "Rcpp",
       "name": "Rcpp",
@@ -177,7 +195,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=Rcpp"
     },
-    {
+    "8": {
       "@type": "SoftwareApplication",
       "identifier": "roxygen2",
       "name": "roxygen2",
@@ -188,38 +206,32 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=roxygen2"
-    }
-  ],
-  "codeRepository": "https://github.com/ropensci-review-tools/srr",
-  "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
-  "fileSize": "1567.06KB",
-  "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
-  "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
-    "https://codecov.io/gh/ropensci-review-tools/srr"
-  ],
-  "developmentStatus": "https://www.repostatus.org/#concept",
-  "provider": {
-    "@id": "https://cran.r-project.org",
-    "@type": "Organization",
-    "name": "Comprehensive R Archive Network (CRAN)",
-    "url": "https://cran.r-project.org"
+    },
+    "9": {
+      "@type": "SoftwareApplication",
+      "identifier": "rprojroot",
+      "name": "rprojroot",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=rprojroot"
+    },
+    "SystemRequirements": {}
   },
-  "relatedLink": "https://docs.ropensci.org/srr/",
-  "citation": [
-    {
-      "@type": "SoftwareSourceCode",
-      "datePublished": "2021",
-      "author": [
-        {
-          "@type": "Person",
-          "givenName": "Mark",
-          "familyName": "Padgham"
-        }
-      ],
-      "name": "srr",
-      "url": "https://github.com/ropensci-review-tools/srr",
-      "description": "R package version 0.0.1"
-    }
+  "fileSize": "2495.532KB",
+  "releaseNotes": "https://github.com/ropensci-review-tools/srr/blob/main/NEWS.md",
+  "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
+  "contIntegration": [
+    "https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml",
+    "https://app.codecov.io/gh/ropensci-review-tools/srr"
+  ],
+  "developmentStatus": "https://www.repostatus.org/#active",
+  "keywords": [
+    "compliance-automation",
+    "r",
+    "statistical-software"
   ]
 }

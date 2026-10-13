@@ -1,25 +1,23 @@
-
-
 test_that ("download standards", {
 
     Sys.setenv ("CLIPR_ALLOW" = TRUE)
     Sys.setenv ("NOCLIPR" = TRUE)
 
-    filename <- tempfile (fileext = ".md")
-    expect_false (file.exists (filename))
+    filename <- fs::file_temp (ext = "md")
+    expect_false (fs::file_exists (filename))
     expect_message (
         s <- srr_stats_checklist (c ("regression", "ml"),
             filename = filename
         )
     )
-    expect_true (file.exists (filename))
+    expect_true (fs::file_exists (filename))
 
     expect_type (s, "character")
-    expect_true (length (s) > 100)
-    expect_true (grepl ("General Standards", s [1]))
+    expect_gt (length (s), 100)
+    expect_true (grepl ("General Standards", s [1], fixed = TRUE))
     txt <- "Regression and Supervised Learning Standards"
     expect_true (any (grepl (txt, s)))
-    expect_true (any (grepl ("Machine Learning Standards", s)))
+    expect_true (any (grepl ("Machine Learning Standards", s, fixed = TRUE)))
 
     expect_identical (s, readLines (filename))
 
@@ -36,7 +34,7 @@ test_that ("download standards", {
         srr_stats_checklist_check (),
         "argument \"file\" is missing"
     )
-    tf <- tempfile (fileext = ".txt")
+    tf <- fs::file_temp (ext = ".txt")
     writeLines ("blah", con = tf)
     expect_error (
         srr_stats_checklist_check (tf),
@@ -45,8 +43,8 @@ test_that ("download standards", {
 
     # modify start of standard: by changing one bold markdown format
     # to single "*":
-    i <- grep ("\\*\\*G", s2) [1]
-    s2 [i] <- gsub ("\\*\\*G", "\\*G", s2 [i])
+    i <- grep ("**G", s2, fixed = TRUE) [1]
+    s2 [i] <- gsub ("**G", "*G", s2 [i], fixed = TRUE)
     writeLines (s2, filename)
     x <- utils::capture.output (
         s3 <- srr_stats_checklist_check (filename),
@@ -55,10 +53,10 @@ test_that ("download standards", {
     txt <- "file contained incorrect formatting and has been modified"
     expect_true (any (grep (txt, x)))
     expect_true (s3 [i] != s2 [i]) # file has been fixed
-    expect_true (grepl ("\\*\\*G", s3 [i]))
+    expect_true (grepl ("**G", s3 [i], fixed = TRUE))
 
     # modify end of standard
-    i <- grep ("\\*\\*G", s2) [2]
+    i <- grep ("**G", s2, fixed = TRUE) [2]
     j <- regexpr ("[0-9]\\*\\*", s2 [i])
     num <- substring (s2 [i], j, j)
     s2 [i] <- gsub (

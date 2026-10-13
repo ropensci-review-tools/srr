@@ -1,14 +1,15 @@
-
 #' Check a completed standards checklist
 #'
 #' Correct any potential formatting issues in a completed standards checklist
 #'
 #' @param file Name of local file containing a completed checklist. Must be a
 #' markdown document in `.md` format, not `.Rmd` or anything else.
+#' @return (Invisibly) A character vector of markdown-formatted lines
+#' containing the entire checklist of the specified file.
 #' @family helper
 #' @examples
-#' \dontrun{
 #' f <- tempfile (fileext = ".md")
+#' \dontrun{
 #' srr_stats_checklist (category = "regression", filename = f)
 #' chk <- srr_stats_checklist_check (f)
 #' }
@@ -17,9 +18,13 @@ srr_stats_checklist_check <- function (file) {
 
     x <- checklist_check_intern (file)
 
-    cli::cli_alert_info ("Checklist copied to clipboard")
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
-        clipr::write_clip (x)
+    if (interactive () && Sys.getenv ("NOCLIPR") != "TRUE") {
+        # These lines still run i nexamples, so need 'allow_' in actual call.
+        cli::cli_alert_info ("Checklist copied to clipboard")
+        tryCatch (
+            clipr::write_clip (x, allow_non_interactive = TRUE),
+            error = function (e) NULL
+        )
     }
 
     invisible (x)
@@ -27,11 +32,11 @@ srr_stats_checklist_check <- function (file) {
 
 checklist_check_intern <- function (file) {
 
-    if (!file.exists (file)) {
+    if (!fs::file_exists (file)) {
         stop ("File [", file, "] does not exist")
     }
 
-    if (!tools::file_ext (file) == "md") {
+    if (tools::file_ext (file) != "md") {
         stop ("file must be in '.md' format")
     }
 
@@ -42,14 +47,14 @@ checklist_check_intern <- function (file) {
     x <- fix_nas (x, sym = "*")
     x <- fix_nas (x, sym = "_")
 
-    if (!identical (x0, x)) {
+    if (identical (x0, x)) {
+        cli::cli_alert_success ("No formatting issues found in file")
+    } else {
         cli::cli_alert (paste0 (
             "file contained incorrect ",
             "formatting and has been modified"
         ))
         writeLines (x, file)
-    } else {
-        cli::cli_alert_success ("No formatting issues found in file")
     }
 
     return (x)
@@ -61,7 +66,7 @@ checklist_check_intern <- function (file) {
 rebalance_bold <- function (x) {
 
     fix_start <- function (x, sym = "*") {
-        regex <- paste0 ("\\s\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\", sym)
+        regex <- paste0 ("\\s\\", sym, stds_regex ("id"), "\\", sym)
 
         n <- regexpr (regex, x)
         if (any (n > 0)) {
@@ -76,7 +81,7 @@ rebalance_bold <- function (x) {
     }
 
     fix_end <- function (x, sym = "*") {
-        regex <- paste0 ("\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\", sym, "\\s")
+        regex <- paste0 ("\\", sym, stds_regex ("id"), "\\", sym, "\\s")
         n <- regexpr (regex, x)
         len <- attr (n, "match.length")
         if (any (n > 0)) {
@@ -109,7 +114,7 @@ rebalance_bold <- function (x) {
 fix_sequences <- function (x, sym = "*") {
 
     # Add any missing symbols before dashes:
-    regex <- paste0 ("\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\p{Pd}")
+    regex <- paste0 ("\\", sym, stds_regex ("id"), "\\p{Pd}")
     n <- regexpr (regex, x, perl = TRUE)
     len <- attr (n, "match.length")
     if (any (n > 0)) {
@@ -123,7 +128,7 @@ fix_sequences <- function (x, sym = "*") {
     }
 
     # And missing symbols after dashes before standard identifier:
-    regex <- paste0 ("\\p{Pd}[A-Z]+[0-9]+\\.[0-9]+")
+    regex <- paste0 ("\\p{Pd}", stds_regex ("id"))
     n <- regexpr (regex, x, perl = TRUE)
     len <- attr (n, "match.length")
     if (any (n > 0)) {

@@ -18,8 +18,8 @@ each of which is ultimately formatted into a sub-section of the standards.}
 \item{filename}{Name of 'R' source file in which to write
 \pkg{roxygen2}-formatted lists of standards.}
 
-\item{overwrite}{If \code{FALSE} (default) and \code{filename} already exists, a dialog
-will ask whether file should be overwritten.}
+\item{overwrite}{If \code{FALSE} (default) and \code{filename} already exists, a
+dialogue will ask whether file should be overwritten.}
 }
 \value{
 Nothing
@@ -30,12 +30,12 @@ category-specific standards, as a checklist, convert to project-specific
 \pkg{roxygen2} format, and save in nominated file.
 }
 \examples{
-\dontrun{
 path <- srr_stats_pkg_skeleton ()
 # contains a few standards; insert all with:
 f <- file.path (path, "R", "srr-stats-standards.R")
 file.exists (f)
 length (readLines (f)) # only 14 lines
+\donttest{
 srr_stats_roxygen (
     category = "regression",
     file = f,
@@ -43,9 +43,10 @@ srr_stats_roxygen (
 )
 length (readLines (f)) # now much longer
 }
+unlink (path, recursive = TRUE)
 }
 \seealso{
-Other roxygen: 
-\code{\link{srr_stats_roclet}()}
+Other roxygen:
+\code{\link[=srr_stats_roclet]{srr_stats_roclet()}}
 }
 \concept{roxygen}

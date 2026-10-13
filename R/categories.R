@@ -13,9 +13,7 @@
 srr_stats_categories <- function () {
 
     cats <- std_prefixes ()
-    cat_full <- unlist (lapply (cats$category, function (i) {
-        category_titles_urls (i)
-    }))
+    cat_full <- unlist (lapply (cats$category, category_titles_urls))
 
     version <- stds_version ()
 
@@ -25,8 +23,7 @@ srr_stats_categories <- function () {
         category = cats$category,
         std_prefix = cats$prefix,
         title = cat_full [index - 1],
-        url = cat_full [index],
-        stringsAsFactors = FALSE
+        url = cat_full [index]
     )
 
     attr (res, "stds_version") <- version
@@ -74,10 +71,10 @@ get_categories <- function (stds) {
     ))
 
     all_cats <- srr_stats_categories ()
-    if (any (!categories %in% all_cats$std_prefix)) {
+    if (!all (categories %in% all_cats$std_prefix)) {
         stop ("There are no standards with prefix [",
-            paste0 (categories [which (!categories %in% all_cats$std_prefix)],
-                collapse = ", "
+            paste (categories [which (!categories %in% all_cats$std_prefix)],
+                collapse = ","
             ),
             "]",
             call. = FALSE
@@ -104,7 +101,7 @@ get_standard_nums <- function (category) {
     # remove first checkbox bits:
     s <- gsub ("^\\-\\s+\\[\\s\\]\\s\\*\\*", "", s)
     # then extract standard numbers only
-    m <- gregexpr ("^[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", s)
+    m <- gregexpr (paste0 ("^", stds_regex ("id")), s)
     s <- unlist (regmatches (s, m))
 
     return (s)
@@ -127,7 +124,6 @@ std_prefixes <- function () {
 
     return (data.frame (
         category = cats,
-        prefix = prefixes,
-        stringsAsFactors = FALSE
+        prefix = prefixes
     ))
 }

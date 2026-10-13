@@ -1,4 +1,3 @@
-
 repo_is_git <- function (path) {
 
     g <- tryCatch (
@@ -13,10 +12,10 @@ get_git_remote <- function (path = ".") {
 
     r <- NULL
 
-    if (!any (grepl ("^\\.git$", list.files (path, all.files = TRUE)))) {
+    if (fs::dir_exists (fs::path (path, ".git"))) {
 
-        desc <- file.path (path, "DESCRIPTION")
-        if (!file.exists (desc)) {
+        desc <- fs::path (path, "DESCRIPTION")
+        if (!fs::file_exists (desc)) {
             return (NULL)
         }
 
@@ -25,13 +24,18 @@ get_git_remote <- function (path = ".") {
             return (NULL)
         }
 
-        r <- strsplit (d$URL, "\\s+") [[1]]
+        r <- strsplit (d$URL, ",?\\s+?") [[1]]
         r <- grep ("^https", r, value = TRUE)
         if (length (r) > 1) {
-            r <- grep ("git", r, value = TRUE)
+            r <- grep ("git", r, value = TRUE, fixed = TRUE)
         }
         if (length (r) > 1) {
-            r <- r [which (!grepl ("\\.io", r))]
+            r <- r [which (!grepl (".io", r, fixed = TRUE))]
+        }
+        if (grepl (".io", r, fixed = TRUE) && "BugReports" %in% names (d)) {
+            r <- strsplit (d$BugReports, ",?\\s+?") [[1]]
+            r <- grep ("github.com", r, value = TRUE, fixed = TRUE)
+            r <- gsub ("\\/issues$", "", r)
         }
 
     } else if (repo_is_git (path)) {
@@ -55,6 +59,9 @@ get_git_branch <- function (path, branch = "") {
 
     if (!repo_is_git (path)) {
         return (NULL)
+    }
+    if (is.null (branch)) {
+        branch <- ""
     }
 
     g <- gert::git_info (path)

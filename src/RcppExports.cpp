@@ -10,6 +10,17 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// rcpp_parse_c
+void rcpp_parse_c(const std::string filename, const std::string tempfile);
+RcppExport SEXP _srr_rcpp_parse_c(SEXP filenameSEXP, SEXP tempfileSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type tempfile(tempfileSEXP);
+    rcpp_parse_c(filename, tempfile);
+    return R_NilValue;
+END_RCPP
+}
 // rcpp_parse_rmd
 void rcpp_parse_rmd(const std::string filename, const std::string tempfile);
 RcppExport SEXP _srr_rcpp_parse_rmd(SEXP filenameSEXP, SEXP tempfileSEXP) {
@@ -21,9 +32,22 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// rcpp_parse_rs
+void rcpp_parse_rs(const std::string filename, const std::string tempfile);
+RcppExport SEXP _srr_rcpp_parse_rs(SEXP filenameSEXP, SEXP tempfileSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type tempfile(tempfileSEXP);
+    rcpp_parse_rs(filename, tempfile);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_srr_rcpp_parse_c", (DL_FUNC) &_srr_rcpp_parse_c, 2},
     {"_srr_rcpp_parse_rmd", (DL_FUNC) &_srr_rcpp_parse_rmd, 2},
+    {"_srr_rcpp_parse_rs", (DL_FUNC) &_srr_rcpp_parse_rs, 2},
     {NULL, NULL, 0}
 };
 

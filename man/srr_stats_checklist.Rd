@@ -32,10 +32,10 @@ x <- srr_stats_checklist (category = "regression", filename = f)
 }
 }
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist_check}()},
-\code{\link{srr_stats_pkg_skeleton}()},
-\code{\link{srr_stats_pre_submit}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist_check]{srr_stats_checklist_check()}},
+\code{\link[=srr_stats_pkg_skeleton]{srr_stats_pkg_skeleton()}},
+\code{\link[=srr_stats_pre_submit]{srr_stats_pre_submit()}}
 }
 \concept{helper}

@@ -33,15 +33,16 @@ dl_standards <- function (category = "general", quiet = FALSE) {
         "/standards/", category, ".Rmd"
     )
 
-    tmp <- file.path (
-        tempdir (),
+    tmp <- fs::path (
+        fs::path_temp (),
         paste0 ("srr-standards-", category, ".Rmd")
     )
-    if (!file.exists (tmp)) {
+    dl <- !fs::file_exists (tmp)
+    if (dl) {
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
     } # nolint
 
-    if (!quiet) {
+    if (!quiet && dl) {
         cli::cli_alert_success ("Downloaded {category} standards")
     }
 
@@ -52,15 +53,15 @@ stds_version <- function () {
 
     u <- paste0 (base_url (raw = TRUE), "main/DESCRIPTION")
 
-    tmp <- file.path (tempdir (), "stats-devguide-DESCRIPTION")
-    if (!file.exists (tmp)) {
+    tmp <- fs::path (fs::path_temp (), "stats-devguide-DESCRIPTION")
+    if (!fs::file_exists (tmp)) {
         ret <- utils::download.file (u, destfile = tmp, quiet = TRUE)
     } # nolint
 
     d <- data.frame (read.dcf (tmp))
 
     version <- d$Version
-    if (length (gregexpr ("\\.", version) [[1]]) > 2) {
+    if (length (gregexpr (".", version, fixed = TRUE) [[1]]) > 2) {
         version <- gsub ("\\.\\d{3}$", "", version, perl = TRUE)
     }
 
@@ -100,12 +101,12 @@ format_standards <- function (s) {
 
     s <- vapply (
         seq_along (index1), function (i) {
-            paste0 (s [index1 [i]:index2 [i]], collapse = " ")
+            paste (s [index1 [i]:index2 [i]], collapse = " ")
         },
         character (1)
     )
     # rm hyperlink of standards
-    r <- regexpr ("\\]\\{#[A-Z]+[0-9]+\\_[0-9]+([a-z]?)\\}", s)
+    r <- regexpr (stds_regex ("rmd_anchor"), s)
     regmatches (s, r) <- ""
     # convert dot points to checklist items:
     s <- gsub ("\\s*\\-\\s+\\[\\*\\*", "- \\[ \\] **", s)
@@ -226,7 +227,7 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
         writeLines (text = s, con = filename)
     }
 
-    if (!Sys.getenv ("NOCLIPR") == "TRUE") { # used to turn off clipr in tests
+    if (Sys.getenv ("NOCLIPR") != "TRUE") { # used to turn off clipr in tests
         clipr::write_clip (s)
     }
 
@@ -242,17 +243,17 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' @inheritParams srr_stats_checklist
 #' @param filename Name of 'R' source file in which to write
 #' \pkg{roxygen2}-formatted lists of standards.
-#' @param overwrite If `FALSE` (default) and `filename` already exists, a dialog
-#' will ask whether file should be overwritten.
+#' @param overwrite If `FALSE` (default) and `filename` already exists, a
+#' dialogue will ask whether file should be overwritten.
 #' @return Nothing
 #' @family roxygen
 #' @examples
-#' \dontrun{
 #' path <- srr_stats_pkg_skeleton ()
 #' # contains a few standards; insert all with:
 #' f <- file.path (path, "R", "srr-stats-standards.R")
 #' file.exists (f)
 #' length (readLines (f)) # only 14 lines
+#' \donttest{
 #' srr_stats_roxygen (
 #'     category = "regression",
 #'     file = f,
@@ -260,26 +261,28 @@ srr_stats_checklist <- function (category = NULL, filename = NULL) {
 #' )
 #' length (readLines (f)) # now much longer
 #' }
+#' unlink (path, recursive = TRUE)
 #' @export
 srr_stats_roxygen <- function (category = NULL,
                                filename = "srr-stats-standards.R",
                                overwrite = FALSE) {
 
     loc <- here::here ()
-    if (dirname (filename) != ".") {
-        loc <- path.expand (dirname (filename))
-        if (substring (loc, nchar (loc), nchar (loc)) == "R") {
-            loc <- gsub (paste0 (.Platform$file.sep, "R$"), "", loc)
+    if (fs::path_dir (filename) != ".") {
+        loc <- fs::path_abs (fs::path_dir (filename))
+        loc_dir <- utils::tail (fs::path_split (loc) [[1]], 1L)
+        if (loc_dir == "R") {
+            loc <- fs::path_dir (loc)
         }
     }
 
-    if (!"DESCRIPTION" %in% list.files (loc)) {
+    if (!"DESCRIPTION" %in% fs::path_file (fs::dir_ls (loc))) {
         stop ("This function must be called within an R package directory")
     }
 
-    filename <- file.path (loc, "R", basename (filename))
+    filename <- fs::path (loc, "R", fs::path_file (filename))
 
-    if (!overwrite & interactive () & file.exists (filename)) {
+    if (!overwrite & interactive () & fs::file_exists (filename)) {
         x <- readline ("Overwrite current file (y/n)? ") # nocov
         if (tolower (substring (x, 1, 1) != "y")) { # nocov
             stop ("Okay, we'll stop there")
@@ -294,7 +297,7 @@ srr_stats_roxygen <- function (category = NULL,
     s <- gsub ("^\\s?\\-\\s+\\[\\s\\]\\s+", "", s)
     # replace bold/italic formatting characters with curly braces.
     # This uses regexpr so only first match is modified
-    gptn <- "\\*\\*[A-Z]+[0-9]+\\.([0-9]+)?[a-z]?\\*\\*"
+    gptn <- paste0 ("\\*\\*", stds_regex ("id"), "\\*\\*")
     g <- regexpr (gptn, s)
     s_end <- substring (s, g + attr (g, "match.length"), nchar (s))
     m <- regmatches (s, g)

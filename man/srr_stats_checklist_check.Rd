@@ -10,21 +10,25 @@ srr_stats_checklist_check(file)
 \item{file}{Name of local file containing a completed checklist. Must be a
 markdown document in \code{.md} format, not \code{.Rmd} or anything else.}
 }
+\value{
+(Invisibly) A character vector of markdown-formatted lines
+containing the entire checklist of the specified file.
+}
 \description{
 Correct any potential formatting issues in a completed standards checklist
 }
 \examples{
-\dontrun{
 f <- tempfile (fileext = ".md")
+\dontrun{
 srr_stats_checklist (category = "regression", filename = f)
 chk <- srr_stats_checklist_check (f)
 }
 }
 \seealso{
-Other helper: 
-\code{\link{srr_stats_categories}()},
-\code{\link{srr_stats_checklist}()},
-\code{\link{srr_stats_pkg_skeleton}()},
-\code{\link{srr_stats_pre_submit}()}
+Other helper:
+\code{\link[=srr_stats_categories]{srr_stats_categories()}},
+\code{\link[=srr_stats_checklist]{srr_stats_checklist()}},
+\code{\link[=srr_stats_pkg_skeleton]{srr_stats_pkg_skeleton()}},
+\code{\link[=srr_stats_pre_submit]{srr_stats_pre_submit()}}
 }
 \concept{helper}

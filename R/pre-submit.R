@@ -11,8 +11,13 @@
 #' d <- srr_stats_pkg_skeleton ()
 #' # The skeleton has 'TODO' standards, and also has only a few from the full
 #' # list expected for the categories specified there.
+#' \donttest{
 #' srr_stats_pre_submit (d)
+#' }
+#' unlink (d, recursive = TRUE)
 srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
+
+    path <- fs::path_abs (fs::path_expand (path))
 
     msg <- ""
 
@@ -28,76 +33,44 @@ srr_stats_pre_submit <- function (path = ".", quiet = FALSE) {
         return (msg)
     }
 
-    no_stds <- all (vapply (stds_in_code, is.null, logical (1)))
-    if (no_stds) {
-        msg_none <- "This package has no 'srr' standards"
-        if (!quiet) {
-            cli::cli_alert_warning (msg_none)
-        }
+    if (pre_sub_no_stds (stds_in_code, quiet)) {
         return (invisible ())
     }
 
-    cat_check <- check_num_categories (unlist (stds_in_code)) # in report.R
-    if (nzchar (cat_check)) {
-        return (cat_check)
-    }
-
-    if (any (grepl ("todo", stds_in_code$std_type))) {
-
-        msg <- paste0 (
-            "This package still has TODO ",
-            "standards and can not be submitted"
-        )
-        if (!quiet) {
-            cli::cli_alert_warning (msg)
-        }
-    }
-
+    msg <- c (msg, pre_sub_category_msgs (stds_in_code, quiet = quiet))
     msg <- c (msg, check_missing_standards (stds_in_code, quiet = quiet))
     msg <- c (msg, check_standards_in_files (stds_in_code, quiet = quiet))
+
+    msgs <- get_all_msgs (path)
+    std_txt <- get_stds_txt (msgs)
+    change_msg <- std_txt_change_report (msgs, std_txt)
+    if (length (change_msg) > 0L) {
+        change_msg <- gsub ("^.*Error\\:[[:space:]]+", "", change_msg)
+        if (!quiet) {
+            cli::cli_alert_warning (change_msg)
+        }
+    }
+    msg <- c (msg, change_msg)
+
+    compliance_statement <- check_stds_threshold (stds_in_code)
+    if (length (compliance_statement) > 0L && !quiet) {
+        for (s in compliance_statement) {
+            cli::cli_alert_warning (s)
+        }
+        msg <- c (msg, compliance_statement)
+    }
 
     invisible (msg)
 }
 
 get_stds_from_code <- function (path) {
 
-    if (!dir.exists (file.path (path, "R"))) {
-        warning ("Directory [", path, "] does not appear to be an R package")
-        return (NULL)
-    }
-
-    dirs <- c (".", "R", "vignettes", "tests")
-    sfxs <- c ("\\.(R|r)md$", "\\.(R|r)$", "\\.(R|r)md$", "\\.(R|r)$")
-    rec <- c (FALSE, FALSE, TRUE, TRUE)
-
-    flist <- lapply (seq_along (dirs), function (i) {
-        list.files (file.path (path, dirs [i]),
-            full.names = TRUE,
-            recursive = rec [i],
-            pattern = sfxs [i]
-        )
-    })
-    flist <- normalizePath (unlist (flist))
-
-    suppressWarnings ({
-        blocks <- lapply (flist, function (i) {
-            tryCatch (roxygen2::parse_file (i, env = NULL),
-                error = function (e) list ()
-            )
-        })
-    })
-    names (blocks) <- flist
-    blocks <- do.call (c, blocks)
-    blocks <- collect_blocks (blocks, path)
-
-    msgs <- collect_one_tag (path, blocks, tag = "srrstats")
-    msgs_na <- collect_one_tag (path, blocks, tag = "srrstatsNA")
-    msgs_todo <- collect_one_tag (path, blocks, tag = "srrstatsTODO")
+    msgs <- get_all_msgs (path) # in report.R
 
     ret <- list (
-        stds = parse_std_refs (msgs, "std"),
-        stds_na = parse_std_refs (msgs_na, "na"),
-        stds_todo = parse_std_refs (msgs_todo, "todo")
+        stds = parse_std_refs (msgs$msgs, "std"),
+        stds_na = parse_std_refs (msgs$msgs_na, "na"),
+        stds_todo = parse_std_refs (msgs$msgs_todo, "todo")
     )
 
     do.call (rbind, ret)
@@ -111,19 +84,27 @@ parse_std_refs <- function (msgs, std_type = "srr_stats") {
         i <- gsub (stds, "", i, fixed = TRUE)
         stds <- gsub ("^\\[|\\]$", "", stds)
         fname <- regmatches (i, regexpr ("\\[.*?\\]", i))
-        fname <- gsub ("^\\[|\\]$", "", fname)
+        fname <- ifelse (
+            length (fname) == 0L,
+            NA_character_,
+            gsub ("^\\[|\\]$", "", fname)
+        )
         lnum <- regmatches (i, regexpr ("\\#[0-9]+", i))
-        lnum <- as.numeric (gsub ("^\\#", "", lnum))
+        lnum <- ifelse (
+            length (lnum) == 0L,
+            NA_integer_,
+            as.integer (gsub ("^\\#", "", lnum))
+        )
 
-        i <- strsplit (i, "\\]") [[1]] [1]
-        i <- strsplit (i, "\\[") [[1]] [2]
+        i <- strsplit (i, "]", fixed = TRUE) [[1]] [1]
+        i <- strsplit (i, "[", fixed = TRUE) [[1]] [2]
         i <- strsplit (i, ",\\s?") [[1]]
 
-        chk <- grepl ("[A-Z]+[0-9]+\\.[0-9](+?[a-z]?)", stds)
-        if (any (!chk)) {
+        chk <- grepl (stds_regex ("id"), stds)
+        if (!all (chk)) {
             stop (
                 "Standard references [",
-                paste0 (i [which (!chk)], collapse = ", "),
+                paste (i [which (!chk)], collapse = ","),
                 "] are not in proper format."
             )
         }
@@ -228,20 +209,141 @@ check_missing_standards <- function (stds_in_code, quiet = FALSE) {
             not_a_std, "]"
         )
 
-    } else if (!any (grepl ("todo", stds_in_code$stds))) {
+    } else if (!any (grepl ("todo", stds_in_code$stds, fixed = TRUE))) {
 
         msg <- paste0 (
             "All applicable standards [v",
             attr (categories, "stds_version"),
             "] have been documented in this package (",
-            length (stds_in_code$stds),
+            length (which (stds_in_code$std_type == "std")),
             " complied with; ",
-            length (stds_in_code$stds_na),
+            length (which (stds_in_code$std_type == "na")),
             " N/A standards)"
         )
 
         if (!quiet) {
             cli::cli_alert_success (msg)
+        }
+    }
+
+    return (msg)
+}
+
+#' Check that sufficiently many standards have been documented, both overall,
+#' and in selected category.
+#'
+#' @param stds_in_code `data.frame` returned from `get_stds_from_code()`
+#' function.
+#' @param threshold Threshold for proportion of standards which must be
+#' complied with.
+#' @return `NULL` is everything okay, otherwise a message about insufficient
+#' proportion of documented compliance statements.
+#' @noRd
+check_stds_threshold <- function (stds_in_code, threshold = 0.5) {
+
+    categories <- get_categories (unique (stds_in_code$stds))
+
+    all_stds <- unlist (lapply (categories$category, get_standard_nums))
+    all_stds <- data.frame (
+        std_prefix = gsub ("[0-9].*$", "", all_stds),
+        standard = all_stds
+    )
+
+    stds_in_code <- stds_in_code [which (stds_in_code$std_type == "std"), ]
+    stds_in_code$std_prefix <- gsub ("[0-9].*$", "", stds_in_code$stds)
+
+    compliance <- lapply (categories$std_prefix, function (cat) {
+        data.frame (
+            category = cat,
+            total = length (which (all_stds$std_prefix == cat)),
+            complied = length (which (stds_in_code$std_prefix == cat))
+        )
+    })
+    compliance <- do.call (rbind, compliance)
+    compliance <- rbind (compliance, data.frame (
+        category = "total",
+        total = sum (compliance$total),
+        complied = sum (compliance$complied)
+    ))
+
+    compliance$ratio <- compliance$complied / compliance$total
+
+    compliance_msg <- function (threshold_pc, compliance_pc, what = "all") {
+        paste0 (
+            "Package must comply with at least ",
+            threshold_pc,
+            "% of ",
+            what,
+            " standards, but currently complies with only ",
+            compliance_pc,
+            "%"
+        )
+    }
+
+    compliance_fail <- compliance [which (compliance$ratio < threshold), ]
+    msg <- NULL
+    threshold_pc <- round (100 * threshold)
+    # Overall failure:
+    if (nrow (compliance_fail) > 0L) {
+        if ("total" %in% compliance_fail$category) {
+            compliance_tot <-
+                compliance_fail [compliance_fail$category == "total", ]
+            compliance_pc <- round (compliance_tot$ratio * 100)
+            msg <- compliance_msg (threshold_pc, compliance_pc, what = "all")
+            compliance_fail <-
+                compliance_fail [which (compliance_fail$category != "total"), ]
+        }
+    }
+    # Category-specific messages:
+    if (nrow (compliance_fail) > 0L) {
+        ratio <- sum (compliance_fail$complied) / sum (compliance_fail$total)
+        ratio_pc <- round (ratio * 100)
+        if (ratio < threshold) {
+            msg <- c (msg, compliance_msg (
+                threshold_pc,
+                ratio_pc,
+                what = "category-specific"
+            ))
+        }
+    }
+
+    return (msg)
+}
+
+pre_sub_no_stds <- function (stds_in_code, quiet = FALSE) {
+
+    ret <- FALSE
+    if (is.null (stds_in_code) || length (stds_in_code) == 0L) {
+        msg_none <- "This package has no 'srr' standards"
+        if (!quiet) {
+            cli::cli_alert_warning (msg_none)
+        }
+        ret <- TRUE
+    }
+    return (ret)
+}
+
+pre_sub_category_msgs <- function (stds_in_code, quiet) {
+
+    msg <- ""
+    cat_check <- check_num_categories (stds_in_code$stds) # in report.R
+
+    if (nzchar (cat_check)) {
+        this_msg <- sub (":[^:]+:\\s*", "", cat_check)
+        if (!quiet) {
+            cli::cli_alert_danger (this_msg)
+        }
+        msg <- c (msg, this_msg)
+    }
+
+    if (any (grepl ("todo", stds_in_code$std_type, fixed = TRUE))) {
+
+        msg <- c (msg, paste0 (
+            "This package still has TODO ",
+            "standards and can not be submitted"
+        ))
+        if (!quiet) {
+            cli::cli_alert_danger (msg [length (msg)])
         }
     }
 
