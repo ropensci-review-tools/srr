@@ -42,4 +42,4 @@ jobs:
       with:
         mirrors: |
           codeberg=https://${{ secrets.UNAME }}:${{ secrets.CODEBERG }}@codeberg.org/ropensci-review-tools/srr.git
-          codeflow=https://${{ secrets.UNAME }}:${{ secrets.CODEFLOW }}@codeflow.com/ropensci-review-tools/srr.git
+          codefloe=https://${{ secrets.UNAME }}:${{ secrets.CODEFLOE }}@codefloe.com/ropensci-review-tools/srr.git
