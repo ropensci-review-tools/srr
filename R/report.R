@@ -370,7 +370,7 @@ one_tag_to_markdown <- function (m, remote, tag, branch, std_txt, path_root, pat
 #' @noRd
 one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 
-    g <- gregexpr ("[A-Z]+[0-9]+\\.[0-9]([0-9]?)([a-z]?)", m)
+    g <- gregexpr (stds_regex ("id"), m)
 
     stds <- regmatches (m, g) [[1]]
     stds_g <- sort (grep ("^G", stds, value = TRUE))
@@ -441,11 +441,11 @@ one_msg_to_markdown <- function (m, remote, branch, std_txt) {
 add_missing_stds <- function (md_lines, std_txt) {
 
     md_stds <- grep (
-        "^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)",
+        paste0 ("^\\-\\s+", stds_regex ("id")),
         md_lines,
         value = TRUE
     )
-    g <- regexpr ("^\\-\\s+[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", md_stds)
+    g <- regexpr (paste0 ("^\\-\\s+", stds_regex ("id")), md_stds)
     md_stds <- gsub ("^\\-\\s+", "", regmatches (md_stds, g))
     missing_stds <- std_txt$std [which (!std_txt$std %in% md_stds)]
 

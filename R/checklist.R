@@ -66,7 +66,7 @@ checklist_check_intern <- function (file) {
 rebalance_bold <- function (x) {
 
     fix_start <- function (x, sym = "*") {
-        regex <- paste0 ("\\s\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\", sym)
+        regex <- paste0 ("\\s\\", sym, stds_regex ("id"), "\\", sym)
 
         n <- regexpr (regex, x)
         if (any (n > 0)) {
@@ -81,7 +81,7 @@ rebalance_bold <- function (x) {
     }
 
     fix_end <- function (x, sym = "*") {
-        regex <- paste0 ("\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\", sym, "\\s")
+        regex <- paste0 ("\\", sym, stds_regex ("id"), "\\", sym, "\\s")
         n <- regexpr (regex, x)
         len <- attr (n, "match.length")
         if (any (n > 0)) {
@@ -114,7 +114,7 @@ rebalance_bold <- function (x) {
 fix_sequences <- function (x, sym = "*") {
 
     # Add any missing symbols before dashes:
-    regex <- paste0 ("\\", sym, "[A-Z]+[0-9]+\\.[0-9]+\\p{Pd}")
+    regex <- paste0 ("\\", sym, stds_regex ("id"), "\\p{Pd}")
     n <- regexpr (regex, x, perl = TRUE)
     len <- attr (n, "match.length")
     if (any (n > 0)) {
@@ -128,7 +128,7 @@ fix_sequences <- function (x, sym = "*") {
     }
 
     # And missing symbols after dashes before standard identifier:
-    regex <- paste0 ("\\p{Pd}[A-Z]+[0-9]+\\.[0-9]+")
+    regex <- paste0 ("\\p{Pd}", stds_regex ("id"))
     n <- regexpr (regex, x, perl = TRUE)
     len <- attr (n, "match.length")
     if (any (n > 0)) {

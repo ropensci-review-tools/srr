@@ -4,17 +4,20 @@
   "identifier": "srr",
   "description": "Companion package to 'rOpenSci' statistical software review project ('rOpenSci' authors, 2021; <doi:10.5281/zenodo.5556756>), to facilitate documenting software compliance with statistical standards using 'Roxygen2' 'roclets'.",
   "name": "srr: 'rOpenSci' Software Review 'Roclets'",
-  "relatedLink": "https://docs.ropensci.org/srr/",
+  "relatedLink": [
+    "https://docs.ropensci.org/srr/",
+    "https://CRAN.R-project.org/package=srr"
+  ],
   "codeRepository": "https://github.com/ropensci-review-tools/srr",
   "issueTracker": "https://github.com/ropensci-review-tools/srr/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "1.0.0.005",
+  "version": "1.0.0.008",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.6.0 (2026-04-24)",
+  "runtimePlatform": "R version 4.6.1 (2026-06-24)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -218,13 +221,14 @@
     },
     "SystemRequirements": {}
   },
-  "fileSize": "2491.796KB",
+  "fileSize": "2495.532KB",
+  "releaseNotes": "https://github.com/ropensci-review-tools/srr/blob/main/NEWS.md",
   "readme": "https://github.com/ropensci-review-tools/srr/blob/main/README.md",
   "contIntegration": [
-    "https://github.com/ropensci-review-tools/srr/actions",
+    "https://github.com/ropensci-review-tools/srr/actions/workflows/R-CMD-check.yaml",
     "https://app.codecov.io/gh/ropensci-review-tools/srr"
   ],
-  "developmentStatus": "https://www.repostatus.org/#concept",
+  "developmentStatus": "https://www.repostatus.org/#active",
   "keywords": [
     "compliance-automation",
     "r",

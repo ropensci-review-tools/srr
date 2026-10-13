@@ -430,7 +430,7 @@ extract_standard_numbers <- function (standards, block) {
 
     # roxygen parses markdown "**A**" as "\\strong{A}", and the curly braces
     # muck up standards ID, so have to be removed here:
-    g <- gregexpr ("\\\\(strong|emph)\\{[A-Z]+[0-9]+(\\.[0-9]+)?\\}", standards)
+    g <- gregexpr (stds_regex ("id_strong"), standards)
     m <- lapply (regmatches (standards, g), function (i) {
         res <- paste (i, collapse = "|")
         res <- gsub ("\\\\(strong|emph)", "\\\\\\\\(strong|emph)", res)
@@ -443,8 +443,8 @@ extract_standard_numbers <- function (standards, block) {
 
     # These use regexpr and not gregexpr to only match first '{...}' while
     # ignoring all subsequent ones
-    g_open <- regexpr ("\\{[A-Z]+[0-9]+\\.[0-9]+([a-z]?)", standards)
-    g_close <- regexpr ("[A-Z]+[0-9]+\\.[0-9]+([a-z]?)\\}", standards)
+    g_open <- regexpr (paste0 ("\\{", stds_regex ("id")), standards)
+    g_close <- regexpr (paste0 (stds_regex ("id"), "\\}"), standards)
     g_close <- g_close + attr (g_close, "match.length") - 1
     standards <- gsub ("\\{|\\}", "", substring (standards, g_open, g_close))
     standards <- gsub ("\\s*", "", unlist (strsplit (standards, ",")))

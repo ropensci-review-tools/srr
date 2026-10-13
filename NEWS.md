@@ -1,3 +1,12 @@
+# Version 1.0.0.00x (current dev version)
+
+## Minor Changes
+
+- Added generic `stds_regex()` fn for regex patterns for all stds from stats-devguide.
+- Use ropensci-review-tools/actions/push-to-elsewhere generic workflow
+
+---
+
 # Version 1.0.0 - Initial CRAN release
 
 ## What's Changed
