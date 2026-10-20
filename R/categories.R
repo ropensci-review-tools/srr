@@ -40,9 +40,9 @@ srr_stats_categories <- function () {
 #' @noRd
 list_categories <- function () {
 
-    # u <- paste0 (base_url (), "git/trees/main?recursive=1")
     u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
-    tmp <- fs::file_temp (ext = "Rmd")
+    # u <- paste0 (base_url (raw = TRUE), "dev/standards.Rmd")
+    tmp <- fs::file_temp (ext = ".Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
     x <- readLines (tmp)
@@ -120,6 +120,7 @@ std_prefixes <- function () {
     prefixes [cats == "time-series"] <- "TS"
     prefixes [cats == "unsupervised"] <- "UL"
     prefixes [cats == "distributions"] <- "PD"
+    prefixes [cats == "networks"] <- "NW"
 
     return (data.frame (
         category = cats,

@@ -22,9 +22,11 @@ base_url <- function (raw = FALSE) {
 #' @noRd
 dl_standards <- function (category = "general", quiet = FALSE) {
 
+    branch <- "main"
     u <- paste0 (
         base_url (raw = TRUE),
-        "main/standards/", category, ".Rmd"
+        branch,
+        "/standards/", category, ".Rmd"
     )
 
     tmp <- fs::path (
@@ -176,6 +178,11 @@ category_titles_urls <- function (category) {
         ret <- list (
             title = "Probability Distributions",
             url = paste0 (u_base, "standards-distributions")
+        )
+    } else if (category == "networks") {
+        ret <- list (
+            title = "Networks",
+            url = paste0 (u_base, "standards-networks")
         )
     }
 
