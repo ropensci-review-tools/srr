@@ -184,9 +184,47 @@ category_titles_urls <- function (category) {
             title = "Networks",
             url = paste0 (u_base, "standards-networks")
         )
+    } else {
+        # A category added to the dev guide after this version of srr was
+        # released: take its title from the chapter heading so that
+        # `srr_stats_categories()` still returns one row per category.
+        ret <- list (
+            title = category_title_from_guide (category),
+            url = paste0 (u_base, "standards-", category)
+        )
     }
 
     return (ret)
+}
+
+#' Title of a standards chapter, read from its heading in the dev guide
+#' ("## Title {#standards-<category>}"); the category name itself when the
+#' chapter can not be read.
+#' @noRd
+category_title_from_guide <- function (category) {
+
+    u <- paste0 (base_url (raw = TRUE), "main/standards/", category, ".Rmd")
+    tmp <- fs::file_temp (ext = ".Rmd")
+    x <- tryCatch (
+        {
+            utils::download.file (u, destfile = tmp, quiet = TRUE)
+            readLines (tmp, warn = FALSE)
+        },
+        error = function (e) character (0),
+        warning = function (w) character (0)
+    )
+    h <- grep ("^##\\s", x, value = TRUE)
+    h <- grep (paste0 ("\\{#standards-", category, "\\}"), h, value = TRUE)
+    if (length (h) == 0L) {
+        return (category)
+    }
+    title <- sub ("^##\\s+", "", h [1])
+    title <- sub ("\\s*\\{#.*$", "", title)
+    if (!nzchar (title)) {
+        return (category)
+    }
+
+    return (title)
 }
 
 #' Download checklists of statistical software standards
