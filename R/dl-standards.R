@@ -22,11 +22,7 @@ base_url <- function (raw = FALSE) {
 #' @noRd
 dl_standards <- function (category = "general", quiet = FALSE) {
 
-    branch <- ifelse (
-        category %in% c ("distributions", "networks"),
-        "dev",
-        "main"
-    )
+    branch <- "main"
     u <- paste0 (
         base_url (raw = TRUE),
         branch,

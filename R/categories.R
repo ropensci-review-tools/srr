@@ -40,9 +40,9 @@ srr_stats_categories <- function () {
 #' @noRd
 list_categories <- function () {
 
-    # u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
-    u <- paste0 (base_url (raw = TRUE), "dev/standards.Rmd")
-    tmp <- tempfile (fileext = ".Rmd")
+    u <- paste0 (base_url (raw = TRUE), "main/standards.Rmd")
+    # u <- paste0 (base_url (raw = TRUE), "dev/standards.Rmd")
+    tmp <- fs::file_temp (ext = ".Rmd")
     ret <- utils::download.file (u, destfile = tmp, quiet = TRUE) # nolint
 
     x <- readLines (tmp)
