@@ -6,8 +6,8 @@ Authors@R:
            comment = c(ORCID = "0000-0002-2815-0399"))
 Description: Companion package to 'rOpenSci' statistical software review
     project ('rOpenSci' authors, 2021; <doi:10.5281/zenodo.5556756>), to
-    facilitate documenting software compliance with statistical standards using
-    'Roxygen2' 'roclets'.
+    facilitate documenting software compliance with statistical standards
+    using 'Roxygen2' 'roclets'.
 License: MIT + file LICENSE
 URL: https://docs.ropensci.org/srr/,
     https://github.com/ropensci-review-tools/srr
@@ -33,9 +33,9 @@ LinkingTo:
     Rcpp
 VignetteBuilder: 
     knitr
-Config/testthat/edition: 3
 Config/ropensci/maintainer: staff
+Config/roxygen2/version: 8.0.0
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-GB
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0
