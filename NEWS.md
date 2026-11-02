@@ -1,9 +1,12 @@
+# srr 1.1.0
+
 # Version 1.0.0.00x (current dev version)
 
 ## Minor Changes
 
-- `srr_stats_categories()` no longer errors when the dev guide has a category this version of srr does not know (#71).
-- Added generic `stds_regex()` fn for regex patterns for all stds from stats-devguide.
+- The new maintainer is now Maëlle Salmon (reviewtools@ropensci.org)
+- `srr_stats_categories()` no longer errors when a dev guide category is ahead of srr #72 by rootcoder007
+- Added generic `stds_regex()` fn for regex patterns for all stds from stats-devguide
 - Use ropensci-review-tools/actions/push-to-elsewhere generic workflow
 
 ---
