@@ -1,6 +1,6 @@
 Package: srr
 Title: 'rOpenSci' Software Review 'Roclets'
-Version: 1.1.0
+Version: 1.1.0.9000
 Authors@R: 
     person("Maëlle", "Salmon", , "reviewtools@ropensci.org", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-2815-0399"))
