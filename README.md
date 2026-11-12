@@ -91,10 +91,7 @@ And then installing as above. Alternatively, the development version can
 be installed by running any one of the following lines:
 
 ``` r
-remotes::install_github ("ropensci-review-tools/srr")
-pak::pkg_install ("ropensci-review-tools/srr")
-remotes::install_git ("https://codeberg.org/ropensci-review-tools/srr")
-remotes::install_git ("https://codefloe.com/ropensci-review-tools/srr")
+pak::pak("ropensci-review-tools/srr")
 ```
 
 Once installed, the package can be loaded for use with,
@@ -171,11 +168,7 @@ roclets.
 3.  Enable your package to use the `srr_stats` roclets by modifying the
     package’s `DESCRIPTION` file so that the `Roxygen` line looks like
     this:
-
-    ``` r
-    Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
-    ```
-
+    `{r roxygen, eval = FALSE} Roxygen:list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))`
     That will load the [“roclet”](https://roxygen2.r-lib.org) used by
     this package to process the documentation of statistical standards
     within your actual code. Note that you do not need to add, import,
@@ -188,14 +181,7 @@ roclets.
     This will by default create a new file called by default
     `R/srr_stats_standards.R`, the first few lines of which will look
     like this:
-
-        ## [1] "#' srr_stats"                                                                 
-        ## [2] "#'"                                                                           
-        ## [3] "#' All of the following standards initially have `@srrstatsTODO` tags."       
-        ## [4] "#' These may be moved at any time to any other locations in your code."       
-        ## [5] "#' Once addressed, please modify the tag from `@srrstatsTODO` to `@srrstats`,"
-        ## [6] "#' or `@srrstatsNA`, ensuring that references to every one of the following"
-
+    `{r srr_stats_roxygen, echo = FALSE, message = FALSE} f <- "./R/srr-stats-standards.R" if (!file.exists (f)) {  srr_stats_roxygen () } rso <- readLines (f) head (rso)`
     The file will contain a list of all standards from your nominated
     categories. This file may be renamed, and the individual items moved
     to other locations in other files, but all nominated standards
